@@ -32,8 +32,4 @@ http://www.qgis.org/pyqgis-cookbook/index.html
 (C) 2011-2014 GeoApt LLC - geoapt.com
 Git revision : $Format:%H$
 
-<<<<<<< Updated upstream
-JOEHOEEE
-=======
-JO IK MAAK OOK EEN WIJZIGING
->>>>>>> Stashed changes
+Added new layout

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>342</width>
-    <height>509</height>
+    <width>1030</width>
+    <height>860</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,9 +22,9 @@
       </property>
       <widget class="QWidget" name="dataTab">
        <attribute name="title">
-        <string>data</string>
+        <string>Input</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0">
+       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0,0">
         <item>
          <layout class="QFormLayout" name="formLayout">
           <item row="0" column="0">
@@ -44,71 +44,43 @@
          </layout>
         </item>
         <item>
-         <layout class="QGridLayout" name="gridLayout_3" columnstretch="0,5">
-          <item row="2" column="1">
-           <widget class="QPushButton" name="ambulanceButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>icons/ambulance.png</normaloff>icons/ambulance.png</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>64</width>
-              <height>64</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QComboBox" name="selectAttributeCombo"/>
-          </item>
-          <item row="2" column="0">
-           <widget class="QPushButton" name="medicButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>icons/medic_box.png</normaloff>icons/medic_box.png</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>64</width>
-              <height>64</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QComboBox" name="selectLayerCombo"/>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="selectAttributeLabel">
-            <property name="text">
-             <string>Select attribute:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
            <widget class="QLabel" name="selectLayerLabel">
             <property name="text">
-             <string>Select layer:</string>
+             <string>Select transit layer:</string>
             </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="selectLayerCombo"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <item>
+           <widget class="QLabel" name="selectUserGroup">
+            <property name="text">
+             <string>Select usergroup:</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="UserGroupCombo">
+            <item>
+             <property name="text">
+              <string>Elderly</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Student</string>
+             </property>
+            </item>
            </widget>
           </item>
          </layout>
@@ -117,6 +89,9 @@
          <spacer name="verticalSpacer">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Expanding</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
@@ -128,109 +103,74 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="analysisTab">
+      <widget class="QWidget" name="AnalysisTab">
        <attribute name="title">
-        <string>analysis</string>
+        <string>Analysis</string>
        </attribute>
-       <layout class="QFormLayout" name="formLayout_4">
-        <item row="1" column="0">
-         <widget class="QPushButton" name="setNetworkButton">
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QLabel" name="BuffersLabel">
           <property name="text">
-           <string>Build Network</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QPushButton" name="serviceAreaButton">
-          <property name="text">
-           <string>ServiceArea</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QLineEdit" name="serviceAreaCutoffEdit">
-          <property name="text">
-           <string>1500</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QPushButton" name="shortestRouteButton">
-          <property name="text">
-           <string>Shortest Route</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLabel" name="networkLabel">
-          <property name="text">
-           <string>Uses selected objects for origins / destinations</string>
+           <string>1. Create buffers of all transit nodes </string>
           </property>
           <property name="wordWrap">
            <bool>true</bool>
           </property>
          </widget>
         </item>
-        <item row="4" column="0">
-         <widget class="QPushButton" name="bufferButton">
+        <item>
+         <widget class="QPushButton" name="BufferButton">
           <property name="text">
-           <string>Buffer</string>
+           <string>Create Buffers</string>
           </property>
          </widget>
         </item>
-        <item row="4" column="1">
-         <widget class="QLineEdit" name="bufferCutoffEdit">
+        <item>
+         <widget class="QLabel" name="FindNodesLabel">
           <property name="text">
-           <string>800</string>
+           <string>2. Create heatmap</string>
           </property>
          </widget>
         </item>
-        <item row="6" column="0">
-         <widget class="QPushButton" name="selectBufferButton">
+        <item>
+         <widget class="QPushButton" name="FindNodesButton">
           <property name="text">
-           <string>Select in Buffer</string>
+           <string>Create heatmap</string>
           </property>
          </widget>
         </item>
-        <item row="6" column="1">
-         <widget class="QPushButton" name="selectRangeButton">
+        <item>
+         <widget class="QLabel" name="NoServiceLabel">
           <property name="text">
-           <string>Select in Range</string>
+           <string>3. Find areas without service</string>
           </property>
          </widget>
         </item>
-        <item row="8" column="0">
-         <widget class="QPushButton" name="expressionSelectButton">
+        <item>
+         <widget class="QPushButton" name="NoServiceButton">
           <property name="text">
-           <string>Select</string>
+           <string>Find no-service areas</string>
           </property>
          </widget>
         </item>
-        <item row="7" column="0" colspan="2">
-         <widget class="QLineEdit" name="expressionEdit">
+        <item>
+         <widget class="QLabel" name="AddNodeLabel">
           <property name="text">
-           <string>id &lt; 3</string>
+           <string>4. Add new node</string>
           </property>
          </widget>
         </item>
-        <item row="8" column="1">
-         <widget class="QPushButton" name="expressionFilterButton">
+        <item>
+         <widget class="QPushButton" name="AddNodeButton">
           <property name="text">
-           <string>Filter</string>
+           <string>Add node</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
-         <widget class="QPushButton" name="clearRouteButton">
+        <item>
+         <widget class="QLabel" name="label">
           <property name="text">
-           <string>Clear Routes</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="0">
-         <widget class="QPushButton" name="makeIntersectionButton">
-          <property name="text">
-           <string>Intersection</string>
+           <string>Placeholder</string>
           </property>
          </widget>
         </item>
@@ -238,12 +178,12 @@
       </widget>
       <widget class="QWidget" name="tab">
        <attribute name="title">
-        <string>visualisation</string>
+        <string>Visualisation</string>
        </attribute>
       </widget>
-      <widget class="QWidget" name="visualisationTab">
+      <widget class="QWidget" name="ReportingTab">
        <attribute name="title">
-        <string>reporting</string>
+        <string>Reporting</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0">
         <item>

@@ -19,6 +19,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+
+ Matthijs test
 """
 
 from PyQt4 import QtGui, QtCore, uic
@@ -64,22 +66,11 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.iface.newProjectCreated.connect(self.updateLayers)
         self.openScenarioButton.clicked.connect(self.openScenario)
         self.saveScenarioButton.clicked.connect(self.saveScenario)
-        self.selectLayerCombo.activated.connect(self.setSelectedLayer)
-        self.selectAttributeCombo.activated.connect(self.setSelectedAttribute)
+        self.selectLayerCombo.activated.connect(self.setSelectedLayer) # Select transit layer
+        # self.selectUserGroupCombo.activated.connect(self.setSelectedAttribute) # Ask Jorge
 
         # analysis
-        self.graph = QgsGraph()
-        self.tied_points = []
-        self.setNetworkButton.clicked.connect(self.buildNetwork)
-        self.shortestRouteButton.clicked.connect(self.calculateRoute)
-        self.clearRouteButton.clicked.connect(self.deleteRoutes)
-        self.serviceAreaButton.clicked.connect(self.calculateServiceArea)
-        self.bufferButton.clicked.connect(self.calculateBuffer)
-        self.selectBufferButton.clicked.connect(self.selectFeaturesBuffer)
-        self.makeIntersectionButton.clicked.connect(self.calculateIntersection)
-        self.selectRangeButton.clicked.connect(self.selectFeaturesRange)
-        self.expressionSelectButton.clicked.connect(self.selectFeaturesExpression)
-        self.expressionFilterButton.clicked.connect(self.filterFeaturesExpression)
+        self.BufferButton.clicked.connect(self.calculateBuffer) #what does the program do and what is user input?
 
         # visualisation
 
@@ -90,10 +81,11 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.updateAttribute.connect(self.extractAttributeSummary)
 
         # set current UI restrictions
-        self.makeIntersectionButton.hide()
+
 
         # initialisation
         self.updateLayers()
+        # doet alles wanneer de plugin start
 
         #run simple tests
 
@@ -266,13 +258,23 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     # buffer functions
     def getBufferCutoff(self):
-        cutoff = self.bufferCutoffEdit.text()
+        return 500
+        """cutoff = self.bufferCutoffEdit.text()
         if uf.isNumeric(cutoff):
-            return uf.convertNumeric(cutoff)
+            if User == Elderly:
+                return 500
+            elif User == Student:
+                return 800
+            elif User == Adult:
+                return 700
+            # return uf.convertNumeric(cutoff)
         else:
             return 0
+        """
 
     def calculateBuffer(self):
+        # Bufferradius should be hardcoded based on user group
+
         origins = self.getSelectedLayer().selectedFeatures()
         layer = self.getSelectedLayer()
         if origins > 0:

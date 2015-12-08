@@ -19,6 +19,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+
+ Matthijs test
 """
 
 from PyQt4 import QtGui, QtCore, uic

@@ -81,6 +81,13 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         # set current UI restrictions
 
+        ik voeg hier wat toe
+
+        en hier
+
+
+        en daar
+
         # initialisation
         self.updateLayers()
         #self.SelectUserGroupCombo.currentIndexChanged(const QString&)

@@ -176,8 +176,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             buffer_layer = uf.getLegendLayerByName(self.iface, "Buffers")
             # create one if it doesn't exist
             if not buffer_layer:
-                attribs = ['id', 'distance']
-                types = [QtCore.QVariant.String, QtCore.QVariant.Double]
+                attribs = ['id', 'distance', 'network' ]
+                types = [QtCore.QVariant.String, QtCore.QVariant.Double, QtCore.QVariant.String]
                 buffer_layer = uf.createTempLayer('Buffers','POLYGON',layer.crs().postgisSrid(), attribs, types)
                 uf.loadTempLayer(buffer_layer)
             # insert buffer polygons

@@ -74,6 +74,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         # analysis
         self.bufferButton.clicked.connect(self.calculateBuffer)
+        #click the button and create non service area
+        self.nonserviceButton.clicked.connect(self.calculateIntersection)
 
         # visualisation
 
@@ -168,10 +170,13 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # use the global variables radius and transittypes???
         radius = 1200
         transittypes = ('rail','metro')
+        network = 1
 
         uf.selectFeaturesByExpression(self.getSelectedLayer(),"network in {}".format(transittypes))
         origins = self.getSelectedLayer().selectedFeatures()
         layer = self.getSelectedLayer()
+
+        #getFieldValues(layer, network)
 
         if origins > 0:
             cutoff_distance = radius
@@ -183,7 +188,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             buffer_layer = uf.getLegendLayerByName(self.iface, "Buffers")
             # create one if it doesn't exist
             if not buffer_layer:
-                attribs = ['id', 'distance', 'network' ]
+                attribs = ['id', 'distance', 'network']
                 types = [QtCore.QVariant.String, QtCore.QVariant.Double, QtCore.QVariant.String]
                 buffer_layer = uf.createTempLayer('Buffers','POLYGON',layer.crs().postgisSrid(), attribs, types)
                 uf.loadTempLayer(buffer_layer)
@@ -194,11 +199,71 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 # each buffer has an id and a geometry
                 geoms.append(buffer[1])
                 # in the case of values, it expects a list of multiple values in each item - list of lists
-                values.append([buffer[0],cutoff_distance])
+                values.append([buffer[0],cutoff_distance, network])
             uf.insertTempFeatures(buffer_layer, geoms, values)
             self.refreshCanvas(buffer_layer)
 
+    #our intersection function
     def calculateIntersection(self):
+        layer = self.getSelectedLayer()
+        # use the buffer to cut from another layer
+        buffer = uf.getLegendLayerByName(self.iface, "Buffers")
+        # use the selected layer for cutting
+        buurten = uf.getLegendLayerByName(self.iface, "buurten")
+        print buurten.featureCount()
+        #if there are buffers, do something
+        if buffer.featureCount() > 0:
+            non_services = {}
+            # get the intersections between the two layers
+            nonservice_areas = uf.getFeaturesByIntersection(buurten, buffer, False)
+            print len(nonservice_areas)
+            print nonservice_areas
+            nonservice_layer = uf.getLegendLayerByName(self.iface, "Non service")
+
+            if not nonservice_layer:
+                attribs = ['id', 'random_values']
+                types = [QtCore.QVariant.String, QtCore.QVariant.String]
+                nonservice_layer = uf.createTempLayer('Non service','POLYGON',layer.crs().postgisSrid(), attribs, types)
+                uf.loadTempLayer(nonservice_layer)
+            # insert non service areas
+            geoms = []
+            values = []
+            random_value = 1
+            for nonservice_area in non_services.iteritems():
+                # each non service area has an id
+                geoms.append(nonservice_area[1])
+                # in the case of values, it expects a list of multiple values in each item - list of lists
+                values.append([nonservice_area[0], random_value])
+            uf.insertTempFeatures(nonservice_layer, geoms, values)
+            self.refreshCanvas(nonservice_layer)
+
+
+            """if intersections:
+                # store the intersection geometries results in temporary layer called "Intersections"
+                intersection_layer = uf.getLegendLayerByName(self.iface, "Intersections")
+                # create one if it doesn't exist
+                if not intersection_layer:
+                    geom_type = intersections[0].type()
+                    print intersections[0]
+                    print geom_type
+                    if geom_type == 1:
+                        intersection_layer = uf.createTempLayer('Intersections','POINT',layer.crs().postgisSrid(), [], [])
+                    elif geom_type == 2:
+                        intersection_layer = uf.createTempLayer('Intersections','LINESTRING',layer.crs().postgisSrid(), [], [])
+                    elif geom_type == 3:
+                        intersection_layer = uf.createTempLayer('Intersections','POLYGON',layer.crs().postgisSrid(), [], [])
+                    uf.loadTempLayer(intersection_layer)
+                # insert buffer polygons
+                geoms = []
+                values = []
+                for intersect in intersections:
+                    # each buffer has an id and a geometry
+                    geoms.append(intersect)
+                uf.insertTempFeatures(intersection_layer, geoms, values)
+                self.refreshCanvas(intersection_layer)"""
+
+    #original code
+    """def calculateIntersection(self):
         # use the buffer to cut from another layer
         cutter = uf.getLegendLayerByName(self.iface, "Buffers")
         # use the selected layer for cutting
@@ -226,7 +291,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                     # each buffer has an id and a geometry
                     geoms.append(intersect)
                 uf.insertTempFeatures(intersection_layer, geoms, values)
-                self.refreshCanvas(intersection_layer)
+                self.refreshCanvas(intersection_layer)"""
 
     # after adding features to layers needs a refresh (sometimes)
     def refreshCanvas(self, layer):

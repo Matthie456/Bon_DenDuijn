@@ -210,7 +210,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         buffer = uf.getLegendLayerByName(self.iface, "Buffers")
         # use the selected layer for cutting
         buurten = uf.getLegendLayerByName(self.iface, "buurten")
-        print buurten.featureCount()
+        # print buurten.featureCount()
         #if there are buffers, do something
         if buffer.featureCount() > 0:
             non_services = {}
@@ -218,6 +218,9 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             nonservice_areas = uf.getFeaturesByIntersection(buurten, buffer, False)
             print len(nonservice_areas)
             print nonservice_areas
+    ## Volgens mij gaat het hier mis. Op regel 215 maak je een lijst, maar er komt niks in die lijst als ik het goed zie.
+    ## Terwijl regel 220 wel laat zien (zie python console) dat er iets gebeurd. Volgens mij hoeven we alleen elk losse
+    ## item in de lijst te zetten en die lijst naar de layer te schrijven. Laten we daar morgen ff naar kijken!
             nonservice_layer = uf.getLegendLayerByName(self.iface, "Non service")
 
             if not nonservice_layer:

@@ -164,7 +164,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     # buffer functions
 
     def calculateBuffer(self):
-        origins = self.getSelectedLayer().selectedFeatures()
+        origins =self.getSelectedLayer().getFeatures()
         layer = self.getSelectedLayer()
         if origins > 0:
             cutoff_distance = 200

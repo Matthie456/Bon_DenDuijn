@@ -241,7 +241,9 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 #    Visualisation functions
 #######
 
-
+hallo
+iwdied
+weifjwij
 
 #######
 #    Reporting functions

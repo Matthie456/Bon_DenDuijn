@@ -83,6 +83,12 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         # initialisation
         self.updateLayers()
+        #self.SelectUserGroupCombo.currentIndexChanged(const QString&)
+        if self.SelectUserGroupCombo.currentText() == 'Students':
+            radius = 800
+            transittypes = ['train', 'bus', 'ferry','metro','tram']
+            print radius, transittypes
+
         print "Plugin loaded!"
 
         #run simple tests

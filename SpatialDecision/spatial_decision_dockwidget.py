@@ -164,6 +164,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     # buffer functions
 
     def calculateBuffer(self):
+        # origins = self.getSelectedLayer().selectedFeatures()
+        uf.selectFeaturesByExpression(self.getSelectedLayer(),"network = 'rail'")
         origins = self.getSelectedLayer().selectedFeatures()
         layer = self.getSelectedLayer()
 

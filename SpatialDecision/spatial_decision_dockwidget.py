@@ -193,27 +193,29 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 buffer_layer = uf.createTempLayer('Buffers','POLYGON',layer.crs().postgisSrid(), attribs, types)
                 uf.loadTempLayer(buffer_layer)
             # insert buffer polygons
-            geoms = []
-            values = []
+            geoms = [] # geometries in a list
+            values = [] #list of lists, consisting of 3 items. E.g. [[0L, 1200, 1],[...
             for buffer in buffers.iteritems():
                 # each buffer has an id and a geometry
                 geoms.append(buffer[1])
                 # in the case of values, it expects a list of multiple values in each item - list of lists
                 values.append([buffer[0],cutoff_distance, network])
+            print 'geoms buffer', geoms
+            print 'values buffer', values
+            print values[0][0]
             uf.insertTempFeatures(buffer_layer, geoms, values)
             self.refreshCanvas(buffer_layer)
 
     #our intersection function
     def calculateIntersection(self):
-        layer = self.getSelectedLayer()
-        # use the buffer to cut from another layer
+        layer = self.getSelectedLayer() #deze heb ik eigenlijk enkel toegevoegd tbv createTempLayer
+        # use the buffer layer
         buffer = uf.getLegendLayerByName(self.iface, "Buffers")
-        # use the selected layer for cutting
+        # use the buurten layer
         buurten = uf.getLegendLayerByName(self.iface, "buurten")
-        # print buurten.featureCount()
+
         #if there are buffers, do something
         if buffer.featureCount() > 0:
-            non_services = {}
             # get the intersections between the two layers
             nonservice_areas = uf.getFeaturesByIntersection(buurten, buffer, False)
             print len(nonservice_areas)
@@ -221,8 +223,13 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     ## Volgens mij gaat het hier mis. Op regel 215 maak je een lijst, maar er komt niks in die lijst als ik het goed zie.
     ## Terwijl regel 220 wel laat zien (zie python console) dat er iets gebeurd. Volgens mij hoeven we alleen elk losse
     ## item in de lijst te zetten en die lijst naar de layer te schrijven. Laten we daar morgen ff naar kijken!
-            nonservice_layer = uf.getLegendLayerByName(self.iface, "Non service")
 
+    ## Je hebt gelijk. Als je kijk naar de buffer wordt er gebruik gemaakt van een dictionary.
+    ## Terwijl we nu te maken hebben met een lijst
+    ## Misschien lukt het eenvoudig met een lijst, dit heb ik geprobeerd. zie onderstaand
+            #use the Non service layer (if it exists)
+            nonservice_layer = uf.getLegendLayerByName(self.iface, "Non service")
+            #create new non service layer
             if not nonservice_layer:
                 attribs = ['id', 'random_values']
                 types = [QtCore.QVariant.String, QtCore.QVariant.String]
@@ -232,12 +239,19 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             geoms = []
             values = []
             random_value = 1
-            for nonservice_area in non_services.iteritems():
+    ## Onderstaand gaat (nog) niet goed.
+    ## de lists: geoms en values worden gevuld, maar niet juist weggeschreven bij insertTempFeatures
+            nr_list = list(enumerate(nonservice_areas))
+            print nr_list
+            for item in nr_list:
                 # each non service area has an id
-                geoms.append(nonservice_area[1])
+                geoms.append(item[1])
                 # in the case of values, it expects a list of multiple values in each item - list of lists
-                values.append([nonservice_area[0], random_value])
+                values.append([item[0], random_value])
+            print 'geoms intersect', geoms
+            print 'values intersect', values
             uf.insertTempFeatures(nonservice_layer, geoms, values)
+
             self.refreshCanvas(nonservice_layer)
 
 

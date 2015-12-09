@@ -44,7 +44,7 @@
          </layout>
         </item>
         <item>
-         <layout class="QGridLayout" name="gridLayout_3" columnstretch="0,0,0">
+         <layout class="QGridLayout" name="gridLayout_3" columnstretch="0,0">
           <item row="1" column="1">
            <widget class="QComboBox" name="selectAttributeCombo"/>
           </item>
@@ -112,6 +112,13 @@
          <widget class="QPushButton" name="bufferButton">
           <property name="text">
            <string>Create buffer</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QPushButton" name="NonSerivceButton">
+          <property name="text">
+           <string>Create non serivce areas</string>
           </property>
          </widget>
         </item>

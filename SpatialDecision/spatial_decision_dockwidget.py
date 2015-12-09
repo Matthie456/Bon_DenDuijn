@@ -166,7 +166,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def calculateBuffer(self):
         # use the global variables radius and transittypes???
-        radius = 800
+        radius = 1200
         transittypes = ('rail','metro')
 
         uf.selectFeaturesByExpression(self.getSelectedLayer(),"network in {}".format(transittypes))

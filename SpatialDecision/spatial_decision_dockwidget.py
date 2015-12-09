@@ -57,6 +57,10 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # define globals
         self.iface = iface
         self.canvas = self.iface.mapCanvas()
+        if self.SelectUserGroupCombo.currentText() == 'Students':
+            radius = 800
+            transittypes = ('rail','metro')
+            print radius, transittypes, "tekst"
 
         # set up GUI operation signals
         # data
@@ -84,10 +88,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # initialisation
         self.updateLayers()
         #self.SelectUserGroupCombo.currentIndexChanged(const QString&)
-        if self.SelectUserGroupCombo.currentText() == 'Students':
-            radius = 800
-            transittypes = ['train', 'bus', 'ferry','metro','tram']
-            print radius, transittypes
+
 
         print "Plugin loaded!"
 
@@ -164,16 +165,16 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     # buffer functions
 
     def calculateBuffer(self):
-        # origins = self.getSelectedLayer().selectedFeatures()
-        uf.selectFeaturesByExpression(self.getSelectedLayer(),"network = 'rail'")
+        # use the global variables radius and transittypes???
+        radius = 800
+        transittypes = ('rail','metro')
+
+        uf.selectFeaturesByExpression(self.getSelectedLayer(),"network in {}".format(transittypes))
         origins = self.getSelectedLayer().selectedFeatures()
         layer = self.getSelectedLayer()
 
-        # select all features:
-        # origins =self.getSelectedLayer().getFeatures()
-        # layer = self.getSelectedLayer()
         if origins > 0:
-            cutoff_distance = 200
+            cutoff_distance = radius
             buffers = {}
             for point in origins:
                 geom = point.geometry()

@@ -377,7 +377,7 @@ def getFeaturesByIntersection(base_layer, intersect_layer, crosses):
         append = not crosses
         base_geom = QgsGeometry(feat.geometry())
         for intersect in intersect_geom:
-            if base_geom.intersects(intersect):
+            if base_geom.intersesct(intersect):
                 append = crosses
                 break
         if append:
@@ -713,6 +713,7 @@ def getDBLayerPrimaryKey(layer):
 def createTempLayer(name, geometry, srid, attributes, types):
     #geometry can be 'POINT', 'LINESTRING' or 'POLYGON' or the 'MULTI' version of the previous
     vlayer = QgsVectorLayer('%s?crs=EPSG:%s'% (geometry, srid), name, "memory")
+    print name
     provider = vlayer.dataProvider()
     #create the required fields
     if attributes:
@@ -736,19 +737,14 @@ def loadTempLayer(layer):
 def insertTempFeatures(layer, coordinates, attributes):
     provider = layer.dataProvider()
     geometry_type = provider.geometryType()
-    print "geo-Type", geometry_type
     for i, geom in enumerate(coordinates):
         fet = QgsFeature()
         if geometry_type == 1:
             fet.setGeometry(QgsGeometry.fromPoint(geom))
         elif geometry_type == 2:
-            print 'geometry_type = 2'
-            print geom
             fet.setGeometry(QgsGeometry.fromPolyline(geom))
         # in the case of polygons, instead of coordinates we insert the geometry
         elif geometry_type == 3:
-            print 'geometry_type = 3'
-            print geom
             fet.setGeometry(geom)
         if attributes:
             fet.setAttributes(attributes[i])

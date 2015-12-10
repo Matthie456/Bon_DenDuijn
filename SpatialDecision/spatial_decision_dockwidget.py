@@ -75,7 +75,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # analysis
         self.bufferButton.clicked.connect(self.calculateBuffer)
         #click the button and create non service area
-        self.nonserviceButton.clicked.connect(self.symmmetricdifference())
+        self.nonserviceButton.clicked.connect(self.symmmetricdifference)
 
         # visualisation
 
@@ -218,15 +218,17 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         differencelayer =  uf.getLegendLayerByName(self.iface, 'Buffers')
         features1 = uf.getAllFeatures(inputlayer)
         features2 = uf.getAllFeatures(differencelayer)
+        print type(features1)
+
         geom1 = []
         geom2 = []
-        for feature in features1:
-            geom1.append(feature.geometry())
+        for feature in features1.iteritems():
+            geom1.append(feature[1].geometry())
 
-        for feature in features2:
-            geom2.append(feature.geometry())
+        for feature in features2.iteritems():
+            geom2.append(feature[1].geometry())
 
-        print geom1.unaryUnion()
+        print 
 
 
 

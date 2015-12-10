@@ -75,7 +75,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # analysis
         self.bufferButton.clicked.connect(self.calculateBuffer)
         #click the button and create non service area
-        self.nonserviceButton.clicked.connect(self.calculateIntersection)
+        self.nonserviceButton.clicked.connect(self.symmmetricdifference())
 
         # visualisation
 
@@ -206,109 +206,37 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             uf.insertTempFeatures(buffer_layer, geoms, values)
             self.refreshCanvas(buffer_layer)
 
-    #our intersection function
-    def calculateIntersection(self):
-        layer = self.getSelectedLayer() #deze heb ik eigenlijk enkel toegevoegd tbv createTempLayer
-        # use the buffer layer
-        buffer = uf.getLegendLayerByName(self.iface, "Buffers")
-        # use the buurten layer
-        buurten = uf.getLegendLayerByName(self.iface, "buurten")
-
-        #if there are buffers, do something
-        if buffer.featureCount() > 0:
-            # get the intersections between the two layers
-            nonservice_areas = uf.getFeaturesByIntersection(buurten, buffer, False)
-            print len(nonservice_areas)
-            print nonservice_areas
-    ## Volgens mij gaat het hier mis. Op regel 215 maak je een lijst, maar er komt niks in die lijst als ik het goed zie.
-    ## Terwijl regel 220 wel laat zien (zie python console) dat er iets gebeurd. Volgens mij hoeven we alleen elk losse
-    ## item in de lijst te zetten en die lijst naar de layer te schrijven. Laten we daar morgen ff naar kijken!
-
-    ## Je hebt gelijk. Als je kijk naar de buffer wordt er gebruik gemaakt van een dictionary.
-    ## Terwijl we nu te maken hebben met een lijst
-    ## Misschien lukt het eenvoudig met een lijst, dit heb ik geprobeerd. zie onderstaand
-            #use the Non service layer (if it exists)
-            nonservice_layer = uf.getLegendLayerByName(self.iface, "Non service")
-            #create new non service layer
-            if not nonservice_layer:
-                attribs = ['id', 'random_values']
-                types = [QtCore.QVariant.String, QtCore.QVariant.String]
-                nonservice_layer = uf.createTempLayer('Non service','POLYGON',layer.crs().postgisSrid(), attribs, types)
-                uf.loadTempLayer(nonservice_layer)
-            # insert non service areas
-            geoms = []
-            values = []
-            random_value = 1
-    ## Onderstaand gaat (nog) niet goed.
-    ## de lists: geoms en values worden gevuld, maar niet juist weggeschreven bij insertTempFeatures
-            nr_list = list(enumerate(nonservice_areas))
-            print nr_list
-            for item in nr_list:
-                # each non service area has an id
-                geoms.append(item[1])
-                # in the case of values, it expects a list of multiple values in each item - list of lists
-                values.append([item[0], random_value])
-            print 'geoms intersect', geoms
-            print 'values intersect', values
-            uf.insertTempFeatures(nonservice_layer, geoms, values)
-
-            self.refreshCanvas(nonservice_layer)
-
-
-            """if intersections:
-                # store the intersection geometries results in temporary layer called "Intersections"
-                intersection_layer = uf.getLegendLayerByName(self.iface, "Intersections")
-                # create one if it doesn't exist
-                if not intersection_layer:
-                    geom_type = intersections[0].type()
-                    print intersections[0]
-                    print geom_type
-                    if geom_type == 1:
-                        intersection_layer = uf.createTempLayer('Intersections','POINT',layer.crs().postgisSrid(), [], [])
-                    elif geom_type == 2:
-                        intersection_layer = uf.createTempLayer('Intersections','LINESTRING',layer.crs().postgisSrid(), [], [])
-                    elif geom_type == 3:
-                        intersection_layer = uf.createTempLayer('Intersections','POLYGON',layer.crs().postgisSrid(), [], [])
-                    uf.loadTempLayer(intersection_layer)
-                # insert buffer polygons
-                geoms = []
-                values = []
-                for intersect in intersections:
-                    # each buffer has an id and a geometry
-                    geoms.append(intersect)
-                uf.insertTempFeatures(intersection_layer, geoms, values)
-                self.refreshCanvas(intersection_layer)"""
-
-    #original code
-    """def calculateIntersection(self):
-        # use the buffer to cut from another layer
-        cutter = uf.getLegendLayerByName(self.iface, "Buffers")
-        # use the selected layer for cutting
+    # SymmDiff function
+    def symmmetricdifference (self):
         layer = self.getSelectedLayer()
-        if cutter.featureCount() > 0:
-            # get the intersections between the two layers
-            intersections = uf.getFeaturesIntersections(layer,cutter)
-            if intersections:
-                # store the intersection geometries results in temporary layer called "Intersections"
-                intersection_layer = uf.getLegendLayerByName(self.iface, "Intersections")
-                # create one if it doesn't exist
-                if not intersection_layer:
-                    geom_type = intersections[0].type()
-                    if geom_type == 1:
-                        intersection_layer = uf.createTempLayer('Intersections','POINT',layer.crs().postgisSrid(), [], [])
-                    elif geom_type == 2:
-                        intersection_layer = uf.createTempLayer('Intersections','LINESTRING',layer.crs().postgisSrid(), [], [])
-                    elif geom_type == 3:
-                        intersection_layer = uf.createTempLayer('Intersections','POLYGON',layer.crs().postgisSrid(), [], [])
-                    uf.loadTempLayer(intersection_layer)
-                # insert buffer polygons
-                geoms = []
-                values = []
-                for intersect in intersections:
-                    # each buffer has an id and a geometry
-                    geoms.append(intersect)
-                uf.insertTempFeatures(intersection_layer, geoms, values)
-                self.refreshCanvas(intersection_layer)"""
+        symmdiff_layer = uf.getLegendLayerByName(iface, 'Symmmetric Difference')
+        # create templayer if does not exist
+        if not symmdiff_layer:
+            attribs = ['id']
+            types = [QtCore.QVariant.String]
+            symmdiff_layer = uf.createTempLayer('Symmetric Difference', 'POLYGON', layer.crs().postgisSrid(), attribs, types)
+            uf.loadTempLayer(symmdiff_layer)
+
+        # calculate symmetric difference
+        inputlayer = uf.getLegendLayerByName(iface, 'buurten')
+        differencelayer =  uf.getLegendLayerByName(iface, 'Buffers')
+        features1 = uf.getAllFeatures(inputlayer)
+        features2 = uf.getAllFeatures(differencelayer)
+        geom1 = []
+        geom2 = []
+        for feature in features1:
+            geom1.append(feature.geometry())
+
+        for feature in features2:
+            geom2.append(feature.geometry())
+
+        print geom1.unaryUnion()
+
+
+
+
+
+
 
     # after adding features to layers needs a refresh (sometimes)
     def refreshCanvas(self, layer):

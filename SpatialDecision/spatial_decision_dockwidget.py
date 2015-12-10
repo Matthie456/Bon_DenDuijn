@@ -90,8 +90,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # initialisation
         self.updateLayers()
         #self.SelectUserGroupCombo.currentIndexChanged(const QString&)
-
-
         print "Plugin loaded!"
 
         #run simple tests
@@ -200,16 +198,14 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 geoms.append(buffer[1])
                 # in the case of values, it expects a list of multiple values in each item - list of lists
                 values.append([buffer[0],cutoff_distance, network])
-            print 'geoms buffer', geoms
-            print 'values buffer', values
-            print values[0][0]
+
             uf.insertTempFeatures(buffer_layer, geoms, values)
             self.refreshCanvas(buffer_layer)
 
     # SymmDiff function
     def symmmetricdifference (self):
-        layer = self.getSelectedLayer()
-        symmdiff_layer = uf.getLegendLayerByName(iface, 'Symmmetric Difference')
+        layer = uf.getLegendLayerByName(self.iface, 'panden')
+        symmdiff_layer = uf.getLegendLayerByName(self.iface, 'Symmmetric Difference')
         # create templayer if does not exist
         if not symmdiff_layer:
             attribs = ['id']
@@ -218,8 +214,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             uf.loadTempLayer(symmdiff_layer)
 
         # calculate symmetric difference
-        inputlayer = uf.getLegendLayerByName(iface, 'buurten')
-        differencelayer =  uf.getLegendLayerByName(iface, 'Buffers')
+        inputlayer = uf.getLegendLayerByName(self.iface, 'buurten')
+        differencelayer =  uf.getLegendLayerByName(self.iface, 'Buffers')
         features1 = uf.getAllFeatures(inputlayer)
         features2 = uf.getAllFeatures(differencelayer)
         geom1 = []

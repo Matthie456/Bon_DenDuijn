@@ -736,19 +736,14 @@ def loadTempLayer(layer):
 def insertTempFeatures(layer, coordinates, attributes):
     provider = layer.dataProvider()
     geometry_type = provider.geometryType()
-    print "geo-Type", geometry_type
     for i, geom in enumerate(coordinates):
         fet = QgsFeature()
         if geometry_type == 1:
             fet.setGeometry(QgsGeometry.fromPoint(geom))
         elif geometry_type == 2:
-            print 'geometry_type = 2'
-            print geom
             fet.setGeometry(QgsGeometry.fromPolyline(geom))
         # in the case of polygons, instead of coordinates we insert the geometry
         elif geometry_type == 3:
-            print 'geometry_type = 3'
-            print geom
             fet.setGeometry(geom)
         if attributes:
             fet.setAttributes(attributes[i])

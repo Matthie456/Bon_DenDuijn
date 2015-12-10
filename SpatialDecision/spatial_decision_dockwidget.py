@@ -168,7 +168,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # use the global variables radius and transittypes???
         radius = 1200
         transittypes = ('rail','metro')
-        network = 1
+        #network = 1
 
         uf.selectFeaturesByExpression(self.getSelectedLayer(),"network in {}".format(transittypes))
         origins = self.getSelectedLayer().selectedFeatures()
@@ -193,12 +193,16 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             # insert buffer polygons
             geoms = [] # geometries in a list
             values = [] #list of lists, consisting of 3 items. E.g. [[0L, 1200, 1],[...
+
+            fld_values = uf.getFieldValues(layer, 'network', True,"network in {}".format(transittypes))[0]
+            cnt = 0
+
             for buffer in buffers.iteritems():
                 # each buffer has an id and a geometry
                 geoms.append(buffer[1])
                 # in the case of values, it expects a list of multiple values in each item - list of lists
-                values.append([buffer[0],cutoff_distance, network])
-
+                values.append([buffer[0],cutoff_distance, fld_values[cnt]])
+                cnt += 1
             uf.insertTempFeatures(buffer_layer, geoms, values)
             self.refreshCanvas(buffer_layer)
 
@@ -228,7 +232,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         for feature in features2.iteritems():
             geom2.append(feature[1].geometry())
 
-        print
+        for geom in geom1:
+            print 'area: ', geom.area()
 
 
 

@@ -69,7 +69,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.openScenarioButton.clicked.connect(self.openScenario)
         self.saveScenarioButton.clicked.connect(self.saveScenario)
         self.selectLayerCombo.activated.connect(self.setSelectedLayer)
-        self.selectAttributeCombo.activated.connect(self.setSelectedAttribute)
+        self.selectAttributeCombo.hide() # activated.connect(self.setSelectedAttribute)
         # self.SelectUserGroupCombo.clicked.connect(self.functiehier)
 
         # analysis
@@ -228,7 +228,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         for feature in features2.iteritems():
             geom2.append(feature[1].geometry())
 
-        print 
+        print
 
 
 

@@ -57,10 +57,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # define globals
         self.iface = iface
         self.canvas = self.iface.mapCanvas()
-        if self.SelectUserGroupCombo.currentText() == 'Students':
-            radius = 800
-            transittypes = ('rail','metro')
-            print radius, transittypes, "tekst"
 
         # set up GUI operation signals
         # data
@@ -70,7 +66,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.saveScenarioButton.clicked.connect(self.saveScenario)
         self.selectLayerCombo.activated.connect(self.setSelectedLayer)
         self.selectAttributeCombo.hide() # activated.connect(self.setSelectedAttribute)
-        # self.SelectUserGroupCombo.clicked.connect(self.functiehier)
+        self.SelectUserGroupCombo.activated.connect(self.setSelectedUserGroup)
 
         # analysis
         self.bufferButton.clicked.connect(self.calculateBuffer)
@@ -159,16 +155,34 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         field_name = self.selectAttributeCombo.currentText()
         return field_name
 
+    def setSelectedUserGroup(self):
+        proj = QgsProject.instance()
+        if self.SelectUserGroupCombo.currentText() == 'Students':
+            proj.writeEntry("SpatialDecisionDockWidget", "radius", 800)
+            proj.writeEntry("SpatialDecisionDockWidget", "transittypes", "('rail','metro')")
+            myint = proj.readNumEntry("SpatialDecisionDockWidget", "radius")[0]
+        elif self.SelectUserGroupCombo.currentText() == 'Elderly':
+            proj.writeEntry("SpatialDecisionDockWidget", "radius", 400)
+            proj.writeEntry("SpatialDecisionDockWidget", "transittypes", "('rail','tram','ferry')")
+
+        elif self.SelectUserGroupCombo.currentText() == 'Adults':
+            proj.writeEntry("SpatialDecisionDockWidget", "radius", 600)[0]
+            proj.writeEntry("SpatialDecisionDockWidget", "transittypes", "('rail','metro','ferry')")
+            myint = proj.readNumEntry("SpatialDecisionDockWidget", "radius")[0]
+
 #######
 #    Analysis functions
 #######
     # buffer functions
 
     def calculateBuffer(self):
-        # use the global variables radius and transittypes???
-        radius = 1200
-        transittypes = ('rail','metro')
-        #network = 1
+
+        proj = QgsProject.instance()
+        cur_user = self.SelectUserGroupCombo.currentText()
+        print cur_user
+        radius = proj.readNumEntry("SpatialDecisionDockWidget", "radius")[0]
+        transittypes = proj.readEntry("SpatialDecisionDockWidget", "transittypes")[0]
+        network = 1
 
         uf.selectFeaturesByExpression(self.getSelectedLayer(),"network in {}".format(transittypes))
         origins = self.getSelectedLayer().selectedFeatures()
@@ -182,13 +196,14 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             for point in origins:
                 geom = point.geometry()
                 buffers[point.id()] = geom.buffer(cutoff_distance,12)
-            # store the buffer results in temporary layer called "Buffers"
-            buffer_layer = uf.getLegendLayerByName(self.iface, "Buffers")
+            # store the buffer results in temporary layer called "Buffers_[cur_user]"
+            print 'Buffers_{}'.format(cur_user)
+            buffer_layer = uf.getLegendLayerByName(self.iface, 'Buffer_{}'.format(cur_user))
             # create one if it doesn't exist
             if not buffer_layer:
                 attribs = ['id', 'distance', 'network']
                 types = [QtCore.QVariant.String, QtCore.QVariant.Double, QtCore.QVariant.String]
-                buffer_layer = uf.createTempLayer('Buffers','POLYGON',layer.crs().postgisSrid(), attribs, types)
+                buffer_layer = uf.createTempLayer('Buffers_{}'.format(cur_user),'POLYGON',layer.crs().postgisSrid(), attribs, types)
                 uf.loadTempLayer(buffer_layer)
             # insert buffer polygons
             geoms = [] # geometries in a list
@@ -219,10 +234,9 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         # calculate symmetric difference
         inputlayer = uf.getLegendLayerByName(self.iface, 'buurten')
-        differencelayer =  uf.getLegendLayerByName(self.iface, 'Buffers')
+        differencelayer =  uf.getLegendLayerByName(self.iface, 'Symmetric Difference')
         features1 = uf.getAllFeatures(inputlayer)
         features2 = uf.getAllFeatures(differencelayer)
-        print type(features1)
 
         geom1 = []
         geom2 = []
@@ -231,15 +245,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         for feature in features2.iteritems():
             geom2.append(feature[1].geometry())
-
-        for geom in geom1:
-            print 'area: ', geom.area()
-
-
-
-
-
-
 
     # after adding features to layers needs a refresh (sometimes)
     def refreshCanvas(self, layer):

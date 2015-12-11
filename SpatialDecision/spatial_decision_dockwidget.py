@@ -198,7 +198,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 buffers[point.id()] = geom.buffer(cutoff_distance,12)
             # store the buffer results in temporary layer called "Buffers_[cur_user]"
             print 'Buffers_{}'.format(cur_user)
-            buffer_layer = uf.getLegendLayerByName(self.iface, 'Buffer_{}'.format(cur_user))
+            buffer_layer = uf.getLegendLayerByName(self.iface, 'Buffers_{}'.format(cur_user))
             # create one if it doesn't exist
             if not buffer_layer:
                 attribs = ['id', 'distance', 'network']

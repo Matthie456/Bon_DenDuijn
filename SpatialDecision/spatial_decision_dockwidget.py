@@ -221,6 +221,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             print geoms
             uf.insertTempFeatures(buffer_layer, geoms, values)
             self.refreshCanvas(buffer_layer)
+            layer.removeSelection()
 
     # SymmDiff function
     def symmmetricdifference (self):

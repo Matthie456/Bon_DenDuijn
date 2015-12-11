@@ -87,8 +87,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         # initialisation
         self.updateLayers()
-        #self.SelectUserGroupCombo.currentIndexChanged(const QString&)
         print "Plugin loaded!"
+        print "{}/dissolve_results.shp".format(QgsProject.instance().homePath())
 
         #run simple tests
 
@@ -103,9 +103,12 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 #######
 #   Data functions
 #######
+
     def openScenario(self,filename=""):
         scenario_open = False
-        scenario_file = os.path.join('/Users/jorge/github/GEO1005','sample_data','time_test.qgs')
+        #scenario_file = os.path.join('/Users/jorge/github/GEO1005','sample_data','time_test.qgs')
+
+        scenario_file = os.path.join('{}'.format(QgsProject.instance().homePath()),'sample_data', 'projectfile.qgs')
         # check if file exists
         if os.path.isfile(scenario_file):
             self.iface.addProject(scenario_file)
@@ -162,19 +165,17 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         if self.SelectUserGroupCombo.currentText() == 'Students':
             proj.writeEntry("SpatialDecisionDockWidget", "radius", 800)
             proj.writeEntry("SpatialDecisionDockWidget", "transittypes", "('rail','metro')")
-            myint = proj.readNumEntry("SpatialDecisionDockWidget", "radius")[0]
         elif self.SelectUserGroupCombo.currentText() == 'Elderly':
             proj.writeEntry("SpatialDecisionDockWidget", "radius", 400)
             proj.writeEntry("SpatialDecisionDockWidget", "transittypes", "('rail','tram','ferry')")
-
         elif self.SelectUserGroupCombo.currentText() == 'Adults':
             proj.writeEntry("SpatialDecisionDockWidget", "radius", 600)[0]
             proj.writeEntry("SpatialDecisionDockWidget", "transittypes", "('rail','metro','ferry')")
-            myint = proj.readNumEntry("SpatialDecisionDockWidget", "radius")[0]
 
 #######
 #    Analysis functions
 #######
+
     # buffer functions
 
     def calculateBuffer(self):
@@ -184,7 +185,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         print cur_user
         radius = proj.readNumEntry("SpatialDecisionDockWidget", "radius")[0]
         transittypes = proj.readEntry("SpatialDecisionDockWidget", "transittypes")[0]
-        network = 1
 
         uf.selectFeaturesByExpression(self.getSelectedLayer(),"network in {}".format(transittypes))
         origins = self.getSelectedLayer().selectedFeatures()
@@ -198,7 +198,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 geom = point.geometry()
                 buffers[point.id()] = geom.buffer(cutoff_distance,12)
             # store the buffer results in temporary layer called "Buffers_[cur_user]"
-            print 'Buffers_{}'.format(cur_user)
             buffer_layer = uf.getLegendLayerByName(self.iface, 'Buffers_{}'.format(cur_user))
             # create one if it doesn't exist
             if not buffer_layer:
@@ -233,14 +232,15 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         symmdiff_layer = uf.getLegendLayerByName(self.iface, 'Symmmetric Difference')
         # create templayer if does not exist
-        if not symmdiff_layer:
-            attribs = ['id']
-            types = [QtCore.QVariant.String]
-            symmdiff_layer = uf.createTempLayer('Symmetric Difference', 'POLYGON', layer.crs().postgisSrid(), attribs, types)
-            uf.loadTempLayer(symmdiff_layer)
+        #if not symmdiff_layer:
+            #attribs = ['test']
+            #types = [QtCore.QVariant.String]
+            #symmdiff_layer = uf.createTempLayer('Symmetric Difference', 'POLYGON', layer.crs().postgisSrid(), attribs, types)
+            #uf.loadTempLayer(symmdiff_layer)
 
-        symmdiff = processing.runandload('qgis:symmetricaldifference', buffer_layer, difference_layer, None)
-        
+        save_path = "%s/Symmetric Difference" % QgsProject.instance().homePath()
+        symmdiff = processing.runandload('qgis:symmetricaldifference', buffer_layer, difference_layer, save_path)
+
 
 
     def accessibility(self):

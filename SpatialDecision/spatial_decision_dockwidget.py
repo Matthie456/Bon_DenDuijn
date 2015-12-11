@@ -30,6 +30,7 @@ import resources
 import os
 import os.path
 import random
+import processing
 
 from . import utility_functions as uf
 
@@ -225,7 +226,23 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     # SymmDiff function
     def symmmetricdifference (self):
-        layer = uf.getLegendLayerByName(self.iface, 'panden')
+        layer = self.getSelectedLayer()
+        cur_user = self.SelectUserGroupCombo.currentText()
+        buffer_layer = uf.getLegendLayerByName(self.iface, 'Buffers') #_{}'.format(cur_user))
+        difference_layer = uf.getLegendLayerByName(self.iface, 'buurten')
+
+        symmdiff_layer = uf.getLegendLayerByName(self.iface, 'Symmmetric Difference')
+        # create templayer if does not exist
+        if not symmdiff_layer:
+            attribs = ['id']
+            types = [QtCore.QVariant.String]
+            symmdiff_layer = uf.createTempLayer('Symmetric Difference', 'POLYGON', layer.crs().postgisSrid(), attribs, types)
+            uf.loadTempLayer(symmdiff_layer)
+
+        symmdiff = processing.runandload('qgis:symmetricaldifference', buffer_layer, difference_layer, None)
+        print type(symmdiff)
+
+        """layer = uf.getLegendLayerByName(self.iface, 'panden')
         symmdiff_layer = uf.getLegendLayerByName(self.iface, 'Symmmetric Difference')
         # create templayer if does not exist
         if not symmdiff_layer:
@@ -249,7 +266,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             geom2.append(feature[1].geometry())
 
         #for geom in geom1:
-            #print 'area: ', geom.area()
+            #print 'area: ', geom.area()"""
 
     def accessibility(self):
         #transittypes = ('rail','metro')

@@ -240,33 +240,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             uf.loadTempLayer(symmdiff_layer)
 
         symmdiff = processing.runandload('qgis:symmetricaldifference', buffer_layer, difference_layer, None)
-        print type(symmdiff)
+        
 
-        """layer = uf.getLegendLayerByName(self.iface, 'panden')
-        symmdiff_layer = uf.getLegendLayerByName(self.iface, 'Symmmetric Difference')
-        # create templayer if does not exist
-        if not symmdiff_layer:
-            attribs = ['id']
-            types = [QtCore.QVariant.String]
-            symmdiff_layer = uf.createTempLayer('Symmetric Difference', 'POLYGON', layer.crs().postgisSrid(), attribs, types)
-            uf.loadTempLayer(symmdiff_layer)
-
-        # calculate symmetric difference
-        inputlayer = uf.getLegendLayerByName(self.iface, 'buurten')
-        differencelayer =  uf.getLegendLayerByName(self.iface, 'Symmetric Difference')
-        features1 = uf.getAllFeatures(inputlayer)
-        features2 = uf.getAllFeatures(differencelayer)
-
-        geom1 = []
-        geom2 = []
-        for feature in features1.iteritems():
-            geom1.append(feature[1].geometry())
-
-        for feature in features2.iteritems():
-            geom2.append(feature[1].geometry())
-
-        #for geom in geom1:
-            #print 'area: ', geom.area()"""
 
     def accessibility(self):
         #transittypes = ('rail','metro')

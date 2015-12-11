@@ -218,7 +218,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 # in the case of values, it expects a list of multiple values in each item - list of lists
                 values.append([buffer[0],cutoff_distance, fld_values[cnt]])
                 cnt += 1
-            print geoms
+            #print geoms
             uf.insertTempFeatures(buffer_layer, geoms, values)
             self.refreshCanvas(buffer_layer)
 
@@ -247,15 +247,20 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         for feature in features2.iteritems():
             geom2.append(feature[1].geometry())
 
-        for geom in geom1:
-            print 'area: ', geom.area()
+        #for geom in geom1:
+            #print 'area: ', geom.area()
 
     def accessibility(self):
-        transittypes = ('rail','metro')
-        uf.selectFeaturesByExpression(self.getSelectedLayer(),"network in {}".format(transittypes))
-        origins = self.getSelectedLayer().selectedFeatures() #list with user group transporttypes
+        #transittypes = ('rail','metro')
+        #uf.selectFeaturesByExpression(self.getSelectedLayer(),"network in {}".format(transittypes))
+        #origins = self.getSelectedLayer().selectedFeatures() #list with user group transporttypes
+        #uf.getLegendLayerByName(self.iface, "vbo_woonfunctie")
 
-        if origins > 0:
+        all_stops_layer = uf.getLegendLayerByName(self.iface, "transit_stops_adam")
+        all_stops = uf.getAllFeatures(all_stops_layer) #list with vbo_woonfunctie points
+
+        all_stops_list = list(all_stops.values())
+        if all_stops_list > 0:
             layer = self.getSelectedLayer()
             #check if the layer exists
             access_layer = uf.getLegendLayerByName(self.iface, "Accessibility")
@@ -272,11 +277,10 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             #print 'buffers: ', buffers
             buffer_list = list(buffers.values())
             #print buffer_list
-            for point in origins:
+            for point in all_stops_list:
                 cnt = 0
-                #geoms.append(point.geometry())
-                #geoms.append(point)
-                geoms.append(QgsGeometry(point.geometry()))
+                geom = QgsGeometry(point.geometry())
+                geoms.append(geom.asPoint())
                 for buffer in buffer_list:
                     base_geom = QgsGeometry(point.geometry())
                     #print point
@@ -287,9 +291,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                         cnt +=1
                     else:
 		                continue
-                print cnt
                 values.append([cnt])
-            print geoms
             uf.insertTempFeatures(access_layer, geoms, values)
             self.refreshCanvas(access_layer)
 

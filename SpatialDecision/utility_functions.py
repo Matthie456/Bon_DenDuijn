@@ -361,6 +361,13 @@ def getAllFeatureData(layer):
                 symbols = {feature.id(): QColor(200,200,200,255)}
     return data, symbols
 
+"""def nodeinrange(base_feature, intersect_feature):
+    #base_geom = QgsGeometry(base_feature.geometry())
+	#intersect_geom = QgsGeometry(intersect_feature.geometry())
+	#if base_geom.intersects(intersect_geom):
+		#return True
+	#else:
+		#return False"""
 
 def getFeaturesByIntersection(base_layer, intersect_layer, crosses):
     features = []

@@ -76,6 +76,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.bufferButton.clicked.connect(self.calculateBuffer)
         #click the button and create non service area
         self.nonserviceButton.clicked.connect(self.symmmetricdifference)
+        self.accessibilityButton.clicked.connect(self.accessibility)
 
         # visualisation
 
@@ -166,7 +167,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def calculateBuffer(self):
         # use the global variables radius and transittypes???
-        radius = 1200
+        radius = 1500
         transittypes = ('rail','metro')
         #network = 1
 
@@ -174,12 +175,12 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         origins = self.getSelectedLayer().selectedFeatures()
         layer = self.getSelectedLayer()
 
-        #getFieldValues(layer, network)
 
         if origins > 0:
             cutoff_distance = radius
             buffers = {}
             for point in origins:
+                print 'POINT', point
                 geom = point.geometry()
                 buffers[point.id()] = geom.buffer(cutoff_distance,12)
             # store the buffer results in temporary layer called "Buffers"
@@ -200,9 +201,11 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             for buffer in buffers.iteritems():
                 # each buffer has an id and a geometry
                 geoms.append(buffer[1])
+                #print 'BUFFER TYPE', buffer[1]
                 # in the case of values, it expects a list of multiple values in each item - list of lists
                 values.append([buffer[0],cutoff_distance, fld_values[cnt]])
                 cnt += 1
+            print geoms
             uf.insertTempFeatures(buffer_layer, geoms, values)
             self.refreshCanvas(buffer_layer)
 
@@ -235,8 +238,48 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         for geom in geom1:
             print 'area: ', geom.area()
 
+    def accessibility(self):
+        transittypes = ('rail','metro')
+        uf.selectFeaturesByExpression(self.getSelectedLayer(),"network in {}".format(transittypes))
+        origins = self.getSelectedLayer().selectedFeatures() #list with user group transporttypes
 
-
+        if origins > 0:
+            layer = self.getSelectedLayer()
+            #check if the layer exists
+            access_layer = uf.getLegendLayerByName(self.iface, "Accessibility")
+            # create one if it doesn't exist
+            if not access_layer:
+                attribs = ['number of overlapping buffers']
+                types = [QtCore.QVariant.Double]
+                access_layer = uf.createTempLayer('Accessibility','POINT',layer.crs().postgisSrid(), attribs, types)
+                uf.loadTempLayer(access_layer)
+            geoms = []
+            values = []
+            buffer_layer = uf.getLegendLayerByName(self.iface, "Buffers")
+            buffers = uf.getAllFeatures(buffer_layer)
+            #print 'buffers: ', buffers
+            buffer_list = list(buffers.values())
+            #print buffer_list
+            for point in origins:
+                cnt = 0
+                #geoms.append(point.geometry())
+                #geoms.append(point)
+                geoms.append(QgsGeometry(point.geometry()))
+                for buffer in buffer_list:
+                    base_geom = QgsGeometry(point.geometry())
+                    #print point
+                    #print base_geom
+                    #print buffer
+                    intersect_geom = QgsGeometry(buffer.geometry())
+                    if base_geom.intersects(intersect_geom):
+                        cnt +=1
+                    else:
+		                continue
+                print cnt
+                values.append([cnt])
+            print geoms
+            uf.insertTempFeatures(access_layer, geoms, values)
+            self.refreshCanvas(access_layer)
 
 
 

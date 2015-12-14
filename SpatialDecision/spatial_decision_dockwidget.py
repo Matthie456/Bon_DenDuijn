@@ -204,6 +204,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 attribs = ['id', 'distance', 'network']
                 types = [QtCore.QVariant.String, QtCore.QVariant.Double, QtCore.QVariant.String]
                 buffer_layer = uf.createTempLayer('Buffers_{}'.format(cur_user),'POLYGON',layer.crs().postgisSrid(), attribs, types)
+                buffer_layer.setLayerName('Buffers_{}'.format(cur_user))
                 uf.loadTempLayer(buffer_layer)
             # insert buffer polygons
             geoms = [] # geometries in a list
@@ -227,7 +228,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def symmmetricdifference (self):
         layer = self.getSelectedLayer()
         cur_user = self.SelectUserGroupCombo.currentText()
-        buffer_layer = uf.getLegendLayerByName(self.iface, 'Buffers') #_{}'.format(cur_user))
+        buffer_layer = uf.getLegendLayerByName(self.iface, 'Buffers_{}'.format(cur_user))
         difference_layer = uf.getLegendLayerByName(self.iface, 'buurten')
 
         symmdiff_layer = uf.getLegendLayerByName(self.iface, 'Symmmetric Difference')
@@ -240,6 +241,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         save_path = "%s/Symmetric Difference" % QgsProject.instance().homePath()
         symmdiff = processing.runandload('qgis:symmetricaldifference', buffer_layer, difference_layer, save_path)
+        symmdiff.setLayerName = ('Symmetric Difference')
 
 
 

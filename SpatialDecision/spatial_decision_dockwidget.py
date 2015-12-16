@@ -241,14 +241,13 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         save_path = "%s/Symmetric Difference" % QgsProject.instance().homePath()
         symmdiff = processing.runandload('qgis:symmetricaldifference', buffer_layer, difference_layer, save_path)
-        symmdiff.setLayerName = ('Symmetric Difference')
 
 
 
     def accessibility(self):
 
         cur_user = self.SelectUserGroupCombo.currentText()
-        all_stops_layer = uf.getLegendLayerByName(self.iface, "TOP10NL_25O_Gebouwen_centroids_woonfunctie")
+        all_stops_layer = uf.getLegendLayerByName(self.iface, "Gebouwen_Centroids_clipped")
         all_stops = uf.getAllFeatures(all_stops_layer) #list with vbo_woonfunctie points
 
         all_stops_list = list(all_stops.values())

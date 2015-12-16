@@ -229,15 +229,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         layer = self.getSelectedLayer()
         cur_user = self.SelectUserGroupCombo.currentText()
         buffer_layer = uf.getLegendLayerByName(self.iface, 'Buffers_{}'.format(cur_user))
-        difference_layer = uf.getLegendLayerByName(self.iface, 'buurten')
-
-        symmdiff_layer = uf.getLegendLayerByName(self.iface, 'Symmmetric Difference')
-        # create templayer if does not exist
-        #if not symmdiff_layer:
-            #attribs = ['test']
-            #types = [QtCore.QVariant.String]
-            #symmdiff_layer = uf.createTempLayer('Symmetric Difference', 'POLYGON', layer.crs().postgisSrid(), attribs, types)
-            #uf.loadTempLayer(symmdiff_layer)
+        difference_layer = uf.getLegendLayerByName(self.iface, 'Buurten_clipped')
 
         save_path = "%s/Symmetric Difference" % QgsProject.instance().homePath()
         symmdiff = processing.runandload('qgis:symmetricaldifference', buffer_layer, difference_layer, save_path)

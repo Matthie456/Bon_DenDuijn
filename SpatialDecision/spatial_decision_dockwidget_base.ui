@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="sampleWidgets">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="InputTab">
        <attribute name="title">
@@ -160,6 +160,13 @@
            <widget class="QPushButton" name="nonserviceButton">
             <property name="text">
              <string>Create non service areas</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="accessibilitynonserviceButton">
+            <property name="text">
+             <string>Check need for public transport</string>
             </property>
            </widget>
           </item>

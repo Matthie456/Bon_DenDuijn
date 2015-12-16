@@ -75,6 +75,9 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         #click the button and create non service area
         self.nonserviceButton.clicked.connect(self.symmmetricdifference)
         self.accessibilityButton.clicked.connect(self.accessibility)
+        self.accessibilitynonserviceButton.clicked.connect(self.accessibilitynonservice)
+
+
 
         # visualisation
 
@@ -221,6 +224,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 values.append([buffer[0],cutoff_distance, fld_values[cnt]])
                 cnt += 1
             #print geoms
+            print 'BUFFERS GEOMS', geoms
+            print 'BUFFERS VALUES', values
             uf.insertTempFeatures(buffer_layer, geoms, values)
             self.refreshCanvas(buffer_layer)
             layer.removeSelection()
@@ -240,11 +245,11 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def accessibility(self):
 
         cur_user = self.SelectUserGroupCombo.currentText()
-        all_stops_layer = uf.getLegendLayerByName(self.iface, "Gebouwen_Centroids_clipped")
-        all_stops = uf.getAllFeatures(all_stops_layer) #list with vbo_woonfunctie points
+        all_houses_layer = uf.getLegendLayerByName(self.iface, "Gebouwen_Centroids_clipped")
+        all_houses = uf.getAllFeatures(all_houses_layer) #list with residential housing as points
 
-        all_stops_list = list(all_stops.values())
-        if all_stops_list > 0:
+        all_houses_list = list(all_houses.values())
+        if all_houses_list > 0:
             layer = self.getSelectedLayer()
             #check if the layer exists
             access_layer = uf.getLegendLayerByName(self.iface, "Accessibility")
@@ -261,7 +266,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             #print 'buffers: ', buffers
             buffer_list = list(buffers.values())
             #print buffer_list
-            for point in all_stops_list:
+            for point in all_houses_list:
                 cnt = 0
                 geom = QgsGeometry(point.geometry())
                 geoms.append(geom.asPoint())
@@ -279,7 +284,52 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             uf.insertTempFeatures(access_layer, geoms, values)
             self.refreshCanvas(access_layer)
 
+    def accessibilitynonservice(self):
 
+        #cur_user = self.SelectUserGroupCombo.currentText()
+        all_houses_layer = uf.getLegendLayerByName(self.iface, "Gebouwen_Centroids_clipped")
+        all_houses = uf.getAllFeatures(all_houses_layer) #list with residential houses as points
+
+        all_houses_list = list(all_houses.values())
+        #print all_houses_list
+        if all_houses_list > 0:
+            layer = self.getSelectedLayer()
+            #check if the layer exists
+            access_nonservice_layer = uf.getLegendLayerByName(self.iface, "Lack of accessibility")
+            # create one if it doesn't exist
+            if not access_nonservice_layer:
+                attribs = ['number of houses']
+                types = [QtCore.QVariant.Double]
+                access_nonservice_layer = uf.createTempLayer('Lack of accessibility','POLYGON',layer.crs().postgisSrid(), attribs, types)
+                uf.loadTempLayer(access_nonservice_layer)
+            geoms = []
+            values = []
+            symdiff_layer = uf.getLegendLayerByName(self.iface, 'Symmetrical difference')
+            symdiff_features = uf.getAllFeatures(symdiff_layer)
+            #print 'buffers: ', buffers
+            #print symdiff_features
+            symdiff_features_list = list(symdiff_features.values())
+
+            #print buffer_list
+            for symdiff_feature in symdiff_features_list:
+                cnt = 0
+                geom = QgsGeometry(symdiff_feature.geometry())
+                #print geom
+                geoms.append(geom)
+                #geoms.append(geom.asPoint())
+                for house in all_houses_list:
+                    base_geom = QgsGeometry(symdiff_feature.geometry())
+                    intersect_geom = QgsGeometry(house.geometry())
+                    if base_geom.intersects(intersect_geom):
+                        cnt +=1
+                    else:
+		                continue
+                    print cnt
+                values.append([cnt])
+            print 'ACCES NS GEOMS', geoms
+            print 'ACCES NS VALUES', values
+            uf.insertTempFeatures(access_nonservice_layer, geoms, values)
+            self.refreshCanvas(access_nonservice_layer)
 
 
     # after adding features to layers needs a refresh (sometimes)

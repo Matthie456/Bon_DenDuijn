@@ -66,7 +66,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.openScenarioButton.clicked.connect(self.openScenario)
         self.saveScenarioButton.clicked.connect(self.saveScenario)
         self.selectLayerCombo.activated.connect(self.setSelectedLayer)
-        self.selectAttributeCombo.hide() # activated.connect(self.setSelectedAttribute)
+        self.selectAttributeCombo.hide()# activated.connect(self.setSelectedAttribute)
+        self.selectAttributeLabel.hide()
         self.SelectUserGroupCombo.activated.connect(self.setSelectedUserGroup)
 
         # analysis

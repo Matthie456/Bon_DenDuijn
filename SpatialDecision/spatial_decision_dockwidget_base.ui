@@ -6,19 +6,19 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>316</width>
-    <height>505</height>
+    <width>376</width>
+    <height>500</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>SDSS Template</string>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="1">
+   <layout class="QVBoxLayout" name="verticalLayout_5">
+    <item>
      <widget class="QTabWidget" name="sampleWidgets">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="InputTab">
        <attribute name="title">
@@ -54,7 +54,7 @@
           <item row="0" column="0">
            <widget class="QLabel" name="selectLayerLabel">
             <property name="text">
-             <string>Select layer:</string>
+             <string>Select transit layer:</string>
             </property>
            </widget>
           </item>
@@ -76,12 +76,12 @@
            <widget class="QComboBox" name="SelectUserGroupCombo">
             <item>
              <property name="text">
-              <string>Students</string>
+              <string>Elderly</string>
              </property>
             </item>
             <item>
              <property name="text">
-              <string>Elderly</string>
+              <string>Students</string>
              </property>
             </item>
            </widget>
@@ -107,27 +107,76 @@
        <attribute name="title">
         <string>Analysis</string>
        </attribute>
-       <layout class="QFormLayout" name="formLayout_4">
-        <item row="1" column="1">
+       <layout class="QVBoxLayout" name="verticalLayout_6">
+        <item>
          <widget class="QPushButton" name="bufferButton">
           <property name="text">
-           <string>Create buffer</string>
+           <string>Create buffers</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
-         <widget class="QPushButton" name="nonserviceButton">
-          <property name="text">
-           <string>Create non service areas</string>
-          </property>
-         </widget>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>Check accessibility based on residential housing</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <item>
+             <widget class="QPushButton" name="accessibilityButton">
+              <property name="text">
+               <string>Check accessibilty</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="comboBox"/>
+            </item>
+           </layout>
+          </item>
+         </layout>
         </item>
-        <item row="3" column="1">
-         <widget class="QPushButton" name="accessibilityButton">
-          <property name="text">
-           <string>Check accessibilty</string>
-          </property>
-         </widget>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_4">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>Select neighborhood layer</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="comboBox_2"/>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QPushButton" name="nonserviceButton">
+            <property name="text">
+             <string>Create non service areas</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>

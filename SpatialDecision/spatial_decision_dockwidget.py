@@ -163,8 +163,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def setSelectedUserGroup(self):
         proj = QgsProject.instance()
         if self.SelectUserGroupCombo.currentText() == 'Students':
-            proj.writeEntry("SpatialDecisionDockWidget", "radius", 800)
-            proj.writeEntry("SpatialDecisionDockWidget", "transittypes", "('rail','metro')")
+            proj.writeEntry("SpatialDecisionDockWidget", "radius", 1200)
+            proj.writeEntry("SpatialDecisionDockWidget", "transittypes", "('rail','metro', 'tram')")
         elif self.SelectUserGroupCombo.currentText() == 'Elderly':
             proj.writeEntry("SpatialDecisionDockWidget", "radius", 400)
             proj.writeEntry("SpatialDecisionDockWidget", "transittypes", "('rail','tram','ferry')")
@@ -246,12 +246,9 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
 
     def accessibility(self):
-        #transittypes = ('rail','metro')
-        #uf.selectFeaturesByExpression(self.getSelectedLayer(),"network in {}".format(transittypes))
-        #origins = self.getSelectedLayer().selectedFeatures() #list with user group transporttypes
-        #uf.getLegendLayerByName(self.iface, "vbo_woonfunctie")
 
-        all_stops_layer = uf.getLegendLayerByName(self.iface, "transit_stops_adam")
+        cur_user = self.SelectUserGroupCombo.currentText()
+        all_stops_layer = uf.getLegendLayerByName(self.iface, "TOP10NL_25O_Gebouwen_centroids_woonfunctie")
         all_stops = uf.getAllFeatures(all_stops_layer) #list with vbo_woonfunctie points
 
         all_stops_list = list(all_stops.values())
@@ -267,7 +264,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 uf.loadTempLayer(access_layer)
             geoms = []
             values = []
-            buffer_layer = uf.getLegendLayerByName(self.iface, "Buffers")
+            buffer_layer = uf.getLegendLayerByName(self.iface, 'Buffers_{}'.format(cur_user))
             buffers = uf.getAllFeatures(buffer_layer)
             #print 'buffers: ', buffers
             buffer_list = list(buffers.values())

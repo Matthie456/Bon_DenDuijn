@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>378</width>
+    <width>388</width>
     <height>494</height>
    </rect>
   </property>
@@ -139,14 +139,14 @@
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="checkaccessibilityLabel">
-            <property name="text">
-             <string>Check accessibility based on residential housing</string>
-            </property>
-           </widget>
-          </item>
-          <item>
            <layout class="QVBoxLayout" name="verticalLayout_4">
+            <item>
+             <widget class="QLabel" name="checkaccessibilityLabel">
+              <property name="text">
+               <string>Check accessibility based on residential housing</string>
+              </property>
+             </widget>
+            </item>
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_4">
               <item>

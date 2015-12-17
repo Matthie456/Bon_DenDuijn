@@ -339,7 +339,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         all_houses_list = list(all_houses.values())
         if all_houses_list > 0:
-            layer = self.getBuildinglayer()
+            layer = uf.getLegendLayerByName(self.iface, 'Gebouwen_clipped')
             #check if the layer exists
             access_nonservice_layer = uf.getLegendLayerByName(self.iface, "Lack of accessibility")
             # create one if it doesn't exist
@@ -350,22 +350,32 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 uf.loadTempLayer(access_nonservice_layer)
             geoms = []
             values = []
-            symdiff_layer = uf.getLegendLayerByName(self.iface, 'Symmetric Difference.shp')
+            symdiff_layer = uf.getLegendLayerByName(self.iface, 'Buurten_clipped')
             symdiff_features = uf.getAllFeatures(symdiff_layer)
             symdiff_features_list = list(symdiff_features.values())
+            fld_values = uf.getFieldValues(layer, 'ADRESSCNT')[0]
             for symdiff_feature in symdiff_features_list:
-                cnt = 0
                 geom = QgsGeometry(symdiff_feature.geometry())
                 geoms.append(geom)
+                house_id = 0
+                sumtotal = 0
                 for house in all_houses_list:
+                    adress_cnt = fld_values[house_id]
+                    print adress_cnt
+                    house_id += 1
                     base_geom = QgsGeometry(symdiff_feature.geometry())
                     intersect_geom = QgsGeometry(house.geometry())
                     if base_geom.intersects(intersect_geom):
-                        cnt +=1
+                        if adress_cnt == NULL:
+                            print 'adress cnt == NULL'
+                            sumtotal = sumtotal + 0
+                        else:
+                            print 'adress_cnt is a int'
+                            sumtotal = sumtotal + adress_cnt
                     else:
-		                continue
+                        continue
 
-                values.append([cnt])
+                values.append([sumtotal])
             uf.insertTempFeatures(access_nonservice_layer, geoms, values)
             self.refreshCanvas(access_nonservice_layer)
 

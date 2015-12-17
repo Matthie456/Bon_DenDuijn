@@ -339,7 +339,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         all_houses_list = list(all_houses.values())
         if all_houses_list > 0:
-            layer = uf.getLegendLayerByName(self.iface, 'Gebouwen_clipped')
+            layer = uf.getLegendLayerByName(self.iface, 'Gebouwen_Centroids_clipped')
             #check if the layer exists
             access_nonservice_layer = uf.getLegendLayerByName(self.iface, "Lack of accessibility")
             # create one if it doesn't exist
@@ -354,6 +354,10 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             symdiff_features = uf.getAllFeatures(symdiff_layer)
             symdiff_features_list = list(symdiff_features.values())
             fld_values = uf.getFieldValues(layer, 'ADRESSCNT')[0]
+            print fld_values
+            print fld_values[0]
+            print len(fld_values)
+            print len(all_houses_list)
             for symdiff_feature in symdiff_features_list:
                 geom = QgsGeometry(symdiff_feature.geometry())
                 geoms.append(geom)
@@ -370,12 +374,12 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                             print 'adress cnt == NULL'
                             sumtotal = sumtotal + 0
                         else:
-                            print 'adress_cnt is a int'
+                            print 'adress_cnt is an int'
                             sumtotal = sumtotal + adress_cnt
                     else:
                         continue
-
-                values.append([sumtotal])
+                ratio = sumtotal/geom.area()
+                values.append([ratio])
             uf.insertTempFeatures(access_nonservice_layer, geoms, values)
             self.refreshCanvas(access_nonservice_layer)
 

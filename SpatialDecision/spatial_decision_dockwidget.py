@@ -350,8 +350,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 		                continue
 
                 values.append([cnt])
-            print 'ACCES NS GEOMS', geoms
-            print 'ACCES NS VALUES', values
             uf.insertTempFeatures(access_nonservice_layer, geoms, values)
             self.refreshCanvas(access_nonservice_layer)
 

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>388</width>
+    <width>409</width>
     <height>494</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="sampleWidgets">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="InputTab">
        <attribute name="title">
@@ -162,11 +162,22 @@
              </layout>
             </item>
             <item>
-             <widget class="QPushButton" name="accessibilityButton">
-              <property name="text">
-               <string>Check accessibilty</string>
-              </property>
-             </widget>
+             <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <item>
+               <widget class="QPushButton" name="accessibilityButton">
+                <property name="text">
+                 <string>Check accessibilty</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="toggleAccessibiltyCheckBox">
+                <property name="text">
+                 <string>Hide accessibility layer</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
            </layout>
           </item>

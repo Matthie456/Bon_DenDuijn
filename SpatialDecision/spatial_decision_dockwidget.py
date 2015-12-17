@@ -78,6 +78,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.accessibilityButton.clicked.connect(self.accessibility)
         self.accessibilitynonserviceButton.clicked.connect(self.accessibilitynonservice)
         self.toggleVisibiltyCheckBox.stateChanged.connect(self.toggleHideBufferLayer)
+        self.toggleAccessibiltyCheckBox.stateChanged.connect(self.toggleAccessibilityLayer)
 
 
         # visualisation
@@ -219,6 +220,17 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.iface.legendInterface().setLayerVisible(layer, False)
             self.refreshCanvas(layer)
 
+    def toggleAccessibilityLayer(self):
+        layer = uf.getLegendLayerByName(self.iface, 'Accessibility')
+        state = self.toggleAccessibiltyCheckBox.checkState()
+
+        if state == 0:
+            self.iface.legendInterface().setLayerVisible(layer, True)
+            self.refreshCanvas(layer)
+        elif state == 2:
+            self.iface.legendInterface().setLayerVisible(layer, False)
+            self.refreshCanvas(layer)
+
     # buffer functions
 
     def calculateBuffer(self):
@@ -313,6 +325,10 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 		                continue
                 values.append([cnt])
             uf.insertTempFeatures(access_layer, geoms, values)
+            path = '/Users/Matthijs/Dropbox/Uni/MSc Geomatics/GEO1005/Prototype SDSS/Styles'
+            access_layer.loadNamedStyle('{}/Accessibility_blues_01.qml'.format(path))
+            access_layer.triggerRepaint()
+            self.iface.legendInterface().refreshLayerSymbology(access_layer)
             self.refreshCanvas(access_layer)
 
     def accessibilitynonservice(self):

@@ -74,9 +74,11 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.bufferButton.clicked.connect(self.calculateBuffer)
         #click the button and create non service area
         self.nonserviceButton.clicked.connect(self.symmmetricdifference)
+        self.neighborhoodCombo.activated.connect(self.setNeighborhoodlayer)
+        self.buildingCentroidsCombo.activated.connect(self.setBuildinglayer)
         self.accessibilityButton.clicked.connect(self.accessibility)
         self.accessibilitynonserviceButton.clicked.connect(self.accessibilitynonservice)
-
+        self.toggleVisibiltyCheckBox.stateChanged.connect(self.toggleHideBufferLayer)
 
 
         # visualisation
@@ -92,7 +94,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # initialisation
         self.updateLayers()
         print "Plugin loaded!"
-        print "{}/dissolve_results.shp".format(QgsProject.instance().homePath())
+
 
         #run simple tests
 
@@ -132,10 +134,16 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def updateLayers(self):
         layers = uf.getLegendLayers(self.iface, 'all', 'all')
         self.selectLayerCombo.clear()
+        self.neighborhoodCombo.clear()
+        self.buildingCentroidsCombo.clear()
         if layers:
             layer_names = uf.getLayersListNames(layers)
             self.selectLayerCombo.addItems(layer_names)
+            self.neighborhoodCombo.addItems(layer_names)
+            self.buildingCentroidsCombo.addItems(layer_names)
             self.setSelectedLayer()
+            self.setNeighborhoodlayer()
+            self.setBuildinglayer()
 
     def setSelectedLayer(self):
         layer_name = self.selectLayerCombo.currentText()
@@ -180,13 +188,44 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 #    Analysis functions
 #######
 
+    def setNeighborhoodlayer(self):
+        layer_name = self.neighborhoodCombo.currentText()
+        layer = uf.getLegendLayerByName(self.iface,layer_name)
+        self.updateAttributes(layer)
+
+    def getNeighborhoodlayer(self):
+        layer_name = self.neighborhoodCombo.currentText()
+        layer = uf.getLegendLayerByName(self.iface,layer_name)
+        return layer
+
+    def setBuildinglayer(self):
+        layer_name = self.neighborhoodCombo.currentText()
+        layer = uf.getLegendLayerByName(self.iface,layer_name)
+        self.updateAttributes(layer)
+
+    def getBuildinglayer(self):
+        layer_name = self.neighborhoodCombo.currentText()
+        layer = uf.getLegendLayerByName(self.iface,layer_name)
+        return layer
+
+    def toggleHideBufferLayer(self):
+        cur_user = self.SelectUserGroupCombo.currentText()
+        layer = uf.getLegendLayerByName(self.iface, 'Buffers_{}'.format(cur_user))
+        state = self.toggleVisibiltyCheckBox.checkState()
+        print state
+        if state == 0:
+            self.iface.legendInterface().setLayerVisible(layer, True)
+            self.refreshCanvas(layer)
+        elif state == 2:
+            self.iface.legendInterface().setLayerVisible(layer, False)
+            self.refreshCanvas(layer)
+
     # buffer functions
 
     def calculateBuffer(self):
 
         proj = QgsProject.instance()
         cur_user = self.SelectUserGroupCombo.currentText()
-        print cur_user
         radius = proj.readNumEntry("SpatialDecisionDockWidget", "radius")[0]
         transittypes = proj.readEntry("SpatialDecisionDockWidget", "transittypes")[0]
 
@@ -223,9 +262,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 # in the case of values, it expects a list of multiple values in each item - list of lists
                 values.append([buffer[0],cutoff_distance, fld_values[cnt]])
                 cnt += 1
-            #print geoms
-            print 'BUFFERS GEOMS', geoms
-            print 'BUFFERS VALUES', values
+
             uf.insertTempFeatures(buffer_layer, geoms, values)
             self.refreshCanvas(buffer_layer)
             layer.removeSelection()
@@ -235,9 +272,9 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         layer = self.getSelectedLayer()
         cur_user = self.SelectUserGroupCombo.currentText()
         buffer_layer = uf.getLegendLayerByName(self.iface, 'Buffers_{}'.format(cur_user))
-        difference_layer = uf.getLegendLayerByName(self.iface, 'Buurten_clipped')
-
+        difference_layer = self.getNeighborhoodlayer()
         save_path = "%s/Symmetric Difference" % QgsProject.instance().homePath()
+
         symmdiff = processing.runandload('qgis:symmetricaldifference', buffer_layer, difference_layer, save_path)
 
 
@@ -245,7 +282,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def accessibility(self):
 
         cur_user = self.SelectUserGroupCombo.currentText()
-        all_houses_layer = uf.getLegendLayerByName(self.iface, "Gebouwen_Centroids_clipped")
+        all_houses_layer = self.getBuildinglayer()
         all_houses = uf.getAllFeatures(all_houses_layer) #list with residential housing as points
 
         all_houses_list = list(all_houses.values())
@@ -286,13 +323,13 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def accessibilitynonservice(self):
 
-        all_houses_layer = uf.getLegendLayerByName(self.iface, "Gebouwen_Centroids_clipped")
-        all_houses = uf.getAllFeatures(all_houses_layer) #dict with residential houses as points
+        all_houses_layer = self.getBuildinglayer()
+        all_houses = uf.getAllFeatures(all_houses_layer) #list with residential houses as points
+        
 
         all_houses_list = list(all_houses.values())
-        #print all_houses_list
         if all_houses_list > 0:
-            layer = self.getSelectedLayer()
+            layer = self.getBuildinglayer()
             #check if the layer exists
             access_nonservice_layer = uf.getLegendLayerByName(self.iface, "Lack of accessibility")
             # create one if it doesn't exist
@@ -303,12 +340,11 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 uf.loadTempLayer(access_nonservice_layer)
             geoms = []
             values = []
-            symdiff_layer = uf.getLegendLayerByName(self.iface, 'Symmetrical difference')
+            symdiff_layer = uf.getLegendLayerByName(self.iface, 'Symmetric Difference.shp')
             symdiff_features = uf.getAllFeatures(symdiff_layer)
             #print 'buffers: ', buffers
             #print symdiff_features
             symdiff_features_list = list(symdiff_features.values())
-
             #print buffer_list
             for symdiff_feature in symdiff_features_list:
                 cnt = 0

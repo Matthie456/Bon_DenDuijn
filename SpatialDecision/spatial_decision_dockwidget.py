@@ -286,9 +286,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def accessibilitynonservice(self):
 
-        #cur_user = self.SelectUserGroupCombo.currentText()
         all_houses_layer = uf.getLegendLayerByName(self.iface, "Gebouwen_Centroids_clipped")
-        all_houses = uf.getAllFeatures(all_houses_layer) #list with residential houses as points
+        all_houses = uf.getAllFeatures(all_houses_layer) #dict with residential houses as points
 
         all_houses_list = list(all_houses.values())
         #print all_houses_list
@@ -316,7 +315,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 geom = QgsGeometry(symdiff_feature.geometry())
                 #print geom
                 geoms.append(geom)
-                #geoms.append(geom.asPoint())
                 for house in all_houses_list:
                     base_geom = QgsGeometry(symdiff_feature.geometry())
                     intersect_geom = QgsGeometry(house.geometry())

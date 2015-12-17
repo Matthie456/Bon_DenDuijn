@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="sampleWidgets">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="InputTab">
        <attribute name="title">
@@ -111,18 +111,22 @@
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
-           <widget class="QPushButton" name="bufferButton">
-            <property name="text">
-             <string>Create buffers</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="checkaccessibilityLabel">
-            <property name="text">
-             <string>Check accessibility based on residential housing</string>
-            </property>
-           </widget>
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <item>
+             <widget class="QPushButton" name="bufferButton">
+              <property name="text">
+               <string>Create buffers</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="toggleVisibiltyCheckBox">
+              <property name="text">
+               <string>Hide buffer layer</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item>
            <widget class="Line" name="line_3">
@@ -131,6 +135,13 @@
             </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="checkaccessibilityLabel">
+            <property name="text">
+             <string>Check accessibility based on residential housing</string>
             </property>
            </widget>
           </item>

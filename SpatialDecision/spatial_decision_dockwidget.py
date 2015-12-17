@@ -78,7 +78,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.buildingCentroidsCombo.activated.connect(self.setBuildinglayer)
         self.accessibilityButton.clicked.connect(self.accessibility)
         self.accessibilitynonserviceButton.clicked.connect(self.accessibilitynonservice)
-
+        self.toggleVisibiltyCheckBox.stateChanged.connect(self.toggleHideBufferLayer)
 
 
         # visualisation
@@ -94,7 +94,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # initialisation
         self.updateLayers()
         print "Plugin loaded!"
-        print "{}/dissolve_results.shp".format(QgsProject.instance().homePath())
+
 
         #run simple tests
 
@@ -207,6 +207,18 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         layer_name = self.neighborhoodCombo.currentText()
         layer = uf.getLegendLayerByName(self.iface,layer_name)
         return layer
+
+    def toggleHideBufferLayer(self):
+        cur_user = self.SelectUserGroupCombo.currentText()
+        layer = uf.getLegendLayerByName(self.iface, 'Buffers_{}'.format(cur_user))
+        state = self.toggleVisibiltyCheckBox.checkState()
+        print state
+        if state == 0:
+            self.iface.legendInterface().setLayerVisible(layer, True)
+            self.refreshCanvas(layer)
+        elif state == 2:
+            self.iface.legendInterface().setLayerVisible(layer, False)
+            self.refreshCanvas(layer)
 
     # buffer functions
 

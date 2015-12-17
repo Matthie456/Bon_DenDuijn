@@ -71,8 +71,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.SelectUserGroupCombo.activated.connect(self.setSelectedUserGroup)
 
         # analysis
-        self.bufferButton.clicked.connect(self.calculateBuffer)
-        #click the button and create non service area
+        self.bufferButton.clicked.connect(self.calculateBuffer) #click the button and create non service area
         self.nonserviceButton.clicked.connect(self.symmmetricdifference)
         self.neighborhoodCombo.activated.connect(self.setNeighborhoodlayer)
         self.buildingCentroidsCombo.activated.connect(self.setBuildinglayer)
@@ -212,7 +211,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         cur_user = self.SelectUserGroupCombo.currentText()
         layer = uf.getLegendLayerByName(self.iface, 'Buffers_{}'.format(cur_user))
         state = self.toggleVisibiltyCheckBox.checkState()
-        print state
+
         if state == 0:
             self.iface.legendInterface().setLayerVisible(layer, True)
             self.refreshCanvas(layer)
@@ -300,18 +299,13 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             values = []
             buffer_layer = uf.getLegendLayerByName(self.iface, 'Buffers_{}'.format(cur_user))
             buffers = uf.getAllFeatures(buffer_layer)
-            #print 'buffers: ', buffers
             buffer_list = list(buffers.values())
-            #print buffer_list
             for point in all_houses_list:
                 cnt = 0
                 geom = QgsGeometry(point.geometry())
                 geoms.append(geom.asPoint())
                 for buffer in buffer_list:
                     base_geom = QgsGeometry(point.geometry())
-                    #print point
-                    #print base_geom
-                    #print buffer
                     intersect_geom = QgsGeometry(buffer.geometry())
                     if base_geom.intersects(intersect_geom):
                         cnt +=1
@@ -342,14 +336,10 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             values = []
             symdiff_layer = uf.getLegendLayerByName(self.iface, 'Symmetric Difference.shp')
             symdiff_features = uf.getAllFeatures(symdiff_layer)
-            #print 'buffers: ', buffers
-            #print symdiff_features
             symdiff_features_list = list(symdiff_features.values())
-            #print buffer_list
             for symdiff_feature in symdiff_features_list:
                 cnt = 0
                 geom = QgsGeometry(symdiff_feature.geometry())
-                #print geom
                 geoms.append(geom)
                 for house in all_houses_list:
                     base_geom = QgsGeometry(symdiff_feature.geometry())
@@ -358,7 +348,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                         cnt +=1
                     else:
 		                continue
-                    print cnt
+
                 values.append([cnt])
             print 'ACCES NS GEOMS', geoms
             print 'ACCES NS VALUES', values

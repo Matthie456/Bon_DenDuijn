@@ -329,9 +329,10 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         #cur_user = self.SelectUserGroupCombo.currentText()
         all_houses_layer = self.getBuildinglayer()
         all_houses = uf.getAllFeatures(all_houses_layer) #list with residential houses as points
+        #print all_houses
 
         all_houses_list = list(all_houses.values())
-        #print all_houses_list
+        print all_houses_list
         if all_houses_list > 0:
             layer = self.getBuildinglayer()
             #check if the layer exists
@@ -344,12 +345,13 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 uf.loadTempLayer(access_nonservice_layer)
             geoms = []
             values = []
-            symdiff_layer = uf.getLegendLayerByName(self.iface, 'Symmetrical Differenc.shp')
+            symdiff_layer = uf.getLegendLayerByName(self.iface, 'Symmetric Difference.shp')
+            print type(symdiff_layer), symdiff_layer
             symdiff_features = uf.getAllFeatures(symdiff_layer)
             #print 'buffers: ', buffers
             #print symdiff_features
             symdiff_features_list = list(symdiff_features.values())
-
+            print symdiff_features_list
             #print buffer_list
             for symdiff_feature in symdiff_features_list:
                 cnt = 0
@@ -366,8 +368,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 		                continue
                     print cnt
                 values.append([cnt])
-            # print 'ACCES NS GEOMS', geoms
-            # print 'ACCES NS VALUES', values
+            print 'ACCES NS GEOMS', geoms
+            print 'ACCES NS VALUES', values
             uf.insertTempFeatures(access_nonservice_layer, geoms, values)
             self.refreshCanvas(access_nonservice_layer)
 

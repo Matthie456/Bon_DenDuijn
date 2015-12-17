@@ -66,20 +66,23 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.openScenarioButton.clicked.connect(self.openScenario)
         self.saveScenarioButton.clicked.connect(self.saveScenario)
         self.selectLayerCombo.activated.connect(self.setSelectedLayer)
-        self.selectAttributeCombo.hide()# activated.connect(self.setSelectedAttribute)
+        self.selectAttributeCombo.hide()
         self.selectAttributeLabel.hide()
-        self.SelectUserGroupCombo.activated.connect(self.setSelectedUserGroup)
 
         # analysis
         self.bufferButton.clicked.connect(self.calculateBuffer) #click the button and create non service area
-        self.nonserviceButton.clicked.connect(self.symmmetricdifference)
-        self.neighborhoodCombo.activated.connect(self.setNeighborhoodlayer)
-        self.buildingCentroidsCombo.activated.connect(self.setBuildinglayer)
+        self.nonserviceButton.hide() # clicked.connect(self.symmmetricdifference)
         self.accessibilityButton.clicked.connect(self.accessibility)
         self.accessibilitynonserviceButton.clicked.connect(self.accessibilitynonservice)
+
+        # dropdown menus
+        self.neighborhoodCombo.activated.connect(self.setNeighborhoodlayer)
+        self.buildingCentroidsCombo.activated.connect(self.setBuildinglayer)
+        self.SelectUserGroupCombo.activated.connect(self.setSelectedUserGroup)
+
+        # toggle layer visibility
         self.toggleVisibiltyCheckBox.stateChanged.connect(self.toggleHideBufferLayer)
         self.toggleAccessibiltyCheckBox.stateChanged.connect(self.toggleAccessibilityLayer)
-
 
         # visualisation
 
@@ -231,8 +234,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.iface.legendInterface().setLayerVisible(layer, False)
             self.refreshCanvas(layer)
 
-    # buffer functions
-
+    # buffer function
     def calculateBuffer(self):
 
         proj = QgsProject.instance()
@@ -275,10 +277,14 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 cnt += 1
 
             uf.insertTempFeatures(buffer_layer, geoms, values)
+            path = '{}/styles/'.format(QgsProject.instance().homePath())
+            buffer_layer.loadNamedStyle('{}/Buffers.qml'.format(path))
+            buffer_layer.triggerRepaint()
+            self.iface.legendInterface().refreshLayerSymbology(buffer_layer)
             self.refreshCanvas(buffer_layer)
             layer.removeSelection()
 
-    # SymmDiff function
+    # Nonservice function
     def symmmetricdifference (self):
         layer = self.getSelectedLayer()
         cur_user = self.SelectUserGroupCombo.currentText()
@@ -288,17 +294,17 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         symmdiff = processing.runandload('qgis:symmetricaldifference', buffer_layer, difference_layer, save_path)
 
-
-
     def accessibility(self):
 
         cur_user = self.SelectUserGroupCombo.currentText()
         all_houses_layer = self.getBuildinglayer()
+
         all_houses = uf.getAllFeatures(all_houses_layer) #list with residential housing as points
 
         all_houses_list = list(all_houses.values())
         if all_houses_list > 0:
-            layer = self.getSelectedLayer()
+            layer = self.getBuildinglayer()
+            print layer.name()
             #check if the layer exists
             access_layer = uf.getLegendLayerByName(self.iface, "Accessibility")
             # create one if it doesn't exist
@@ -310,6 +316,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             geoms = []
             values = []
             buffer_layer = uf.getLegendLayerByName(self.iface, 'Buffers_{}'.format(cur_user))
+            print buffer_layer.name()
             buffers = uf.getAllFeatures(buffer_layer)
             buffer_list = list(buffers.values())
             for point in all_houses_list:
@@ -325,8 +332,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 		                continue
                 values.append([cnt])
             uf.insertTempFeatures(access_layer, geoms, values)
-            path = '/Users/Matthijs/Dropbox/Uni/MSc Geomatics/GEO1005/Prototype SDSS/Styles'
-            access_layer.loadNamedStyle('{}/Accessibility_blues_01.qml'.format(path))
+            path = '{}/styles/'.format(QgsProject.instance().homePath())
+            access_layer.loadNamedStyle('{}/Accessibility.qml'.format(path))
             access_layer.triggerRepaint()
             self.iface.legendInterface().refreshLayerSymbology(access_layer)
             self.refreshCanvas(access_layer)
@@ -350,7 +357,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 uf.loadTempLayer(access_nonservice_layer)
             geoms = []
             values = []
-            symdiff_layer = uf.getLegendLayerByName(self.iface, 'Symmetric Difference.shp')
+            symdiff_layer = self.getBuildinglayer()
             symdiff_features = uf.getAllFeatures(symdiff_layer)
             symdiff_features_list = list(symdiff_features.values())
             for symdiff_feature in symdiff_features_list:
@@ -367,6 +374,10 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
                 values.append([cnt])
             uf.insertTempFeatures(access_nonservice_layer, geoms, values)
+            path = '{}/styles/'.format(QgsProject.instance().homePath())
+            access_nonservice_layer.loadNamedStyle('{}/Lack_of_Accessibility.qml'.format(path))
+            access_nonservice_layer.triggerRepaint()
+            self.iface.legendInterface().refreshLayerSymbology(access_nonservice_layer)
             self.refreshCanvas(access_nonservice_layer)
 
 
@@ -443,5 +454,3 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def clearTable(self):
         self.statisticsTable.clear()
 
-
-#TEST

@@ -242,6 +242,13 @@
             </property>
            </widget>
           </item>
+          <item>
+           <widget class="QProgressBar" name="needforPTprogressBar">
+            <property name="value">
+             <number>0</number>
+            </property>
+           </widget>
+          </item>
          </layout>
         </item>
         <item>

@@ -71,7 +71,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         # analysis
         self.bufferButton.clicked.connect(self.calculateBuffer) #click the button and create non service area
-        self.nonserviceButton.hide() # clicked.connect(self.symmmetricdifference)
+        self.nonserviceButton.clicked.connect(self.symmmetricdifference)
         self.accessibilityButton.clicked.connect(self.accessibility)
         self.accessibilitynonserviceButton.clicked.connect(self.accessibilitynonservice)
 
@@ -207,7 +207,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.updateAttributes(layer)
 
     def getBuildinglayer(self):
-        layer_name = self.neighborhoodCombo.currentText()
+        layer_name = self.buildingCentroidsCombo.currentText()
         layer = uf.getLegendLayerByName(self.iface,layer_name)
         return layer
 
@@ -292,7 +292,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         difference_layer = self.getNeighborhoodlayer()
         save_path = "%s/Symmetric Difference" % QgsProject.instance().homePath()
 
-        symmdiff = processing.runandload('qgis:symmetricaldifference', buffer_layer, difference_layer, save_path)
+        symmdiff = processing.runandload('qgis:symmetricaldifference', buffer_layer, difference_layer, None)
 
     def accessibility(self):
 

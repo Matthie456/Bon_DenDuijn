@@ -75,9 +75,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.accessibilityButton.clicked.connect(self.accessibility)
         self.accessibilitynonserviceButton.clicked.connect(self.accessibilitynonservice)
 
-
-        
-
+        # add node
+        self.addNodeButton.clicked.connect(self.addnode)
 
         # dropdown menus
         self.neighborhoodCombo.activated.connect(self.setNeighborhoodlayer)
@@ -429,6 +428,15 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             access_nonservice_layer.triggerRepaint()
             self.iface.legendInterface().refreshLayerSymbology(access_nonservice_layer)
             self.refreshCanvas(access_nonservice_layer)
+
+    def addnode(self):
+        pass
+
+        # get layer
+        transit_layer = uf.getLegendLayerByName(self.iface, "Transit_stops")
+        transit_layer.startEditing()
+        layerdata = transit_layer.dataProvider()
+        # hier moeten features gemaakt worden.
 
 
     # after adding features to layers needs a refresh (sometimes)

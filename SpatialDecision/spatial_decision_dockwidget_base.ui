@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>409</width>
-    <height>494</height>
+    <height>512</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -246,6 +246,23 @@
            <widget class="QProgressBar" name="needforPTprogressBar">
             <property name="value">
              <number>0</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="Line" name="line_4">
+            <property name="lineWidth">
+             <number>2</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="addNodeButton">
+            <property name="text">
+             <string>Add new transport node</string>
             </property>
            </widget>
           </item>

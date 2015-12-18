@@ -179,6 +179,19 @@
               </item>
              </layout>
             </item>
+            <item>
+             <widget class="QProgressBar" name="accessibiltyprogressBar">
+              <property name="maximum">
+               <number>100</number>
+              </property>
+              <property name="value">
+               <number>0</number>
+              </property>
+              <property name="textVisible">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
           <item>

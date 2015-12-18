@@ -75,6 +75,11 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.accessibilityButton.clicked.connect(self.accessibility)
         self.accessibilitynonserviceButton.clicked.connect(self.accessibilitynonservice)
 
+        #progress bars
+        self.accessibiltyprogressBar.valueChanged.connect(self.accessibility)
+        #self.accessibiltyprogressBar.setMaximum(len(all_houses_list))
+
+
         # dropdown menus
         self.neighborhoodCombo.activated.connect(self.setNeighborhoodlayer)
         self.buildingCentroidsCombo.activated.connect(self.setBuildinglayer)
@@ -295,7 +300,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         symmdiff = processing.runandload('qgis:symmetricaldifference', buffer_layer, difference_layer, None)
 
     def accessibility(self):
-
+        self.accessibiltyprogressBar.setValue(0)
         cur_user = self.SelectUserGroupCombo.currentText()
         all_houses_layer = self.getBuildinglayer()
         all_houses = uf.getAllFeatures(all_houses_layer) #list with residential housing as points
@@ -316,7 +321,14 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             buffer_layer = uf.getLegendLayerByName(self.iface, 'Buffers_{}'.format(cur_user))
             buffers = uf.getAllFeatures(buffer_layer)
             buffer_list = list(buffers.values())
+
+            progressbar_maxvalue = self.accessibiltyprogressBar.setMaximum(len(all_houses_list))
+            #reset = self.accessibilityprogressBar.reset()
+            progressbar_value = 0
             for point in all_houses_list:
+                print progressbar_value
+                self.accessibiltyprogressBar.setValue(progressbar_value)
+                progressbar_value +=1
                 cnt = 0
                 geom = QgsGeometry(point.geometry())
                 geoms.append(geom.asPoint())
@@ -334,6 +346,9 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             access_layer.triggerRepaint()
             self.iface.legendInterface().refreshLayerSymbology(access_layer)
             self.refreshCanvas(access_layer)
+
+
+
 
     def accessibilitynonservice(self):
 
@@ -357,7 +372,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             symdiff_layer = self.getNeighborhoodlayer()
             symdiff_features = uf.getAllFeatures(symdiff_layer)
             symdiff_features_list = list(symdiff_features.values())
-            fld_values = uf.getFieldValues(layer, 'ADRESSCNT')[0]
+            fld_values = uf.getFieldValues(layer, 'VBO_CNT')[0]
             for symdiff_feature in symdiff_features_list:
                 geom = QgsGeometry(symdiff_feature.geometry())
                 geoms.append(geom)

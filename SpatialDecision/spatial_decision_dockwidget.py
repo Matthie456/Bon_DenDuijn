@@ -71,13 +71,13 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         # analysis
         self.bufferButton.clicked.connect(self.calculateBuffer) #click the button and create non service area
-        self.nonserviceButton.clicked.connect(self.symmmetricdifference)
+        self.nonserviceButton.hide() # clicked.connect(self.symmmetricdifference)
         self.accessibilityButton.clicked.connect(self.accessibility)
         self.accessibilitynonserviceButton.clicked.connect(self.accessibilitynonservice)
 
         #progress bars
         self.accessibiltyprogressBar.valueChanged.connect(self.accessibility)
-        #self.accessibiltyprogressBar.setMaximum(len(all_houses_list))
+        
 
 
         # dropdown menus
@@ -101,6 +101,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         # initialisation
         self.updateLayers()
+        proj = QgsProject.instance()
+        proj.writeEntry("SpatialDecisionDockWidget", 'CRS' ,28992)
         print "Plugin loaded!"
 
 
@@ -207,7 +209,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         return layer
 
     def setBuildinglayer(self):
-        layer_name = self.neighborhoodCombo.currentText()
+        layer_name = self.buildingCentroidsCombo.currentText()
         layer = uf.getLegendLayerByName(self.iface,layer_name)
         self.updateAttributes(layer)
 
@@ -242,10 +244,13 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     # buffer function
     def calculateBuffer(self):
 
+        # Globals
         proj = QgsProject.instance()
         cur_user = self.SelectUserGroupCombo.currentText()
         radius = proj.readNumEntry("SpatialDecisionDockWidget", "radius")[0]
         transittypes = proj.readEntry("SpatialDecisionDockWidget", "transittypes")[0]
+        CRS = proj.readEntry("SpatialDecisionDockWidget", 'CRS')[0]
+        
 
         uf.selectFeaturesByExpression(self.getSelectedLayer(),"network in {}".format(transittypes))
         origins = self.getSelectedLayer().selectedFeatures()
@@ -264,7 +269,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             if not buffer_layer:
                 attribs = ['id', 'distance', 'network']
                 types = [QtCore.QVariant.String, QtCore.QVariant.Double, QtCore.QVariant.String]
-                buffer_layer = uf.createTempLayer('Buffers_{}'.format(cur_user),'POLYGON',layer.crs().postgisSrid(), attribs, types)
+                buffer_layer = uf.createTempLayer('Buffers_{}'.format(cur_user),'POLYGON',CRS, attribs, types)
                 buffer_layer.setLayerName('Buffers_{}'.format(cur_user))
                 uf.loadTempLayer(buffer_layer)
             # insert buffer polygons
@@ -300,6 +305,9 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         symmdiff = processing.runandload('qgis:symmetricaldifference', buffer_layer, difference_layer, None)
 
     def accessibility(self):
+        # Globals
+        proj = QgsProject.instance()
+        CRS = proj.readEntry("SpatialDecisionDockWidget", 'CRS')[0]
         self.accessibiltyprogressBar.setValue(0)
         cur_user = self.SelectUserGroupCombo.currentText()
         all_houses_layer = self.getBuildinglayer()
@@ -314,7 +322,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             if not access_layer:
                 attribs = ['number of overlapping buffers']
                 types = [QtCore.QVariant.Double]
-                access_layer = uf.createTempLayer('Accessibility','POINT',layer.crs().postgisSrid(), attribs, types)
+                access_layer = uf.createTempLayer('Accessibility','POINT',CRS, attribs, types)
                 uf.loadTempLayer(access_layer)
             geoms = []
             values = []
@@ -323,7 +331,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             buffer_list = list(buffers.values())
 
             progressbar_maxvalue = self.accessibiltyprogressBar.setMaximum(len(all_houses_list))
-            #reset = self.accessibilityprogressBar.reset()
             progressbar_value = 0
             for point in all_houses_list:
                 print progressbar_value
@@ -347,10 +354,10 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.iface.legendInterface().refreshLayerSymbology(access_layer)
             self.refreshCanvas(access_layer)
 
-
-
-
     def accessibilitynonservice(self):
+        # Globals
+        proj = QgsProject.instance()
+        CRS = proj.readEntry("SpatialDecisionDockWidget", 'CRS')[0]
 
         all_houses_layer = self.getBuildinglayer()
         all_houses = uf.getAllFeatures(all_houses_layer) #list with residential houses as points
@@ -358,30 +365,30 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         all_houses_list = list(all_houses.values())
         if all_houses_list > 0:
-            layer = self.getBuildinglayer()
+            building_layer = self.getBuildinglayer()
             #check if the layer exists
             access_nonservice_layer = uf.getLegendLayerByName(self.iface, "Lack of accessibility")
             # create one if it doesn't exist
             if not access_nonservice_layer:
-                attribs = ['Ratio']
+                attribs = ['ratio']
                 types = [QtCore.QVariant.Double]
-                access_nonservice_layer = uf.createTempLayer('Lack of accessibility','POLYGON',layer.crs().postgisSrid(), attribs, types)
+                access_nonservice_layer = uf.createTempLayer('Lack of accessibility','POLYGON',CRS, attribs, types)
                 uf.loadTempLayer(access_nonservice_layer)
             geoms = []
             values = []
-            symdiff_layer = self.getNeighborhoodlayer()
-            symdiff_features = uf.getAllFeatures(symdiff_layer)
-            symdiff_features_list = list(symdiff_features.values())
-            fld_values = uf.getFieldValues(layer, 'VBO_CNT')[0]
-            for symdiff_feature in symdiff_features_list:
-                geom = QgsGeometry(symdiff_feature.geometry())
+            nbhood_layer = self.getNeighborhoodlayer()
+            nbhood_features = uf.getAllFeatures(nbhood_layer)
+            nbhood_features_list = list(nbhood_features.values())
+            fld_values = uf.getFieldValues(building_layer, 'VBO_CNT')[0]
+            for nbhood_feature in nbhood_features_list:
+                geom = QgsGeometry(nbhood_feature.geometry())
                 geoms.append(geom)
                 house_id = 0
                 sumtotal = 0
                 for house in all_houses_list:
                     adress_cnt = fld_values[house_id]
                     house_id += 1
-                    base_geom = QgsGeometry(symdiff_feature.geometry())
+                    base_geom = QgsGeometry(nbhood_feature.geometry())
                     intersect_geom = QgsGeometry(house.geometry())
                     if base_geom.intersects(intersect_geom):
                         if adress_cnt == NULL:

@@ -298,13 +298,11 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         cur_user = self.SelectUserGroupCombo.currentText()
         all_houses_layer = self.getBuildinglayer()
-
         all_houses = uf.getAllFeatures(all_houses_layer) #list with residential housing as points
 
         all_houses_list = list(all_houses.values())
         if all_houses_list > 0:
-            layer = self.getBuildinglayer()
-            print layer.name()
+            layer = self.getSelectedLayer()
             #check if the layer exists
             access_layer = uf.getLegendLayerByName(self.iface, "Accessibility")
             # create one if it doesn't exist
@@ -316,7 +314,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             geoms = []
             values = []
             buffer_layer = uf.getLegendLayerByName(self.iface, 'Buffers_{}'.format(cur_user))
-            print buffer_layer.name()
             buffers = uf.getAllFeatures(buffer_layer)
             buffer_list = list(buffers.values())
             for point in all_houses_list:
@@ -351,28 +348,35 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             access_nonservice_layer = uf.getLegendLayerByName(self.iface, "Lack of accessibility")
             # create one if it doesn't exist
             if not access_nonservice_layer:
-                attribs = ['number of houses']
+                attribs = ['Ratio']
                 types = [QtCore.QVariant.Double]
                 access_nonservice_layer = uf.createTempLayer('Lack of accessibility','POLYGON',layer.crs().postgisSrid(), attribs, types)
                 uf.loadTempLayer(access_nonservice_layer)
             geoms = []
             values = []
-            symdiff_layer = self.getBuildinglayer()
+            symdiff_layer = self.getNeighborhoodlayer()
             symdiff_features = uf.getAllFeatures(symdiff_layer)
             symdiff_features_list = list(symdiff_features.values())
+            fld_values = uf.getFieldValues(layer, 'ADRESSCNT')[0]
             for symdiff_feature in symdiff_features_list:
-                cnt = 0
                 geom = QgsGeometry(symdiff_feature.geometry())
                 geoms.append(geom)
+                house_id = 0
+                sumtotal = 0
                 for house in all_houses_list:
+                    adress_cnt = fld_values[house_id]
+                    house_id += 1
                     base_geom = QgsGeometry(symdiff_feature.geometry())
                     intersect_geom = QgsGeometry(house.geometry())
                     if base_geom.intersects(intersect_geom):
-                        cnt +=1
+                        if adress_cnt == NULL:
+                            sumtotal = sumtotal + 0
+                        else:
+                            sumtotal = sumtotal + adress_cnt
                     else:
-		                continue
-
-                values.append([cnt])
+                        continue
+                ratio = sumtotal/geom.area()
+                values.append([ratio])
             uf.insertTempFeatures(access_nonservice_layer, geoms, values)
             path = '{}/styles/'.format(QgsProject.instance().homePath())
             access_nonservice_layer.loadNamedStyle('{}/Lack_of_Accessibility.qml'.format(path))

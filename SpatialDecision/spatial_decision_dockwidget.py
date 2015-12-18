@@ -187,12 +187,27 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         if self.SelectUserGroupCombo.currentText() == 'Students':
             proj.writeEntry("SpatialDecisionDockWidget", "radius", 1200)
             proj.writeEntry("SpatialDecisionDockWidget", "transittypes", "('rail','metro', 'tram')")
+            transit_layer = uf.getLegendLayerByName(self.iface, "Transit_stops")
+            path = '{}/styles/'.format(QgsProject.instance().homePath())
+            transit_layer.loadNamedStyle('{}/Transit_Students.qml'.format(path))
+            transit_layer.triggerRepaint()
+            self.iface.legendInterface().refreshLayerSymbology(transit_layer)
         elif self.SelectUserGroupCombo.currentText() == 'Elderly':
             proj.writeEntry("SpatialDecisionDockWidget", "radius", 400)
             proj.writeEntry("SpatialDecisionDockWidget", "transittypes", "('rail','tram','ferry')")
+            transit_layer = uf.getLegendLayerByName(self.iface, "Transit_stops")
+            path = '{}/styles/'.format(QgsProject.instance().homePath())
+            transit_layer.loadNamedStyle('{}/Transit_Elderly.qml'.format(path))
+            transit_layer.triggerRepaint()
+            self.iface.legendInterface().refreshLayerSymbology(transit_layer)
         elif self.SelectUserGroupCombo.currentText() == 'Adults':
             proj.writeEntry("SpatialDecisionDockWidget", "radius", 600)[0]
             proj.writeEntry("SpatialDecisionDockWidget", "transittypes", "('rail','metro','ferry')")
+            transit_layer = uf.getLegendLayerByName(self.iface, "Transit_stops")
+            path = '{}/styles/'.format(QgsProject.instance().homePath())
+            transit_layer.loadNamedStyle('{}/Transit_Adults.qml'.format(path))
+            transit_layer.triggerRepaint()
+            self.iface.legendInterface().refreshLayerSymbology(transit_layer)
 
 #######
 #    Analysis functions

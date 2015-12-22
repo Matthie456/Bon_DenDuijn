@@ -31,6 +31,8 @@ import os
 import os.path
 import random
 import processing
+from qgis.gui import QgsMapToolEmitPoint
+from qgis.gui import QgsMapTool
 
 from . import utility_functions as uf
 
@@ -76,7 +78,11 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.accessibilitynonserviceButton.clicked.connect(self.accessibilitynonservice)
 
         # add node
-        self.addNodeButton.clicked.connect(self.addnode)
+        #self.addNodeButton.clicked.connect(self.addnode)
+        tool = clickTool(self.iface.mapCanvas())
+        self.iface.mapCanvas().setMapTool(tool)
+        self.clickTool = QgsMapToolEmitPoint(self.canvas)
+        self.clicktool.clicked.connect(self.addnode)
 
         # dropdown menus
         self.neighborhoodCombo.activated.connect(self.setNeighborhoodlayer)
@@ -430,13 +436,10 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.refreshCanvas(access_nonservice_layer)
 
     def addnode(self):
-        pass
-
         # get layer
         transit_layer = uf.getLegendLayerByName(self.iface, "Transit_stops")
         transit_layer.startEditing()
-        layerdata = transit_layer.dataProvider()
-        # hier moeten features gemaakt worden.
+        self.iface.actionAddFeature().trigger()
 
 
     # after adding features to layers needs a refresh (sometimes)
@@ -511,4 +514,40 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def clearTable(self):
         self.statisticsTable.clear()
+
+class clickTool(QgsMapTool):
+    def __init__(self, canvas):
+        QgsMapTool.__init__(self, canvas)
+        self.canvas = canvas
+
+    def canvasPressEvent(self, event):
+        pass
+
+    def canvasMoveEvent(self, event):
+        x = event.pos().x()
+        y = event.pos().y()
+
+        point = self.canvas.getCoordinateTransform().toMapCoordinates(x, y)
+
+    def canvasReleaseEvent(self, event):
+        #Get the click
+        x = event.pos().x()
+        y = event.pos().y()
+
+        point = self.canvas.getCoordinateTransform().toMapCoordinates(x, y)
+
+    def activate(self):
+        pass
+
+    def deactivate(self):
+        pass
+
+    def isZoomTool(self):
+        return False
+
+    def isTransient(self):
+        return False
+
+    def isEditTool(self):
+        return True
 

@@ -35,10 +35,10 @@
   <mapcanvas>
     <units>meters</units>
     <extent>
-      <xmin>109475.37955205325852148</xmin>
-      <ymin>480982.45311732066329569</ymin>
-      <xmax>130609.2052079185959883</xmax>
-      <ymax>492740.08717124303802848</ymax>
+      <xmin>110440.29176924438797869</xmin>
+      <ymin>481554.25294973008567467</ymin>
+      <xmax>131574.11742510978365317</xmax>
+      <ymax>493311.88700365246040747</ymax>
     </extent>
     <rotation>0</rotation>
     <projections>1</projections>
@@ -1691,6 +1691,7 @@
       <SingleCategoryDiagramRenderer diagramType="Pie">
         <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" sizeType="MM" minScaleDenominator="-4.65661e-10">
           <fontProperties description=".SF NS Text,13,-1,5,50,0,0,0,0,0" style=""/>
+          <attribute field="" color="#000000" label=""/>
         </DiagramCategory>
       </SingleCategoryDiagramRenderer>
       <DiagramLayerSettings yPosColumn="-1" linePlacementFlags="10" placement="0" dist="0" xPosColumn="-1" priority="0" obstacle="0" showAll="1"/>
@@ -3876,6 +3877,7 @@
       <CanvasColorBluePart type="int">255</CanvasColorBluePart>
     </Gui>
     <SpatialDecisionDockWidget>
+      <CRS type="int">28992</CRS>
       <radius type="int">400</radius>
       <transittypes type="QString">('rail','tram','ferry')</transittypes>
     </SpatialDecisionDockWidget>

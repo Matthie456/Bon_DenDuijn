@@ -32,8 +32,7 @@ import os.path
 import random
 import processing
 
-from qgis.gui import QgsMapTool
-from qgis.gui import QgsMapToolEmitPoint
+from qgis.gui import QgsMapTool, QgsMapToolEmitPoint, QgsMapToolPan
 
 from . import utility_functions as uf
 
@@ -435,16 +434,59 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.refreshCanvas(access_nonservice_layer)
 
     def addnode(self):
+        """
+        proj = QgsProject.instance()
+        CRS = proj.readEntry("SpatialDecisionDockWidget", 'CRS')[0]
+
+        ## first make a copy of all the features.
+        # user should enter a name to save the new layer instead of "Username"
+        transit_layer = uf.getLegendLayerByName(self.iface, "Transit_stops")
+        new_layer = uf.getLegendLayerByName(self.iface, "Username")
+        # if layer does not exist, create one
+        if not new_layer:
+            attribs = ['sid']
+            types = [QtCore.QVariant.String]
+            new_layer = uf.createTempLayer('Username','POINT',CRS, attribs, types)
+            uf.loadTempLayer(new_layer)
+        features = uf.getAllFeatures(transit_layer)
+        featurelist = list(features.values())
+        geometries = []
+        for feature in featurelist:
+            geometries.append(QgsGeometry(feature.geometry()))
+
+        print geometries
+        # get attribute values
+        # this probably won't work, because insertTempFeatures takes one list of attributes not two.
+        sid_values = uf.getFieldValues(transit_layer, 'sid')[0]
+        network_values = uf.getFieldValues(transit_layer, 'network')[0]
+        attributes = [sid_values, network_values]
+        # insert features into new layer
+        uf.insertTempFeatures(new_layer, geometries, sid_values)
+        """
+        new_layer = uf.getLegendLayerByName(self.iface, 'transit_copy')
+        ## Add new features to copied layer
         # set Clicktool
         self.clickTool = QgsMapToolEmitPoint(self.canvas)
         self.clickTool.canvasClicked.connect(self.addnode)
         self.canvas.setMapTool(self.clickTool)
-        # get layer
-        transit_layer = uf.getLegendLayerByName(self.iface, "Transit_stops")
-        if not transit_layer.isEditable():
-            transit_layer.startEditing()
-        self.iface.setActiveLayer(transit_layer)
+
+        cntbefore = new_layer.featureCount() # count number of features before editing
+        # Make sure layer is editable
+        if not new_layer.isEditable():
+            new_layer.startEditing()
+        # Add features
+        self.iface.setActiveLayer(new_layer)
         self.iface.actionAddFeature().trigger()
+        # create button 'commit changes' that saves changes using code below.
+        self.iface.actioncommitChanges()
+        myvar = new_layer.dataProvider.featureCount()
+        print 'myvar = ', myvar
+        cntafter = new_layer.featureCount() # count number of features after editing
+        diff = cntafter - cntbefore
+        print 'diff = ', diff
+        if diff == 3:
+            self.panTool = QgsmapToolPan(self.canvas)
+            self.canvas.setMapTool(self.panTool)
         # if statement die bijhoudt of er 3 punten zijn toegevoegd en dan de clicktool deactivate, of de clicktool naar
         # de standaard pantool zet ofzo.
 

@@ -35,10 +35,10 @@
   <mapcanvas>
     <units>meters</units>
     <extent>
-      <xmin>110440.29176924438797869</xmin>
-      <ymin>481554.25294973008567467</ymin>
-      <xmax>131574.11742510978365317</xmax>
-      <ymax>493311.88700365246040747</ymax>
+      <xmin>109575.4378676988708321</xmin>
+      <ymin>481510.46287876559654251</ymin>
+      <xmax>130709.26352356426650658</xmax>
+      <ymax>493268.0969326879712753</ymax>
     </extent>
     <rotation>0</rotation>
     <projections>1</projections>
@@ -119,6 +119,7 @@
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Accessibility20151215222206780"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Symmetrical_difference20151216145634640"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="vbo20151216115848874"/>
+      <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="transit_copy20151224171858357"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Buffers_Elderly20151217134532401"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Buffers_Students20151217121714761"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Buffers_Students20151216091037773"/>
@@ -3884,8 +3885,8 @@
     <Digitizing>
       <DefaultSnapToleranceUnit type="int">1</DefaultSnapToleranceUnit>
       <LayerSnappingList type="QStringList">
-        <value>Building_polygons20151218113243986</value>
         <value>Building_centroids20151218113326346</value>
+        <value>Building_polygons20151218113243986</value>
         <value>Neighborhoods20151218113357061</value>
         <value>Transit_stops20151218113434630</value>
       </LayerSnappingList>

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>409</width>
-    <height>512</height>
+    <height>546</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -256,6 +256,13 @@
             </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="resetMapToolButton">
+            <property name="text">
+             <string>Reset MapTool</string>
             </property>
            </widget>
           </item>

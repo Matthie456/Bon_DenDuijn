@@ -3,32 +3,35 @@
   <title></title>
   <layer-tree-group expanded="1" checked="Qt::PartiallyChecked" name="">
     <customproperties/>
-    <layer-tree-layer expanded="0" checked="Qt::Checked" id="Transit_stops20151218113434630" name="Transit_stops">
+    <layer-tree-group expanded="0" checked="Qt::PartiallyChecked" name="Basemap">
       <customproperties/>
-    </layer-tree-layer>
-    <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="Building_centroids20151218113326346" name="Building_centroids">
-      <customproperties/>
-    </layer-tree-layer>
-    <layer-tree-layer expanded="1" checked="Qt::Checked" id="Neighborhoods20151218113357061" name="Neighborhoods">
-      <customproperties/>
-    </layer-tree-layer>
-    <layer-tree-layer expanded="1" checked="Qt::Checked" id="Building_polygons20151218113243986" name="Building_polygons">
-      <customproperties/>
-    </layer-tree-layer>
-    <layer-tree-group expanded="0" checked="Qt::Checked" name="TOP25Raster_small">
-      <customproperties/>
-      <layer-tree-layer expanded="0" checked="Qt::Checked" id="25b_top25raster_201420151218114204680" name="25b-top25raster-2014">
+      <layer-tree-layer expanded="0" checked="Qt::Checked" id="Transit_stops20151218113434630" name="Transit_stops">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-layer expanded="0" checked="Qt::Checked" id="25d_top25raster_201420151218114140971" name="25d-top25raster-2014">
+      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="Building_centroids20151218113326346" name="Building_centroids">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-layer expanded="0" checked="Qt::Checked" id="25e_top25raster_201420151218114106702" name="25e-top25raster-2014">
+      <layer-tree-layer expanded="1" checked="Qt::Checked" id="Neighborhoods20151218113357061" name="Neighborhoods">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-layer expanded="0" checked="Qt::Checked" id="25g_top25raster_201420151218114032091" name="25g-top25raster-2014">
+      <layer-tree-layer expanded="1" checked="Qt::Checked" id="Building_polygons20151218113243986" name="Building_polygons">
         <customproperties/>
       </layer-tree-layer>
+      <layer-tree-group expanded="0" checked="Qt::Checked" name="TOP25Raster_small">
+        <customproperties/>
+        <layer-tree-layer expanded="0" checked="Qt::Checked" id="25b_top25raster_201420151218114204680" name="25b-top25raster-2014">
+          <customproperties/>
+        </layer-tree-layer>
+        <layer-tree-layer expanded="0" checked="Qt::Checked" id="25d_top25raster_201420151218114140971" name="25d-top25raster-2014">
+          <customproperties/>
+        </layer-tree-layer>
+        <layer-tree-layer expanded="0" checked="Qt::Checked" id="25e_top25raster_201420151218114106702" name="25e-top25raster-2014">
+          <customproperties/>
+        </layer-tree-layer>
+        <layer-tree-layer expanded="0" checked="Qt::Checked" id="25g_top25raster_201420151218114032091" name="25g-top25raster-2014">
+          <customproperties/>
+        </layer-tree-layer>
+      </layer-tree-group>
     </layer-tree-group>
   </layer-tree-group>
   <relations/>
@@ -206,47 +209,49 @@
     </custom-order>
   </layer-tree-canvas>
   <legend updateDrawingOrder="true">
-    <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="Transit_stops" showFeatureCount="0">
-      <filegroup open="false" hidden="false">
-        <legendlayerfile isInOverview="0" layerid="Transit_stops20151218113434630" visible="1"/>
-      </filegroup>
-    </legendlayer>
-    <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="Building_centroids" showFeatureCount="0">
-      <filegroup open="true" hidden="false">
-        <legendlayerfile isInOverview="0" layerid="Building_centroids20151218113326346" visible="0"/>
-      </filegroup>
-    </legendlayer>
-    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="Neighborhoods" showFeatureCount="0">
-      <filegroup open="true" hidden="false">
-        <legendlayerfile isInOverview="0" layerid="Neighborhoods20151218113357061" visible="1"/>
-      </filegroup>
-    </legendlayer>
-    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="Building_polygons" showFeatureCount="0">
-      <filegroup open="true" hidden="false">
-        <legendlayerfile isInOverview="0" layerid="Building_polygons20151218113243986" visible="1"/>
-      </filegroup>
-    </legendlayer>
-    <legendgroup open="false" checked="Qt::Checked" name="TOP25Raster_small">
-      <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="25b-top25raster-2014" showFeatureCount="0">
+    <legendgroup open="false" checked="Qt::PartiallyChecked" name="Basemap">
+      <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="Transit_stops" showFeatureCount="0">
         <filegroup open="false" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="25b_top25raster_201420151218114204680" visible="1"/>
+          <legendlayerfile isInOverview="0" layerid="Transit_stops20151218113434630" visible="1"/>
         </filegroup>
       </legendlayer>
-      <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="25d-top25raster-2014" showFeatureCount="0">
-        <filegroup open="false" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="25d_top25raster_201420151218114140971" visible="1"/>
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="Building_centroids" showFeatureCount="0">
+        <filegroup open="true" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="Building_centroids20151218113326346" visible="0"/>
         </filegroup>
       </legendlayer>
-      <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="25e-top25raster-2014" showFeatureCount="0">
-        <filegroup open="false" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="25e_top25raster_201420151218114106702" visible="1"/>
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="Neighborhoods" showFeatureCount="0">
+        <filegroup open="true" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="Neighborhoods20151218113357061" visible="1"/>
         </filegroup>
       </legendlayer>
-      <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="25g-top25raster-2014" showFeatureCount="0">
-        <filegroup open="false" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="25g_top25raster_201420151218114032091" visible="1"/>
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="Building_polygons" showFeatureCount="0">
+        <filegroup open="true" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="Building_polygons20151218113243986" visible="1"/>
         </filegroup>
       </legendlayer>
+      <legendgroup open="false" checked="Qt::Checked" name="TOP25Raster_small">
+        <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="25b-top25raster-2014" showFeatureCount="0">
+          <filegroup open="false" hidden="false">
+            <legendlayerfile isInOverview="0" layerid="25b_top25raster_201420151218114204680" visible="1"/>
+          </filegroup>
+        </legendlayer>
+        <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="25d-top25raster-2014" showFeatureCount="0">
+          <filegroup open="false" hidden="false">
+            <legendlayerfile isInOverview="0" layerid="25d_top25raster_201420151218114140971" visible="1"/>
+          </filegroup>
+        </legendlayer>
+        <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="25e-top25raster-2014" showFeatureCount="0">
+          <filegroup open="false" hidden="false">
+            <legendlayerfile isInOverview="0" layerid="25e_top25raster_201420151218114106702" visible="1"/>
+          </filegroup>
+        </legendlayer>
+        <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="25g-top25raster-2014" showFeatureCount="0">
+          <filegroup open="false" hidden="false">
+            <legendlayerfile isInOverview="0" layerid="25g_top25raster_201420151218114032091" visible="1"/>
+          </filegroup>
+        </legendlayer>
+      </legendgroup>
     </legendgroup>
   </legend>
   <projectlayers layercount="8">
@@ -3431,7 +3436,7 @@
         </edittype>
       </edittypes>
     </maplayer>
-    <maplayer minimumScale="-4.65661e-10" maximumScale="1e+08" simplifyDrawingHints="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Point" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+    <maplayer minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Point" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
       <id>Transit_stops20151218113434630</id>
       <datasource>./Small project/Transit_stops.shp</datasource>
       <title></title>
@@ -3484,12 +3489,12 @@
       </edittypes>
       <renderer-v2 attr="network" forceraster="0" symbollevels="0" type="categorizedSymbol">
         <categories>
-          <category render="true" symbol="0" value="bus" label="bus"/>
+          <category render="false" symbol="0" value="bus" label="bus"/>
           <category render="true" symbol="1" value="ferry" label="ferry"/>
-          <category render="true" symbol="2" value="metro" label="metro"/>
+          <category render="false" symbol="2" value="metro" label="metro"/>
           <category render="true" symbol="3" value="rail" label="rail"/>
           <category render="true" symbol="4" value="tram" label="tram"/>
-          <category render="true" symbol="5" value="" label=""/>
+          <category render="false" symbol="5" value="" label=""/>
         </categories>
         <symbols>
           <symbol alpha="1" clip_to_extent="1" type="marker" name="0">

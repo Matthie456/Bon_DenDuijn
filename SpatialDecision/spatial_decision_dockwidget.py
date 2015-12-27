@@ -72,14 +72,9 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.selectAttributeLabel.hide()
 
         # analysis
-        self.bufferButton.clicked.connect(self.calculateBuffer) #click the button and create non service area
-        self.nonserviceButton.hide() # clicked.connect(self.symmmetricdifference)
-        self.accessibilityButton.clicked.connect(self.accessibility)
-        self.accessibilitynonserviceButton.clicked.connect(self.accessibilitynonservice)
-
-        # add node
+        self.checkAccessibilityButton.clicked.connect(self.checkaccessibility)
         self.addNodeButton.clicked.connect(self.startnodeprocess)
-        self.resetMapToolButton.clicked.connect(self.resetmaptool)
+        # self.recalculateButton.connect(self.checkaccessibility)
 
 
         # dropdown menus
@@ -90,8 +85,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # toggle layer visibility
         self.toggleVisibiltyCheckBox.stateChanged.connect(self.toggleHideBufferLayer)
         self.toggleAccessibiltyCheckBox.stateChanged.connect(self.toggleAccessibilityLayer)
+        self.toggleAccessibiltyCheckBox.stateChanged.connect(self.toggleAccessibilityLayer)
 
-        # visualisation
 
         # reporting
         self.featureCounterUpdateButton.clicked.connect(self.updateNumberFeatures)
@@ -142,7 +137,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.updateLayers()
 
     def saveScenario(self):
-        self.iface.actionSaveProject()
+        self.iface.actionSaveProject().trigger
 
     def updateLayers(self):
         layers = uf.getLegendLayers(self.iface, 'all', 'all')
@@ -242,10 +237,10 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         state = self.toggleVisibiltyCheckBox.checkState()
 
         if state == 0:
-            self.iface.legendInterface().setLayerVisible(layer, True)
+            self.iface.legendInterface().setLayerVisible(layer, False)
             self.refreshCanvas(layer)
         elif state == 2:
-            self.iface.legendInterface().setLayerVisible(layer, False)
+            self.iface.legendInterface().setLayerVisible(layer, True)
             self.refreshCanvas(layer)
 
     def toggleAccessibilityLayer(self):
@@ -253,15 +248,20 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         state = self.toggleAccessibiltyCheckBox.checkState()
 
         if state == 0:
-            self.iface.legendInterface().setLayerVisible(layer, True)
-            self.refreshCanvas(layer)
-        elif state == 2:
             self.iface.legendInterface().setLayerVisible(layer, False)
             self.refreshCanvas(layer)
+        elif state == 2:
+            self.iface.legendInterface().setLayerVisible(layer, True)
+            self.refreshCanvas(layer)
 
+    ## MAIN Function
+    def checkaccessibility(self):
+        '''Runs all other functions'''
+        self.calculateBuffer()
+        self.accessibility()
+        self.accessibilitynonservice()
 
-
-    # buffer function
+    # Calculate Buffers
     def calculateBuffer(self):
 
         # Globals
@@ -313,22 +313,13 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.refreshCanvas(buffer_layer)
             layer.removeSelection()
 
-    # Nonservice function
-    def symmmetricdifference (self):
-        layer = self.getSelectedLayer()
-        cur_user = self.SelectUserGroupCombo.currentText()
-        buffer_layer = uf.getLegendLayerByName(self.iface, 'Buffers_{}'.format(cur_user))
-        difference_layer = self.getNeighborhoodlayer()
-        save_path = "%s/Symmetric Difference" % QgsProject.instance().homePath()
-
-        symmdiff = processing.runandload('qgis:symmetricaldifference', buffer_layer, difference_layer, None)
-
+    # check accessibility for all building centroids
     def accessibility(self):
         # Globals
         proj = QgsProject.instance()
         CRS = proj.readEntry("SpatialDecisionDockWidget", 'CRS')[0]
-        self.accessibiltyprogressBar.setValue(0)
-        self.accessibiltyprogressBar.setMinimum(0)
+        # self.accessibiltyprogressBar.setValue(0)
+        # self.accessibiltyprogressBar.setMinimum(0)
         cur_user = self.SelectUserGroupCombo.currentText()
         all_houses_layer = self.getBuildinglayer()
         all_houses = uf.getAllFeatures(all_houses_layer) #list with residential housing as points
@@ -350,16 +341,16 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             buffers = uf.getAllFeatures(buffer_layer)
             buffer_list = list(buffers.values())
 
-            self.accessibiltyprogressBar.setMaximum(len(all_houses_list))
-            progressbar_value = 0
+            # self.accessibiltyprogressBar.setMaximum(len(all_houses_list))
+            # progressbar_value = 0
             for point in all_houses_list:
 
                 cnt = 0
                 geom = QgsGeometry(point.geometry())
                 geoms.append(geom.asPoint())
-                self.accessibiltyprogressBar.setValue(progressbar_value)
-                print self.accessibiltyprogressBar.value()
-                progressbar_value +=1
+                # self.accessibiltyprogressBar.setValue(progressbar_value)
+                # print self.accessibiltyprogressBar.value()
+                # progressbar_value +=1
                 for buffer in buffer_list:
                     base_geom = QgsGeometry(point.geometry())
                     intersect_geom = QgsGeometry(buffer.geometry())
@@ -383,8 +374,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         all_houses_layer = self.getBuildinglayer()
         all_houses = uf.getAllFeatures(all_houses_layer) #list with residential houses as points
 
-        self.needforPTprogressBar.setValue(0)
-        self.needforPTprogressBar.setMinimum(0)
+        # self.needforPTprogressBar.setValue(0)
+        # self.needforPTprogressBar.setMinimum(0)
 
         all_houses_list = list(all_houses.values())
         if all_houses_list > 0:
@@ -404,16 +395,16 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             nbhood_features_list = list(nbhood_features.values())
             fld_values = uf.getFieldValues(building_layer, 'VBO_CNT')[0]
 
-            self.needforPTprogressBar.setMaximum(len(nbhood_features_list))
-            progressbar_value = 0
+            # self.needforPTprogressBar.setMaximum(len(nbhood_features_list))
+            # progressbar_value = 0
             for nbhood_feature in nbhood_features_list:
                 geom = QgsGeometry(nbhood_feature.geometry())
                 geoms.append(geom)
                 house_id = 0
                 sumtotal = 0
-                self.needforPTprogressBar.setValue(progressbar_value)
-                print self.needforPTprogressBar.value()
-                progressbar_value += 1
+                # self.needforPTprogressBar.setValue(progressbar_value)
+                # print self.needforPTprogressBar.value()
+                # progressbar_value += 1
                 for house in all_houses_list:
                     adress_cnt = fld_values[house_id]
                     house_id += 1
@@ -465,28 +456,18 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         newfeatures = new_layer.featureCount()
         diff = newfeatures - originalfeatures
 
+        maxnodes = self.maxNewNodesSpinbox.value()
+
         # Add features
         if newfeatures == originalfeatures:
             self.iface.actionAddFeature().trigger()
-        elif diff < 3:
+        elif diff < maxnodes:
             self.iface.actionAddFeature().trigger()
-        elif diff == 3:
+        elif diff == maxnodes:
             new_layer.commitChanges()
             self.panTool = QgsMapToolPan(self.canvas)
             self.canvas.setMapTool(self.panTool)
-
-    def resetmaptool(self):
-        transit_layer = uf.getLegendLayerByName(self.iface, "Transit_stops")
-        new_layer = uf.getLegendLayerByName(self.iface, 'transit_copy')
-
-
-        print diff
-        """
-        if diff == 3:
-            new_layer.commitChanges()
-            self.panTool = QgsMapToolPan(self.canvas)
-            self.canvas.setMapTool(self.panTool)
-        """
+            self.iface.actionLayerSaveAs().trigger()
 
     # after adding features to layers needs a refresh (sometimes)
     def refreshCanvas(self, layer):
@@ -504,6 +485,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 #######
 #    Reporting functions
 #######
+
     # update a text edit field
     def updateNumberFeatures(self):
         layer = self.getSelectedLayer()

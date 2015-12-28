@@ -1,5 +1,5 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis projectname="" version="2.12.0-Lyon">
+<qgis projectname="" version="2.12.1-Lyon">
   <title></title>
   <layer-tree-group expanded="1" checked="Qt::PartiallyChecked" name="">
     <customproperties/>
@@ -3489,9 +3489,9 @@
       </edittypes>
       <renderer-v2 attr="network" forceraster="0" symbollevels="0" type="categorizedSymbol">
         <categories>
-          <category render="false" symbol="0" value="bus" label="bus"/>
+          <category render="true" symbol="0" value="bus" label="bus"/>
           <category render="true" symbol="1" value="ferry" label="ferry"/>
-          <category render="false" symbol="2" value="metro" label="metro"/>
+          <category render="true" symbol="2" value="metro" label="metro"/>
           <category render="true" symbol="3" value="rail" label="rail"/>
           <category render="true" symbol="4" value="tram" label="tram"/>
           <category render="false" symbol="5" value="" label=""/>

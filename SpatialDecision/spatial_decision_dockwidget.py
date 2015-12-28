@@ -429,6 +429,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def startnodeprocess(self):
         # load layer and duplicate it for possible changes
         transit_layer = uf.getLegendLayerByName(self.iface, "Transit_stops")
+        #make it active
         self.iface.setActiveLayer(transit_layer)
         self.iface.actionDuplicateLayer().trigger()
         new_layer = uf.getLegendLayerByName(self.iface, 'Transit_stops copy')

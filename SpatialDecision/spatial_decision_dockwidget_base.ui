@@ -71,6 +71,11 @@
             </item>
             <item>
              <property name="text">
+              <string>Adults</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
               <string>Students</string>
              </property>
             </item>

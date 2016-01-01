@@ -433,6 +433,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # Make the layer active
         self.iface.setActiveLayer(transit_layer)
         self.iface.actionDuplicateLayer().trigger()
+        ### Duplicate is still related to the original, so changes to the copy are made to the original...
         new_layer = uf.getLegendLayerByName(self.iface, 'Transit_stops copy')
         self.iface.setActiveLayer(new_layer)
 
@@ -442,9 +443,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.addnode()
 
     def addnode(self):
-        proj = QgsProject.instance()
-        CRS = proj.readEntry("SpatialDecisionDockWidget", 'CRS')[0]
-
         # load layers
         new_layer = uf.getLegendLayerByName(self.iface, 'Transit_stops copy')
         transit_layer = uf.getLegendLayerByName(self.iface, "Transit_stops")
@@ -453,15 +451,25 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         # setup clicktool
         self.clickTool = QgsMapToolEmitPoint(self.canvas)
-        self.clickTool.canvasClicked.connect(self.addnode)
+        self.clickTool.canvasClicked.connect(self.addfeatures)
         self.canvas.setMapTool(self.clickTool)
+
+
+
+    def addfeatures(self):
+        proj = QgsProject.instance()
+        CRS = proj.readEntry("SpatialDecisionDockWidget", 'CRS')[0]
+        cur_user = self.SelectUserGroupCombo.currentText()
+        new_layer = uf.getLegendLayerByName(self.iface, 'Transit_stops copy')
+        transit_layer = uf.getLegendLayerByName(self.iface, "Transit_stops")
 
         # set counter
         originalfeatures = transit_layer.featureCount()
         newfeatures = new_layer.featureCount()
         diff = newfeatures - originalfeatures
-
         maxnodes = self.maxNewNodesSpinbox.value()
+
+        print new_layer.id()
 
         # Add features
         if newfeatures == originalfeatures:
@@ -481,15 +489,15 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             name = self.newLayerNameEdit.text()
             uf.saveAsNewShapefile(new_layer, path, name, CRS,)
             # remove unnecessary copy of transit_layer
-            self.iface.setActiveLayer(new_layer)
-            self.iface.actionRemoveLayer()
+            QgsMapLayerRegistry.instance().removeMapLayer(new_layer.id())
             # load the saved layer
             self.iface.addVectorLayer(path, name, "ogr")
             scenario_layer = uf.getLegendLayerByName(self.iface, name)
             # style the layer accordingly
             stylepath = '{}/styles/'.format(QgsProject.instance().homePath())
-            scenario_layer.loadNamedStyle('{}/Transit_layer.qml'.format(stylepath))
+            scenario_layer.loadNamedStyle('{}/Transit_{}.qml'.format(stylepath, cur_user))
             scenario_layer.triggerRepaint()
+            self.iface.legendInterface().setLayerVisible(transit_layer, False)
             self.refreshCanvas(scenario_layer)
 
 

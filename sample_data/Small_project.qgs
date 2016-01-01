@@ -3496,7 +3496,7 @@
           <category render="true" symbol="2" value="metro" label="metro"/>
           <category render="true" symbol="3" value="rail" label="rail"/>
           <category render="true" symbol="4" value="tram" label="tram"/>
-          <category render="false" symbol="5" value="" label=""/>
+          <category render="true" symbol="5" value="" label=""/>
         </categories>
         <symbols>
           <symbol alpha="1" clip_to_extent="1" type="marker" name="0">

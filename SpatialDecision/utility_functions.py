@@ -982,3 +982,11 @@ def addShapeFileAttributes(layer, attributes, types, values):
                 layer.updateFields()
     return res
 
+def saveAsNewShapefile(layer, path, name, CRS):
+    filename = path+"/"+name+".shp"
+    error = QgsVectorFileWriter.writeAsVectorFormat(layer, filename, CRS, None, "ESRI Shapefile")
+
+    if error == QgsVectorFileWriter.NoError:
+        print "success!"
+    else:
+        print "failure!"

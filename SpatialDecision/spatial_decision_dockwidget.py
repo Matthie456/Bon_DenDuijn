@@ -199,7 +199,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             transit_layer.triggerRepaint()
             self.iface.legendInterface().refreshLayerSymbology(transit_layer)
         elif self.SelectUserGroupCombo.currentText() == 'Adults':
-            proj.writeEntry("SpatialDecisionDockWidget", "radius", 600)[0]
+            proj.writeEntry("SpatialDecisionDockWidget", "radius", 600)
             proj.writeEntry("SpatialDecisionDockWidget", "transittypes", "('rail','metro','ferry')")
             transit_layer = uf.getLegendLayerByName(self.iface, "Transit_stops")
             path = '{}/styles/'.format(QgsProject.instance().homePath())
@@ -429,22 +429,26 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def startnodeprocess(self):
         # load layer and duplicate it for possible changes
         transit_layer = uf.getLegendLayerByName(self.iface, "Transit_stops")
-        #make it active
+
+        # Make the layer active
         self.iface.setActiveLayer(transit_layer)
         self.iface.actionDuplicateLayer().trigger()
         new_layer = uf.getLegendLayerByName(self.iface, 'Transit_stops copy')
         self.iface.setActiveLayer(new_layer)
-        # Make sure layer is editable
 
+        # Make sure layer is editable
         if not new_layer.isEditable():
             new_layer.startEditing()
         self.addnode()
 
     def addnode(self):
+        proj = QgsProject.instance()
+        CRS = proj.readEntry("SpatialDecisionDockWidget", 'CRS')[0]
+
         # load layers
         new_layer = uf.getLegendLayerByName(self.iface, 'Transit_stops copy')
         transit_layer = uf.getLegendLayerByName(self.iface, "Transit_stops")
-
+        transit_layer.setReadOnly(True)
         new_layer.featureAdded.connect(self.addnode)
 
         # setup clicktool
@@ -461,14 +465,34 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         # Add features
         if newfeatures == originalfeatures:
+            self.iface.setActiveLayer(new_layer)
             self.iface.actionAddFeature().trigger()
+            return
         elif diff < maxnodes:
+            self.iface.setActiveLayer(new_layer)
             self.iface.actionAddFeature().trigger()
+            return
         elif diff == maxnodes:
             new_layer.commitChanges()
             self.panTool = QgsMapToolPan(self.canvas)
             self.canvas.setMapTool(self.panTool)
-            self.iface.actionLayerSaveAs().trigger()
+            # save the scenario to shapefile
+            path = "{}/Scenarios/".format(QgsProject.instance().homePath())
+            name = self.newLayerNameEdit.text()
+            uf.saveAsNewShapefile(new_layer, path, name, CRS,)
+            # remove unnecessary copy of transit_layer
+            self.iface.setActiveLayer(new_layer)
+            self.iface.actionRemoveLayer()
+            # load the saved layer
+            self.iface.addVectorLayer(path, name, "ogr")
+            scenario_layer = uf.getLegendLayerByName(self.iface, name)
+            # style the layer accordingly
+            stylepath = '{}/styles/'.format(QgsProject.instance().homePath())
+            scenario_layer.loadNamedStyle('{}/Transit_layer.qml'.format(stylepath))
+            scenario_layer.triggerRepaint()
+            self.refreshCanvas(scenario_layer)
+
+
 
     # after adding features to layers needs a refresh (sometimes)
     def refreshCanvas(self, layer):

@@ -1,12 +1,14 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis projectname="" version="2.12.1-Lyon">
+<qgis projectname="" version="2.12.0-Lyon">
   <title></title>
   <layer-tree-group expanded="1" checked="Qt::PartiallyChecked" name="">
     <customproperties/>
-    <layer-tree-group expanded="0" checked="Qt::PartiallyChecked" name="Basemap">
+    <layer-tree-group expanded="1" checked="Qt::PartiallyChecked" name="Basemap">
       <customproperties/>
       <layer-tree-layer expanded="0" checked="Qt::Checked" id="Transit_stops20151218113434630" name="Transit_stops">
-        <customproperties/>
+        <customproperties>
+          <property key="showFeatureCount" value="1"/>
+        </customproperties>
       </layer-tree-layer>
       <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="Building_centroids20151218113326346" name="Building_centroids">
         <customproperties/>
@@ -209,8 +211,8 @@
     </custom-order>
   </layer-tree-canvas>
   <legend updateDrawingOrder="true">
-    <legendgroup open="false" checked="Qt::PartiallyChecked" name="Basemap">
-      <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="Transit_stops" showFeatureCount="0">
+    <legendgroup open="true" checked="Qt::PartiallyChecked" name="Basemap">
+      <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="Transit_stops" showFeatureCount="1">
         <filegroup open="false" hidden="false">
           <legendlayerfile isInOverview="0" layerid="Transit_stops20151218113434630" visible="1"/>
         </filegroup>
@@ -3458,7 +3460,7 @@
         </spatialrefsys>
       </srs>
       <provider encoding="System">ogr</provider>
-      <previewExpression></previewExpression>
+      <previewExpression>COALESCE( "stopname", '&lt;NULL>' )</previewExpression>
       <vectorjoins/>
       <expressionfields/>
       <map-layer-style-manager current="">

@@ -67,26 +67,25 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.iface.newProjectCreated.connect(self.updateLayers)
         self.openScenarioButton.clicked.connect(self.openScenario)
         self.saveScenarioButton.clicked.connect(self.saveScenario)
-        self.selectLayerCombo.activated.connect(self.setSelectedLayer)
         self.selectAttributeCombo.hide()
         self.selectAttributeLabel.hide()
 
         # analysis
         self.checkAccessibilityButton.clicked.connect(self.checkaccessibility)
         self.addNodeButton.clicked.connect(self.startnodeprocess)
-        # self.recalculateButton.connect(self.checkaccessibility)
+        self.recalculateButton.clicked.connect(self.recalculateaccessibility)
 
 
         # dropdown menus
         self.neighborhoodCombo.activated.connect(self.setNeighborhoodlayer)
         self.buildingCentroidsCombo.activated.connect(self.setBuildinglayer)
         self.SelectUserGroupCombo.activated.connect(self.setSelectedUserGroup)
+        self.transitLayerCombo.activated.connect(self.setSelectedLayer)
 
         # toggle layer visibility
         self.toggleVisibiltyCheckBox.stateChanged.connect(self.toggleHideBufferLayer)
         self.toggleAccessibiltyCheckBox.stateChanged.connect(self.toggleAccessibilityLayer)
         self.toggleAccessibiltyCheckBox.stateChanged.connect(self.toggleAccessibilityLayer)
-
 
         # reporting
         self.featureCounterUpdateButton.clicked.connect(self.updateNumberFeatures)
@@ -141,12 +140,12 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def updateLayers(self):
         layers = uf.getLegendLayers(self.iface, 'all', 'all')
-        self.selectLayerCombo.clear()
+        self.transitLayerCombo.clear()
         self.neighborhoodCombo.clear()
         self.buildingCentroidsCombo.clear()
         if layers:
             layer_names = uf.getLayersListNames(layers)
-            self.selectLayerCombo.addItems(layer_names)
+            self.transitLayerCombo.addItems(layer_names)
             self.neighborhoodCombo.addItems(layer_names)
             self.buildingCentroidsCombo.addItems(layer_names)
             self.setSelectedLayer()
@@ -154,12 +153,12 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.setBuildinglayer()
 
     def setSelectedLayer(self):
-        layer_name = self.selectLayerCombo.currentText()
+        layer_name = self.transitLayerCombo.currentText()
         layer = uf.getLegendLayerByName(self.iface,layer_name)
         self.updateAttributes(layer)
 
     def getSelectedLayer(self):
-        layer_name = self.selectLayerCombo.currentText()
+        layer_name = self.transitLayerCombo.currentText()
         layer = uf.getLegendLayerByName(self.iface,layer_name)
         return layer
 
@@ -257,6 +256,26 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     ## MAIN Function
     def checkaccessibility(self):
         '''Runs all other functions'''
+        self.iface.legendInterface().addGroup('Scenarios')
+        self.calculateBuffer()
+        self.accessibility()
+        self.accessibilitynonservice()
+
+        # ordering accessibility layer
+        root = QgsProject.instance().layerTreeRoot()
+        scn_group = root.children()[1]
+        access = scn_group.children()[1]
+        access_clone = access.clone()
+        scn_group.insertChildNode(0,access_clone)
+        scn_group.removeChildNode(access)
+
+        # ordering scenarios group
+        scn_group_clone = scn_group.clone()
+        root.insertChildNode(0, scn_group_clone)
+        root.removeChildNode(scn_group)
+
+    def recalculateaccessibility(self):
+        '''Runs all other functions, with added nodes'''
         self.calculateBuffer()
         self.accessibility()
         self.accessibilitynonservice()
@@ -271,9 +290,18 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         transittypes = proj.readEntry("SpatialDecisionDockWidget", "transittypes")[0]
         CRS = proj.readEntry("SpatialDecisionDockWidget", 'CRS')[0]
 
-        uf.selectFeaturesByExpression(self.getSelectedLayer(),"network in {}".format(transittypes))
-        origins = self.getSelectedLayer().selectedFeatures()
-        layer = self.getSelectedLayer()
+        path = '{}/scenarios/'.format(QgsProject.instance().homePath())
+        name = self.newLayerNameEdit.text()
+        if uf.testShapeFileExists(path, name):
+            transit_layer = uf.getLegendLayerByName(self.iface, name)
+            print 'chose:', transit_layer.name()
+        else:
+            transit_layer = self.getSelectedLayer()
+            print 'chose:', transit_layer.name()
+
+        uf.selectFeaturesByExpression(transit_layer,"network in {}".format(transittypes))
+        origins = transit_layer.selectedFeatures()
+        layer = transit_layer
 
 
         if origins > 0:
@@ -310,6 +338,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             buffer_layer.loadNamedStyle('{}/Buffers.qml'.format(path))
             buffer_layer.triggerRepaint()
             self.iface.legendInterface().refreshLayerSymbology(buffer_layer)
+            self.iface.legendInterface().moveLayer(buffer_layer, 2)
             self.refreshCanvas(buffer_layer)
             layer.removeSelection()
 
@@ -364,6 +393,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             access_layer.loadNamedStyle('{}/Accessibility.qml'.format(path))
             access_layer.triggerRepaint()
             self.iface.legendInterface().refreshLayerSymbology(access_layer)
+            self.iface.legendInterface().moveLayer(access_layer, 2)
             self.refreshCanvas(access_layer)
 
     def accessibilitynonservice(self):
@@ -424,17 +454,20 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             access_nonservice_layer.loadNamedStyle('{}/Lack_of_Accessibility.qml'.format(path))
             access_nonservice_layer.triggerRepaint()
             self.iface.legendInterface().refreshLayerSymbology(access_nonservice_layer)
+            self.iface.legendInterface().moveLayer(access_nonservice_layer, 2)
             self.refreshCanvas(access_nonservice_layer)
 
     def startnodeprocess(self):
+        proj = QgsProject.instance()
+        CRS = proj.readEntry("SpatialDecisionDockWidget", 'CRS')[0]
         # load layer and duplicate it for possible changes
         transit_layer = uf.getLegendLayerByName(self.iface, "Transit_stops")
 
         # Make the layer active
         self.iface.setActiveLayer(transit_layer)
-        self.iface.actionDuplicateLayer().trigger()
-        ### Duplicate is still related to the original, so changes to the copy are made to the original...
+        uf.duplicateLayerMem(transit_layer, "POINT", CRS, 'Transit_stops copy')
         new_layer = uf.getLegendLayerByName(self.iface, 'Transit_stops copy')
+
         self.iface.setActiveLayer(new_layer)
 
         # Make sure layer is editable
@@ -454,8 +487,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.clickTool.canvasClicked.connect(self.addfeatures)
         self.canvas.setMapTool(self.clickTool)
 
-
-
     def addfeatures(self):
         proj = QgsProject.instance()
         CRS = proj.readEntry("SpatialDecisionDockWidget", 'CRS')[0]
@@ -468,8 +499,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         newfeatures = new_layer.featureCount()
         diff = newfeatures - originalfeatures
         maxnodes = self.maxNewNodesSpinbox.value()
-
-        print new_layer.id()
 
         # Add features
         if newfeatures == originalfeatures:
@@ -498,9 +527,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             scenario_layer.loadNamedStyle('{}/Transit_{}.qml'.format(stylepath, cur_user))
             scenario_layer.triggerRepaint()
             self.iface.legendInterface().setLayerVisible(transit_layer, False)
+            self.iface.legendInterface().moveLayer(scenario_layer, 0)
             self.refreshCanvas(scenario_layer)
-
-
 
     # after adding features to layers needs a refresh (sometimes)
     def refreshCanvas(self, layer):
@@ -575,6 +603,5 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def clearTable(self):
         self.statisticsTable.clear()
-
 
 

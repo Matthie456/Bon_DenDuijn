@@ -990,3 +990,28 @@ def saveAsNewShapefile(layer, path, name, CRS):
         print "success!"
     else:
         print "failure!"
+
+def duplicateLayerMem(layer, geometry, CRS, name):
+    new_layer = QgsVectorLayer('{}?crs=EPSG:{}'.format(geometry, CRS), name, "memory")
+    provider = new_layer.dataProvider()
+
+    attributes = ['sid', 'stopname', 'townname', 'matchname', 'network', 'buurtname', 'gemeentena']
+    Qstr = QtCore.QVariant.String
+    types = [Qstr, Qstr, Qstr, Qstr, Qstr, Qstr, Qstr]
+
+    if attributes:
+        new_layer.startEditing()
+        fields = []
+        for i, att in enumerate(attributes):
+            fields.append(QgsField(att, types[i]))
+        # add the fields to the layer
+        try:
+            provider.addAttributes(fields)
+        except:
+            return None
+        new_layer.commitChanges()
+
+    features = [feat for feat in layer.getFeatures()]
+    provider.addFeatures(features)
+    QgsMapLayerRegistry.instance().addMapLayer(new_layer)
+    print 'done'

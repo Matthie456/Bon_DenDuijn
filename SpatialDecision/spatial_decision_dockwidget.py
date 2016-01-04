@@ -267,7 +267,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     ## MAIN Function
     def checkaccessibility(self):
         '''Runs all other functions'''
-        self.iface.legendInterface().addGroup('Scenarios')
+        name = self.newLayerNameEdit.text()
+        self.iface.legendInterface().addGroup(name)
         self.calculateBuffer()
         self.accessibility()
         self.accessibilitynonservice()
@@ -303,10 +304,12 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         path = '{}/scenarios/'.format(QgsProject.instance().homePath())
         name = self.newLayerNameEdit.text()
-        if uf.testShapeFileExists(path, name):
-            transit_layer = uf.getLegendLayerByName(self.iface, name)
+        if uf.testShapeFileExists(path, 'Transit_{}'.format(name)):
+            scn_layer = uf.getLegendLayerByName(self.iface, 'Transit_{}'.format(name))
+            transit_layer = scn_layer
             print 'chose:', transit_layer.name()
         else:
+            scn_layer = 'empty'
             transit_layer = self.getSelectedLayer()
             print 'chose:', transit_layer.name()
 
@@ -329,7 +332,18 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 types = [QtCore.QVariant.String, QtCore.QVariant.Double, QtCore.QVariant.String]
                 buffer_layer = uf.createTempLayer('Buffers_{}'.format(cur_user),'POLYGON',CRS, attribs, types)
                 buffer_layer.setLayerName('Buffers_{}'.format(cur_user))
+                print "created layer", buffer_layer.name()
                 uf.loadTempLayer(buffer_layer)
+            if transit_layer == scn_layer:
+                name = self.newLayerNameEdit.text()
+                attribs = ['id', 'distance', 'network']
+                types = [QtCore.QVariant.String, QtCore.QVariant.Double, QtCore.QVariant.String]
+                buffer_layer = uf.createTempLayer('Buffers_{}_{}'.format(cur_user, name),'POLYGON',CRS, attribs, types)
+                buffer_layer.setLayerName('Buffers_{}_{}'.format(cur_user, name))
+                print "created layer", buffer_layer.name()
+                uf.loadTempLayer(buffer_layer)
+
+
             # insert buffer polygons
             geoms = [] # geometries in a list
             values = [] #list of lists, consisting of 3 items. E.g. [[0L, 1200, 1],[...
@@ -349,7 +363,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             buffer_layer.loadNamedStyle('{}/Buffers.qml'.format(path))
             buffer_layer.triggerRepaint()
             self.iface.legendInterface().refreshLayerSymbology(buffer_layer)
-            if transit_layer.name() == self.newLayerNameEdit.text():
+            layer_name = "Transit_{}".format(self.newLayerNameEdit.text())
+            if transit_layer.name() == layer_name:
                 self.iface.legendInterface().moveLayer(buffer_layer, 0)
             else:
                 self.iface.legendInterface().moveLayer(buffer_layer, 2)
@@ -369,6 +384,17 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         all_houses_layer = self.getBuildinglayer()
         all_houses = uf.getAllFeatures(all_houses_layer) #list with residential housing as points
 
+        path = '{}/scenarios/'.format(QgsProject.instance().homePath())
+        name = self.newLayerNameEdit.text()
+        if uf.testShapeFileExists(path, 'Transit_{}'.format(name)):
+            scn_layer = uf.getLegendLayerByName(self.iface, 'Transit_{}'.format(name))
+            transit_layer = scn_layer
+            print 'chose:', transit_layer.name()
+        else:
+            scn_layer = 'empty'
+            transit_layer = self.getSelectedLayer()
+            print 'chose:', transit_layer.name()
+
         all_houses_list = list(all_houses.values())
         if all_houses_list > 0:
             layer = self.getSelectedLayer()
@@ -379,6 +405,12 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 attribs = ['number of overlapping buffers']
                 types = [QtCore.QVariant.Double]
                 access_layer = uf.createTempLayer('Accessibility','POINT',CRS, attribs, types)
+                uf.loadTempLayer(access_layer)
+            if transit_layer == scn_layer:
+                name = self.newLayerNameEdit.text()
+                attribs = ['number of overlapping buffers']
+                types = [QtCore.QVariant.Double]
+                access_layer = uf.createTempLayer('Accessibility_{}'.format(name),'POINT',CRS, attribs, types)
                 uf.loadTempLayer(access_layer)
             geoms = []
             values = []
@@ -410,14 +442,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             access_layer.triggerRepaint()
             self.iface.legendInterface().refreshLayerSymbology(access_layer)
 
-            path = '{}/scenarios/'.format(QgsProject.instance().homePath())
-            name = self.newLayerNameEdit.text()
-            if uf.testShapeFileExists(path, name):
-                transit_layer = uf.getLegendLayerByName(self.iface, name)
-            else:
-                transit_layer = self.getSelectedLayer()
-
-            if transit_layer.name() == self.newLayerNameEdit.text():
+            layer_name = "Transit_{}".format(self.newLayerNameEdit.text())
+            if transit_layer.name() == layer_name:
                 self.iface.legendInterface().moveLayer(access_layer, 0)
             else:
                 self.iface.legendInterface().moveLayer(access_layer, 2)
@@ -432,8 +458,16 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         all_houses_layer = self.getBuildinglayer()
         all_houses = uf.getAllFeatures(all_houses_layer) #list with residential houses as points
 
-        # self.needforPTprogressBar.setValue(0)
-        # self.needforPTprogressBar.setMinimum(0)
+        path = '{}/scenarios/'.format(QgsProject.instance().homePath())
+        name = self.newLayerNameEdit.text()
+        if uf.testShapeFileExists(path, 'Transit_{}'.format(name)):
+            scn_layer = uf.getLegendLayerByName(self.iface, 'Transit_{}'.format(name))
+            transit_layer = scn_layer
+            print 'chose:', transit_layer.name()
+        else:
+            scn_layer = 'empty'
+            transit_layer = self.getSelectedLayer()
+            print 'chose:', transit_layer.name()
 
         all_houses_list = list(all_houses.values())
         if all_houses_list > 0:
@@ -442,6 +476,12 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             access_nonservice_layer = uf.getLegendLayerByName(self.iface, "Lack of accessibility")
             # create one if it doesn't exist
             if not access_nonservice_layer:
+                attribs = ['ratio']
+                types = [QtCore.QVariant.Double]
+                access_nonservice_layer = uf.createTempLayer('Lack of accessibility','POLYGON',CRS, attribs, types)
+                uf.loadTempLayer(access_nonservice_layer)
+            if transit_layer == scn_layer:
+                name = self.newLayerNameEdit.text()
                 attribs = ['ratio']
                 types = [QtCore.QVariant.Double]
                 access_nonservice_layer = uf.createTempLayer('Lack of accessibility','POLYGON',CRS, attribs, types)
@@ -483,14 +523,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             access_nonservice_layer.triggerRepaint()
             self.iface.legendInterface().refreshLayerSymbology(access_nonservice_layer)
 
-            path = '{}/scenarios/'.format(QgsProject.instance().homePath())
-            name = self.newLayerNameEdit.text()
-            if uf.testShapeFileExists(path, name):
-                transit_layer = uf.getLegendLayerByName(self.iface, name)
-            else:
-                transit_layer = self.getSelectedLayer()
-
-            if transit_layer.name() == self.newLayerNameEdit.text():
+            layer_name = "Transit_{}".format(self.newLayerNameEdit.text())
+            if transit_layer.name() == layer_name:
                 self.iface.legendInterface().moveLayer(access_nonservice_layer, 0)
             else:
                 self.iface.legendInterface().moveLayer(access_nonservice_layer, 2)
@@ -556,12 +590,12 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             # save the scenario to shapefile
             path = "{}/Scenarios/".format(QgsProject.instance().homePath())
             name = self.newLayerNameEdit.text()
-            uf.saveAsNewShapefile(new_layer, path, name, CRS,)
+            uf.saveAsNewShapefile(new_layer, path, "Transit_{}".format(name), CRS,)
             # remove unnecessary copy of transit_layer
             QgsMapLayerRegistry.instance().removeMapLayer(new_layer.id())
             # load the saved layer
-            self.iface.addVectorLayer(path, name, "ogr")
-            scenario_layer = uf.getLegendLayerByName(self.iface, name)
+            self.iface.addVectorLayer(path, "Transit_{}".format(name), "ogr")
+            scenario_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(name))
             # style the layer accordingly
             stylepath = '{}/styles/'.format(QgsProject.instance().homePath())
             scenario_layer.loadNamedStyle('{}/Transit_{}.qml'.format(stylepath, cur_user))

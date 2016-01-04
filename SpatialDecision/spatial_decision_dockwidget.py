@@ -83,9 +83,9 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.transitLayerCombo.activated.connect(self.setSelectedLayer)
 
         # toggle layer visibility
-        self.toggleVisibiltyCheckBox.stateChanged.connect(self.toggleHideBufferLayer)
+        self.toggleBufferCheckBox.stateChanged.connect(self.toggleBufferLayer)
         self.toggleAccessibiltyCheckBox.stateChanged.connect(self.toggleAccessibilityLayer)
-        self.toggleAccessibiltyCheckBox.stateChanged.connect(self.toggleAccessibilityLayer)
+        self.toggleLoAccessibilityCheckBox.stateChanged.connect(self.toggleLoAccessibilityLayer)
 
         # reporting
         self.featureCounterUpdateButton.clicked.connect(self.updateNumberFeatures)
@@ -230,10 +230,10 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         layer = uf.getLegendLayerByName(self.iface,layer_name)
         return layer
 
-    def toggleHideBufferLayer(self):
+    def toggleBufferLayer(self):
         cur_user = self.SelectUserGroupCombo.currentText()
         layer = uf.getLegendLayerByName(self.iface, 'Buffers_{}'.format(cur_user))
-        state = self.toggleVisibiltyCheckBox.checkState()
+        state = self.toggleBufferCheckBox.checkState()
 
         if state == 0:
             self.iface.legendInterface().setLayerVisible(layer, False)
@@ -245,6 +245,17 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def toggleAccessibilityLayer(self):
         layer = uf.getLegendLayerByName(self.iface, 'Accessibility')
         state = self.toggleAccessibiltyCheckBox.checkState()
+
+        if state == 0:
+            self.iface.legendInterface().setLayerVisible(layer, False)
+            self.refreshCanvas(layer)
+        elif state == 2:
+            self.iface.legendInterface().setLayerVisible(layer, True)
+            self.refreshCanvas(layer)
+
+    def toggleLoAccessibilityLayer(self):
+        layer = uf.getLegendLayerByName(self.iface, 'Lack of accessibility')
+        state = self.toggleLoAccessibilityCheckBox.checkState()
 
         if state == 0:
             self.iface.legendInterface().setLayerVisible(layer, False)
@@ -339,6 +350,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             buffer_layer.triggerRepaint()
             self.iface.legendInterface().refreshLayerSymbology(buffer_layer)
             self.iface.legendInterface().moveLayer(buffer_layer, 2)
+            self.iface.legendInterface().setLayerVisible(buffer_layer, False)
             self.refreshCanvas(buffer_layer)
             layer.removeSelection()
 
@@ -394,6 +406,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             access_layer.triggerRepaint()
             self.iface.legendInterface().refreshLayerSymbology(access_layer)
             self.iface.legendInterface().moveLayer(access_layer, 2)
+            self.iface.legendInterface().setLayerVisible(access_layer, False)
             self.refreshCanvas(access_layer)
 
     def accessibilitynonservice(self):
@@ -455,6 +468,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             access_nonservice_layer.triggerRepaint()
             self.iface.legendInterface().refreshLayerSymbology(access_nonservice_layer)
             self.iface.legendInterface().moveLayer(access_nonservice_layer, 2)
+            self.iface.legendInterface().setLayerVisible(access_nonservice_layer, False)
             self.refreshCanvas(access_nonservice_layer)
 
     def startnodeprocess(self):
@@ -528,6 +542,15 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             scenario_layer.triggerRepaint()
             self.iface.legendInterface().setLayerVisible(transit_layer, False)
             self.iface.legendInterface().moveLayer(scenario_layer, 0)
+            self.iface.legendInterface().setLayerExpanded(scenario_layer, False)
+
+            root = QgsProject.instance().layerTreeRoot()
+            scn_group = root.children()[0]
+            access = scn_group.children()[0]
+            access_clone = access.clone()
+            scn_group.insertChildNode(4, access_clone)
+            scn_group.removeChildNode(access)
+
             self.refreshCanvas(scenario_layer)
 
     # after adding features to layers needs a refresh (sometimes)

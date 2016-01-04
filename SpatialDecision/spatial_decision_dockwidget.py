@@ -349,7 +349,11 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             buffer_layer.loadNamedStyle('{}/Buffers.qml'.format(path))
             buffer_layer.triggerRepaint()
             self.iface.legendInterface().refreshLayerSymbology(buffer_layer)
-            self.iface.legendInterface().moveLayer(buffer_layer, 2)
+            if transit_layer.name() == self.newLayerNameEdit.text():
+                self.iface.legendInterface().moveLayer(buffer_layer, 0)
+            else:
+                self.iface.legendInterface().moveLayer(buffer_layer, 2)
+
             self.iface.legendInterface().setLayerVisible(buffer_layer, False)
             self.refreshCanvas(buffer_layer)
             layer.removeSelection()
@@ -405,7 +409,18 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             access_layer.loadNamedStyle('{}/Accessibility.qml'.format(path))
             access_layer.triggerRepaint()
             self.iface.legendInterface().refreshLayerSymbology(access_layer)
-            self.iface.legendInterface().moveLayer(access_layer, 2)
+
+            path = '{}/scenarios/'.format(QgsProject.instance().homePath())
+            name = self.newLayerNameEdit.text()
+            if uf.testShapeFileExists(path, name):
+                transit_layer = uf.getLegendLayerByName(self.iface, name)
+            else:
+                transit_layer = self.getSelectedLayer()
+
+            if transit_layer.name() == self.newLayerNameEdit.text():
+                self.iface.legendInterface().moveLayer(access_layer, 0)
+            else:
+                self.iface.legendInterface().moveLayer(access_layer, 2)
             self.iface.legendInterface().setLayerVisible(access_layer, False)
             self.refreshCanvas(access_layer)
 
@@ -467,7 +482,18 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             access_nonservice_layer.loadNamedStyle('{}/Lack_of_Accessibility.qml'.format(path))
             access_nonservice_layer.triggerRepaint()
             self.iface.legendInterface().refreshLayerSymbology(access_nonservice_layer)
-            self.iface.legendInterface().moveLayer(access_nonservice_layer, 2)
+
+            path = '{}/scenarios/'.format(QgsProject.instance().homePath())
+            name = self.newLayerNameEdit.text()
+            if uf.testShapeFileExists(path, name):
+                transit_layer = uf.getLegendLayerByName(self.iface, name)
+            else:
+                transit_layer = self.getSelectedLayer()
+
+            if transit_layer.name() == self.newLayerNameEdit.text():
+                self.iface.legendInterface().moveLayer(access_nonservice_layer, 0)
+            else:
+                self.iface.legendInterface().moveLayer(access_nonservice_layer, 2)
             self.iface.legendInterface().setLayerVisible(access_nonservice_layer, False)
             self.refreshCanvas(access_nonservice_layer)
 

@@ -267,33 +267,45 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     ## MAIN Function
     def checkaccessibility(self):
         '''Runs all other functions'''
-        name = self.newLayerNameEdit.text()
-        self.iface.legendInterface().addGroup(name)
-        self.calculateBuffer()
-        self.accessibility()
-        self.accessibilitynonservice()
+
+        self.iface.legendInterface().addGroup("Baselayers")
+        self.calculateBuffer(False)
+        self.accessibility(False)
+        self.accessibilitynonservice(False)
 
         # ordering accessibility layer
         root = QgsProject.instance().layerTreeRoot()
-        scn_group = root.children()[1]
-        access = scn_group.children()[1]
+        base_group = root.children()[1]
+        access = base_group.children()[1]
         access_clone = access.clone()
-        scn_group.insertChildNode(0,access_clone)
-        scn_group.removeChildNode(access)
+        base_group.insertChildNode(0,access_clone)
+        base_group.removeChildNode(access)
 
         # ordering scenarios group
-        scn_group_clone = scn_group.clone()
-        root.insertChildNode(0, scn_group_clone)
-        root.removeChildNode(scn_group)
+        base_group_clone = base_group.clone()
+        root.insertChildNode(0, base_group_clone)
+        root.removeChildNode(base_group)
 
     def recalculateaccessibility(self):
         '''Runs all other functions, with added nodes'''
-        self.calculateBuffer()
-        self.accessibility()
-        self.accessibilitynonservice()
+        name = self.newLayerNameEdit.text()
+        self.iface.legendInterface().addGroup(name)
+        root = QgsProject.instance().layerTreeRoot()
+        length = len(root.children())
+        new_group = root.children()[length-1]
+        new_group_clone = new_group.clone()
+        root.insertChildNode(0,new_group_clone)
+        root.removeChildNode(new_group)
+        scenario_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(name))
+
+        self.iface.legendInterface().moveLayer(scenario_layer, 0)
+        self.calculateBuffer(True)
+        self.accessibility(True)
+        self.accessibilitynonservice(True)
+
 
     # Calculate Buffers
-    def calculateBuffer(self):
+    def calculateBuffer(self, is_scn):
 
         # Globals
         proj = QgsProject.instance()
@@ -304,12 +316,11 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         path = '{}/scenarios/'.format(QgsProject.instance().homePath())
         name = self.newLayerNameEdit.text()
-        if uf.testShapeFileExists(path, 'Transit_{}'.format(name)):
+        if is_scn:
             scn_layer = uf.getLegendLayerByName(self.iface, 'Transit_{}'.format(name))
             transit_layer = scn_layer
             print 'chose:', transit_layer.name()
         else:
-            scn_layer = 'empty'
             transit_layer = self.getSelectedLayer()
             print 'chose:', transit_layer.name()
 
@@ -334,7 +345,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 buffer_layer.setLayerName('Buffers_{}'.format(cur_user))
                 print "created layer", buffer_layer.name()
                 uf.loadTempLayer(buffer_layer)
-            if transit_layer == scn_layer:
+            if is_scn:
                 name = self.newLayerNameEdit.text()
                 attribs = ['id', 'distance', 'network']
                 types = [QtCore.QVariant.String, QtCore.QVariant.Double, QtCore.QVariant.String]
@@ -363,8 +374,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             buffer_layer.loadNamedStyle('{}/Buffers.qml'.format(path))
             buffer_layer.triggerRepaint()
             self.iface.legendInterface().refreshLayerSymbology(buffer_layer)
-            layer_name = "Transit_{}".format(self.newLayerNameEdit.text())
-            if transit_layer.name() == layer_name:
+
+            if is_scn:
                 self.iface.legendInterface().moveLayer(buffer_layer, 0)
             else:
                 self.iface.legendInterface().moveLayer(buffer_layer, 2)
@@ -374,7 +385,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             layer.removeSelection()
 
     # check accessibility for all building centroids
-    def accessibility(self):
+    def accessibility(self, is_scn):
         # Globals
         proj = QgsProject.instance()
         CRS = proj.readEntry("SpatialDecisionDockWidget", 'CRS')[0]
@@ -383,17 +394,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         cur_user = self.SelectUserGroupCombo.currentText()
         all_houses_layer = self.getBuildinglayer()
         all_houses = uf.getAllFeatures(all_houses_layer) #list with residential housing as points
-
-        path = '{}/scenarios/'.format(QgsProject.instance().homePath())
-        name = self.newLayerNameEdit.text()
-        if uf.testShapeFileExists(path, 'Transit_{}'.format(name)):
-            scn_layer = uf.getLegendLayerByName(self.iface, 'Transit_{}'.format(name))
-            transit_layer = scn_layer
-            print 'chose:', transit_layer.name()
-        else:
-            scn_layer = 'empty'
-            transit_layer = self.getSelectedLayer()
-            print 'chose:', transit_layer.name()
 
         all_houses_list = list(all_houses.values())
         if all_houses_list > 0:
@@ -406,7 +406,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 types = [QtCore.QVariant.Double]
                 access_layer = uf.createTempLayer('Accessibility','POINT',CRS, attribs, types)
                 uf.loadTempLayer(access_layer)
-            if transit_layer == scn_layer:
+            if is_scn:
                 name = self.newLayerNameEdit.text()
                 attribs = ['number of overlapping buffers']
                 types = [QtCore.QVariant.Double]
@@ -442,32 +442,20 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             access_layer.triggerRepaint()
             self.iface.legendInterface().refreshLayerSymbology(access_layer)
 
-            layer_name = "Transit_{}".format(self.newLayerNameEdit.text())
-            if transit_layer.name() == layer_name:
+            if is_scn:
                 self.iface.legendInterface().moveLayer(access_layer, 0)
             else:
                 self.iface.legendInterface().moveLayer(access_layer, 2)
             self.iface.legendInterface().setLayerVisible(access_layer, False)
             self.refreshCanvas(access_layer)
 
-    def accessibilitynonservice(self):
+    def accessibilitynonservice(self, is_scn):
         # Globals
         proj = QgsProject.instance()
         CRS = proj.readEntry("SpatialDecisionDockWidget", 'CRS')[0]
 
         all_houses_layer = self.getBuildinglayer()
         all_houses = uf.getAllFeatures(all_houses_layer) #list with residential houses as points
-
-        path = '{}/scenarios/'.format(QgsProject.instance().homePath())
-        name = self.newLayerNameEdit.text()
-        if uf.testShapeFileExists(path, 'Transit_{}'.format(name)):
-            scn_layer = uf.getLegendLayerByName(self.iface, 'Transit_{}'.format(name))
-            transit_layer = scn_layer
-            print 'chose:', transit_layer.name()
-        else:
-            scn_layer = 'empty'
-            transit_layer = self.getSelectedLayer()
-            print 'chose:', transit_layer.name()
 
         all_houses_list = list(all_houses.values())
         if all_houses_list > 0:
@@ -480,11 +468,11 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 types = [QtCore.QVariant.Double]
                 access_nonservice_layer = uf.createTempLayer('Lack of accessibility','POLYGON',CRS, attribs, types)
                 uf.loadTempLayer(access_nonservice_layer)
-            if transit_layer == scn_layer:
+            if is_scn:
                 name = self.newLayerNameEdit.text()
                 attribs = ['ratio']
                 types = [QtCore.QVariant.Double]
-                access_nonservice_layer = uf.createTempLayer('Lack of accessibility','POLYGON',CRS, attribs, types)
+                access_nonservice_layer = uf.createTempLayer('Lack of accessibility_{}'.format(name),'POLYGON',CRS, attribs, types)
                 uf.loadTempLayer(access_nonservice_layer)
             geoms = []
             values = []
@@ -523,8 +511,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             access_nonservice_layer.triggerRepaint()
             self.iface.legendInterface().refreshLayerSymbology(access_nonservice_layer)
 
-            layer_name = "Transit_{}".format(self.newLayerNameEdit.text())
-            if transit_layer.name() == layer_name:
+            if is_scn:
                 self.iface.legendInterface().moveLayer(access_nonservice_layer, 0)
             else:
                 self.iface.legendInterface().moveLayer(access_nonservice_layer, 2)

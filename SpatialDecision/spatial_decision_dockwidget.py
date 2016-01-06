@@ -88,9 +88,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.toggleLoAccessibilityCheckBox.stateChanged.connect(self.toggleLoAccessibilityLayer)
 
         # reporting
-        self.featureCounterUpdateButton.clicked.connect(self.updateNumberFeatures)
+        #self.featureCounterUpdateButton.clicked.connect(self.updateNumberFeatures)
         self.saveMapButton.clicked.connect(self.saveMap)
-        self.saveMapPathButton.clicked.connect(self.selectFile)
         self.updateAttribute.connect(self.extractAttributeSummary)
 
         # set current UI restrictions
@@ -590,8 +589,9 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.iface.addVectorLayer(directory, "Transit_{}".format(name), "ogr")
             scenario_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(name))
             # style the layer accordingly
-            stylepath = '{}/styles/'.format(QgsProject.instance().homePath())
-            scenario_layer.loadNamedStyle('{}/Transit_{}.qml'.format(stylepath, cur_user))
+            stylepath = '{}/Styles/'.format(QgsProject.instance().homePath())
+            scenario_layer.loadNamedStyle('{}Transit_{}.qml'.format(stylepath, cur_user))
+
             scenario_layer.triggerRepaint()
 
             # Set layer visibility and move to correct group
@@ -629,26 +629,22 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 #######
 
     # update a text edit field
-    def updateNumberFeatures(self):
+    """def updateNumberFeatures(self):
         layer = self.getSelectedLayer()
         if layer:
             count = layer.featureCount()
-            self.featureCounterEdit.setText(str(count))
+            self.featureCounterEdit.setText(str(count))"""
 
-    # selecting a file for saving
-    def selectFile(self):
-        last_dir = uf.getLastDir("SDSS")
-        path = QtGui.QFileDialog.getSaveFileName(self, "Save map file", last_dir, "PNG (*.png)")
-        if path.strip()!="":
-            path = unicode(path)
-            uf.setLastDir(path,"SDSS")
-            self.saveMapPathEdit.setText(path)
 
     # saving the current screen
     def saveMap(self):
-        filename = self.saveMapPathEdit.text()
-        if filename != '':
-            self.canvas.saveAsImage(filename,None,"PNG")
+        last_dir = uf.getLastDir("SDSS")
+        path = QtGui.QFileDialog.getSaveFileName(self, "Save map file", last_dir, "PNG (*.png)")
+        #path = "{}/Images/".format(QgsProject.instance().homePath())
+        if path.strip()!="":
+            path = unicode(path)
+            uf.setLastDir(path,"SDSS")
+            self.canvas.saveAsImage(path,None,"PNG")
 
     def extractAttributeSummary(self, attribute):
         # get summary of the attribute

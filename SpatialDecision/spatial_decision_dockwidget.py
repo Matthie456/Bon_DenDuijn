@@ -301,7 +301,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.iface.legendInterface().moveLayer(scenario_layer, 0)
         self.calculateBuffer(True)
         self.accessibility(True)
-        self.accessibilitynonservice(True)
+
 
 
     # Calculate Buffers
@@ -413,7 +413,10 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 uf.loadTempLayer(access_layer)
             geoms = []
             values = []
-            buffer_layer = uf.getLegendLayerByName(self.iface, 'Buffers_{}'.format(cur_user))
+            if is_scn:
+                buffer_layer = uf.getLegendLayerByName(self.iface, 'Buffers_{}_{}'.format(cur_user, name))
+            else:
+                buffer_layer = uf.getLegendLayerByName(self.iface, 'Buffers_{}'.format(cur_user))
             buffers = uf.getAllFeatures(buffer_layer)
             buffer_list = list(buffers.values())
 
@@ -575,7 +578,10 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 pass
             else:
                 os.makedirs(directory)
-            uf.saveAsNewShapefile(new_layer, directory, "Transit_{}".format(name), CRS,)
+            scenario_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(name))
+            if not scenario_layer:
+                uf.saveAsNewShapefile(new_layer, directory, "Transit_{}".format(name), CRS,)
+                scenario_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(name))
 
             # Remove unnecessary copy of transit_layer
             QgsMapLayerRegistry.instance().removeMapLayer(new_layer.id())

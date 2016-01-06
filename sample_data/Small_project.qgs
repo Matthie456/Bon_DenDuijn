@@ -3,7 +3,7 @@
   <title></title>
   <layer-tree-group expanded="1" checked="Qt::PartiallyChecked" name="">
     <customproperties/>
-    <layer-tree-group expanded="1" checked="Qt::PartiallyChecked" name="Basemap">
+    <layer-tree-group expanded="0" checked="Qt::PartiallyChecked" name="Basemap">
       <customproperties/>
       <layer-tree-layer expanded="0" checked="Qt::Checked" id="Transit_stops20151218113434630" name="Transit_stops">
         <customproperties>
@@ -40,10 +40,10 @@
   <mapcanvas>
     <units>meters</units>
     <extent>
-      <xmin>109650.96414976150845177</xmin>
-      <ymin>481221.39405797608196735</ymin>
-      <xmax>130784.78980562693323009</xmax>
-      <ymax>492979.02811189845670015</ymax>
+      <xmin>109475.37955205325852148</xmin>
+      <ymin>480982.45311732066329569</ymin>
+      <xmax>130609.2052079185959883</xmax>
+      <ymax>492740.08717124303802848</ymax>
     </extent>
     <rotation>0</rotation>
     <projections>1</projections>
@@ -224,7 +224,7 @@
     </custom-order>
   </layer-tree-canvas>
   <legend updateDrawingOrder="true">
-    <legendgroup open="true" checked="Qt::PartiallyChecked" name="Basemap">
+    <legendgroup open="false" checked="Qt::PartiallyChecked" name="Basemap">
       <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="Transit_stops" showFeatureCount="1">
         <filegroup open="false" hidden="false">
           <legendlayerfile isInOverview="0" layerid="Transit_stops20151218113434630" visible="1"/>
@@ -3505,10 +3505,10 @@
       <renderer-v2 attr="network" forceraster="0" symbollevels="0" type="categorizedSymbol">
         <categories>
           <category render="false" symbol="0" value="bus" label="bus"/>
-          <category render="true" symbol="1" value="ferry" label="ferry"/>
+          <category render="false" symbol="1" value="ferry" label="ferry"/>
           <category render="false" symbol="2" value="metro" label="metro"/>
-          <category render="true" symbol="3" value="rail" label="rail"/>
-          <category render="true" symbol="4" value="tram" label="tram"/>
+          <category render="false" symbol="3" value="rail" label="rail"/>
+          <category render="false" symbol="4" value="tram" label="tram"/>
           <category render="false" symbol="5" value="" label=""/>
         </categories>
         <symbols>

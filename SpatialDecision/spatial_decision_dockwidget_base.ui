@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>346</width>
-    <height>383</height>
+    <width>414</width>
+    <height>535</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -229,14 +229,69 @@
             </property>
            </widget>
           </item>
+          <item>
+           <widget class="QLCDNumber" name="remainingNodesLCD">
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <property name="lineWidth">
+             <number>1</number>
+            </property>
+            <property name="midLineWidth">
+             <number>0</number>
+            </property>
+            <property name="smallDecimalPoint">
+             <bool>false</bool>
+            </property>
+            <property name="digitCount">
+             <number>1</number>
+            </property>
+            <property name="mode">
+             <enum>QLCDNumber::Dec</enum>
+            </property>
+            <property name="segmentStyle">
+             <enum>QLCDNumber::Flat</enum>
+            </property>
+            <property name="value" stdset="0">
+             <double>0.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
          </layout>
         </item>
         <item>
-         <widget class="QPushButton" name="addNodeButton">
-          <property name="text">
-           <string>Add new transport node</string>
-          </property>
-         </widget>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QPushButton" name="addNodeButton">
+            <property name="text">
+             <string>Add new transport node</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="continueAddNodeButton">
+            <property name="text">
+             <string>Continue adding...</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
         <item>
          <widget class="QPushButton" name="recalculateButton">
@@ -259,11 +314,6 @@
          </spacer>
         </item>
        </layout>
-      </widget>
-      <widget class="QWidget" name="VisualisationTab">
-       <attribute name="title">
-        <string>Visualisation</string>
-       </attribute>
       </widget>
       <widget class="QWidget" name="ReportingTab">
        <attribute name="title">

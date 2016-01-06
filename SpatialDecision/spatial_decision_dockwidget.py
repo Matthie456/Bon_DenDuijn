@@ -99,11 +99,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.updateLayers()
         proj = QgsProject.instance()
         proj.writeEntry("SpatialDecisionDockWidget", 'CRS' ,28992)
-        print "Plugin loaded!"
-
-
-
-        #run simple tests
 
     def closeEvent(self, event):
         # disconnect interface signals
@@ -112,14 +107,11 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         self.closingPlugin.emit()
         event.accept()
-
 #######
-#   Data functions
+#   Input functions
 #######
-
     def openScenario(self,filename=""):
         scenario_open = False
-        #scenario_file = os.path.join('/Users/jorge/github/GEO1005','sample_data','time_test.qgs')
 
         scenario_file = os.path.join('{}'.format(QgsProject.instance().homePath()),'sample_data', 'projectfile.qgs')
         # check if file exists
@@ -524,10 +516,13 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         uf.duplicateLayerMem(transit_layer, "POINT", CRS, 'Transit_stops copy')
         new_layer = uf.getLegendLayerByName(self.iface, 'Transit_stops copy')
         self.iface.setActiveLayer(new_layer)
+        self.iface.legendInterface().setLayerVisible(new_layer, False)
 
         # Make sure layer is editable
         if not new_layer.isEditable():
             new_layer.startEditing()
+        maxnodes = self.maxNewNodesSpinbox.value()
+        self.remainingNodesLCD.display(maxnodes)
         self.addnode()
 
     def addnode(self):
@@ -540,6 +535,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # setup clicktool
         self.clickTool = QgsMapToolEmitPoint(self.canvas)
         self.clickTool.canvasClicked.connect(self.addfeatures)
+        self.clickTool.canvasClicked.connect(self.lcdCounter)
         self.canvas.setMapTool(self.clickTool)
 
     def addfeatures(self):
@@ -554,6 +550,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         newfeatures = new_layer.featureCount()
         diff = newfeatures - originalfeatures
         maxnodes = self.maxNewNodesSpinbox.value()
+
 
         # Add features
         if newfeatures == originalfeatures:
@@ -610,6 +607,9 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.refreshCanvas(scenario_layer)
 
 
+    def lcdCounter(self):
+        value = self.remainingNodesLCD.value()
+        self.remainingNodesLCD.display(value-1)
 
     # after adding features to layers needs a refresh (sometimes)
     def refreshCanvas(self, layer):

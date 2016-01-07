@@ -74,7 +74,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.checkAccessibilityButton.clicked.connect(self.checkaccessibility)
         self.addNodeButton.clicked.connect(self.startnodeprocess)
         self.recalculateButton.clicked.connect(self.recalculateaccessibility)
-
+        self.continueAddingNodesButton.clicked.connect(self.setClickTool)
 
         # dropdown menus
         self.neighborhoodCombo.activated.connect(self.setNeighborhoodlayer)
@@ -85,7 +85,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # toggle layer visibility
         self.toggleBufferCheckBox.stateChanged.connect(self.toggleBufferLayer)
         self.toggleAccessibiltyCheckBox.stateChanged.connect(self.toggleAccessibilityLayer)
-        self.toggleLoAccessibilityCheckBox.stateChanged.connect(self.toggleLoAccessibilityLayer)
+        self.toggleLoAccessibilityCheckBox.stateChanged.connect(self.toggleDensityLayer)
 
         # reporting
         #self.featureCounterUpdateButton.clicked.connect(self.updateNumberFeatures)
@@ -112,7 +112,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def openScenario(self,filename=""):
         scenario_open = False
 
-        scenario_file = os.path.join('{}'.format(QgsProject.instance().homePath()),'sample_data', 'projectfile.qgs')
+        scenario_file = os.path.join('{}'.format(QgsProject.instance().homePath()), 'Small_project.qgs')
+        print scenario_file
         # check if file exists
         if os.path.isfile(scenario_file):
             self.iface.addProject(scenario_file)
@@ -127,7 +128,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.updateLayers()
 
     def saveScenario(self):
-        self.iface.actionSaveProject().trigger
+        self.iface.actionSaveProjectAs().trigger()
 
     def updateLayers(self):
         layers = uf.getLegendLayers(self.iface, 'all', 'all')
@@ -173,8 +174,9 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def setSelectedUserGroup(self):
         proj = QgsProject.instance()
         if self.SelectUserGroupCombo.currentText() == 'Students':
-            proj.writeEntry("SpatialDecisionDockWidget", "radius", 1200)
+            proj.writeEntry("SpatialDecisionDockWidget", "radius", 800)
             proj.writeEntry("SpatialDecisionDockWidget", "transittypes", "('rail','metro', 'tram')")
+            proj.writeEntry("SpatialDecisionDockWidget", "rail_radius", 1000)
             transit_layer = uf.getLegendLayerByName(self.iface, "Transit_stops")
             path = '{}/styles/'.format(QgsProject.instance().homePath())
             transit_layer.loadNamedStyle('{}/Transit_Students.qml'.format(path))
@@ -183,6 +185,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         elif self.SelectUserGroupCombo.currentText() == 'Elderly':
             proj.writeEntry("SpatialDecisionDockWidget", "radius", 400)
             proj.writeEntry("SpatialDecisionDockWidget", "transittypes", "('rail','tram','ferry')")
+            proj.writeEntry("SpatialDecisionDockWidget", "rail_radius", 750)
             transit_layer = uf.getLegendLayerByName(self.iface, "Transit_stops")
             path = '{}/styles/'.format(QgsProject.instance().homePath())
             transit_layer.loadNamedStyle('{}/Transit_Elderly.qml'.format(path))
@@ -191,6 +194,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         elif self.SelectUserGroupCombo.currentText() == 'Adults':
             proj.writeEntry("SpatialDecisionDockWidget", "radius", 600)
             proj.writeEntry("SpatialDecisionDockWidget", "transittypes", "('rail','metro','ferry')")
+            proj.writeEntry("SpatialDecisionDockWidget", "rail_radius", 800)
             transit_layer = uf.getLegendLayerByName(self.iface, "Transit_stops")
             path = '{}/styles/'.format(QgsProject.instance().homePath())
             transit_layer.loadNamedStyle('{}/Transit_Adults.qml'.format(path))
@@ -244,8 +248,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.iface.legendInterface().setLayerVisible(layer, True)
             self.refreshCanvas(layer)
 
-    def toggleLoAccessibilityLayer(self):
-        layer = uf.getLegendLayerByName(self.iface, 'Lack of accessibility')
+    def toggleDensityLayer(self):
+        layer = uf.getLegendLayerByName(self.iface, 'Density')
         state = self.toggleLoAccessibilityCheckBox.checkState()
 
         if state == 0:
@@ -262,7 +266,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.iface.legendInterface().addGroup("Baselayers")
         self.calculateBuffer(False)
         self.accessibility(False)
-        self.accessibilitynonservice(False)
 
         # ordering accessibility layer
         root = QgsProject.instance().layerTreeRoot()
@@ -323,8 +326,14 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             cutoff_distance = radius
             buffers = {}
             for point in origins:
-                geom = point.geometry()
-                buffers[point.id()] = geom.buffer(cutoff_distance,12)
+                attr = point.attribute('network')
+                if attr == 'rail':
+                    rail_radius = proj.readNumEntry("SpatialDecisionDockWidget", "rail_radius")[0]
+                    geom = point.geometry()
+                    buffers[point.id()] = geom.buffer(rail_radius,12)
+                else:
+                    geom = point.geometry()
+                    buffers[point.id()] = geom.buffer(cutoff_distance,12)
 
             # store the buffer results in temporary layer called "Buffers_[cur_user]"
             buffer_layer = uf.getLegendLayerByName(self.iface, 'Buffers_{}'.format(cur_user))
@@ -353,7 +362,10 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             cnt = 0
             for buffer in buffers.iteritems():
                 geoms.append(buffer[1])
-                values.append([buffer[0],cutoff_distance, fld_values[cnt]])
+                if fld_values[cnt] == 'rail':
+                   values.append([buffer[0],rail_radius, fld_values[cnt]])
+                else:
+                    values.append([buffer[0],cutoff_distance, fld_values[cnt]])
                 cnt += 1
 
             uf.insertTempFeatures(buffer_layer, geoms, values)
@@ -452,14 +464,14 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             access_nonservice_layer = uf.getLegendLayerByName(self.iface, "Lack of accessibility")
             # Create one if it doesn't exist and add suffix for the scenario
             if not access_nonservice_layer:
-                attribs = ['ratio']
-                types = [QtCore.QVariant.Double]
+                attribs = ['res_address_cnt', 'area','density']
+                types = [QtCore.QVariant.String, QtCore.QVariant.Double, QtCore.QVariant.Double]
                 access_nonservice_layer = uf.createTempLayer('Lack of accessibility','POLYGON',CRS, attribs, types)
                 uf.loadTempLayer(access_nonservice_layer)
             if is_scn:
                 name = self.newLayerNameEdit.text()
-                attribs = ['ratio']
-                types = [QtCore.QVariant.Double]
+                attribs = ['res_address_cnt', 'area','density']
+                types = [QtCore.QVariant.String, QtCore.QVariant.Double, QtCore.QVariant.Double]
                 access_nonservice_layer = uf.createTempLayer('Lack of accessibility_{}'.format(name),'POLYGON',CRS, attribs, types)
                 uf.loadTempLayer(access_nonservice_layer)
             geoms = []
@@ -487,12 +499,12 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                     else:
                         continue
                 ratio = sumtotal/geom.area()
-                values.append([ratio])
+                values.append([sumtotal, geom.area(),ratio])
             uf.insertTempFeatures(access_nonservice_layer, geoms, values)
 
             # Style the layer
             path = '{}/styles/'.format(QgsProject.instance().homePath())
-            access_nonservice_layer.loadNamedStyle('{}/Lack_of_Accessibility.qml'.format(path))
+            access_nonservice_layer.loadNamedStyle('{}/Density.qml'.format(path))
             access_nonservice_layer.triggerRepaint()
             self.iface.legendInterface().refreshLayerSymbology(access_nonservice_layer)
 
@@ -530,7 +542,9 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         transit_layer = uf.getLegendLayerByName(self.iface, "Transit_stops")
         transit_layer.setReadOnly(True)
         new_layer.featureAdded.connect(self.addnode)
+        self.setClickTool()
 
+    def setClickTool(self):
         # setup clicktool
         self.clickTool = QgsMapToolEmitPoint(self.canvas)
         self.clickTool.canvasClicked.connect(self.addfeatures)
@@ -638,9 +652,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     # saving the current screen
     def saveMap(self):
-        last_dir = uf.getLastDir("SDSS")
-        path = QtGui.QFileDialog.getSaveFileName(self, "Save map file", last_dir, "PNG (*.png)")
-        #path = "{}/Images/".format(QgsProject.instance().homePath())
+        dir = "{}/Images/".format(QgsProject.instance().homePath())
+        path = QtGui.QFileDialog.getSaveFileName(self, "Save map file", dir, "PNG (*.png)")
         if path.strip()!="":
             path = unicode(path)
             uf.setLastDir(path,"SDSS")

@@ -40,7 +40,6 @@ from . import utility_functions as uf
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'spatial_decision_dockwidget_base.ui'))
 
-
 class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     closingPlugin = QtCore.pyqtSignal()
@@ -556,6 +555,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         CRS = proj.readEntry("SpatialDecisionDockWidget", 'CRS')[0]
         cur_user = self.SelectUserGroupCombo.currentText()
         new_layer = uf.getLegendLayerByName(self.iface, 'Transit_stops copy')
+        stylepath = '{}/Styles/'.format(QgsProject.instance().homePath())
+        new_layer.loadNamedStyle('{}Transit_all.qml'.format(stylepath))
         transit_layer = uf.getLegendLayerByName(self.iface, "Transit_stops")
 
         # set counter
@@ -563,7 +564,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         newfeatures = new_layer.featureCount()
         diff = newfeatures - originalfeatures
         maxnodes = self.maxNewNodesSpinbox.value()
-
+        # ischecked = self.addNodeButton.isChecked()
 
         # Add features
         if newfeatures == originalfeatures:
@@ -583,11 +584,12 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             # Save the scenario to shapefile in /sample_data/Scenarios/{name}/
             path = "{}/Scenarios/".format(QgsProject.instance().homePath())
             name = self.newLayerNameEdit.text()
-            directory = "{}/{}/".format(path, name)
+            directory = "{}/{}".format(path, name)
             if os.path.exists(directory):
                 pass
             else:
                 os.makedirs(directory)
+
             scenario_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(name))
             if not scenario_layer:
                 uf.saveAsNewShapefile(new_layer, directory, "Transit_{}".format(name), CRS,)
@@ -600,7 +602,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.iface.addVectorLayer(directory, "Transit_{}".format(name), "ogr")
             scenario_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(name))
             # style the layer accordingly
-            stylepath = '{}/Styles/'.format(QgsProject.instance().homePath())
             scenario_layer.loadNamedStyle('{}Transit_{}.qml'.format(stylepath, cur_user))
 
             scenario_layer.triggerRepaint()
@@ -656,22 +657,23 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             num = transit_layer.selectedFeatureCount()
             current_dict[type] = num
             transit_layer.removeSelection()
+        print current_dict
 
         # New situation
         name = self.newLayerNameEdit.text()
-        transit_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(name))
-        uf.selectFeaturesByExpression(transit_layer,"network in {}".format(transittypes))
-        totalfeatures = transit_layer.selectedFeatureCount()
-        transit_layer.removeSelection()
+        new_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(name))
+        uf.selectFeaturesByExpression(new_layer,"network in {}".format(transittypes))
+        totalfeatures = new_layer.selectedFeatureCount()
+        new_layer.removeSelection()
 
         network_types = ["'rail'", "'tram'", "'ferry'", "'metro'", "'bus'"]
         new_dict = {}
         for type in network_types:
             string = '"network" = '+"{}".format(type)
             uf.selectFeaturesByExpression(transit_layer, string)
-            num = transit_layer.selectedFeatureCount()
+            num = new_layer.selectedFeatureCount()
             new_dict[type] = num
-            transit_layer.removeSelection()
+            new_layer.removeSelection()
         print new_dict
 
 

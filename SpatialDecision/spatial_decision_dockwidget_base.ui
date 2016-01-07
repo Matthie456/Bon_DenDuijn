@@ -287,12 +287,23 @@
             <property name="text">
              <string>Add new transport node</string>
             </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="continueAddingNodesButton">
-            <property name="text">
-             <string>Continue adding</string>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
+            </property>
+            <property name="autoRepeat">
+             <bool>false</bool>
+            </property>
+            <property name="autoDefault">
+             <bool>false</bool>
+            </property>
+            <property name="default">
+             <bool>false</bool>
+            </property>
+            <property name="flat">
+             <bool>false</bool>
             </property>
            </widget>
           </item>
@@ -316,13 +327,6 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="saveMapButton">
-          <property name="text">
-           <string>Save Map</string>
-          </property>
-         </widget>
-        </item>
-        <item>
          <spacer name="verticalSpacer_2">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
@@ -341,7 +345,21 @@
        <attribute name="title">
         <string>Reporting</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0">
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QPushButton" name="saveMapButton">
+          <property name="text">
+           <string>Save Map</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="continueAddingNodesButton">
+          <property name="text">
+           <string>Continue adding</string>
+          </property>
+         </widget>
+        </item>
         <item>
          <widget class="QListWidget" name="reportList"/>
         </item>

@@ -74,7 +74,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.checkAccessibilityButton.clicked.connect(self.checkaccessibility)
         self.addNodeButton.clicked.connect(self.startnodeprocess)
         self.recalculateButton.clicked.connect(self.recalculateaccessibility)
-        self.continueAddingNodesButton.clicked.connect(self.setClickTool)
+        self.continueAddingNodesButton.clicked.connect(self.reporting)
 
         # dropdown menus
         self.neighborhoodCombo.activated.connect(self.setNeighborhoodlayer)
@@ -633,14 +633,49 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.canvas.refresh()
 
 
-
-#######
-#    Visualisation functions
-#######
-
 #######
 #    Reporting functions
 #######
+
+    def reporting(self):
+        proj = QgsProject.instance()
+        transittypes = proj.readEntry("SpatialDecisionDockWidget", "transittypes")[0]
+
+        # Current situation
+        self.clearTable()
+        transit_layer = uf.getLegendLayerByName(self.iface, 'Transit_stops')
+        uf.selectFeaturesByExpression(transit_layer,"network in {}".format(transittypes))
+        totalfeatures = transit_layer.selectedFeatureCount()
+        transit_layer.removeSelection()
+
+        network_types = ["'rail'", "'tram'", "'ferry'", "'metro'", "'bus'"]
+        current_dict = {}
+        for type in network_types:
+            string = '"network" = '+"{}".format(type)
+            uf.selectFeaturesByExpression(transit_layer, string)
+            num = transit_layer.selectedFeatureCount()
+            current_dict[type] = num
+            transit_layer.removeSelection()
+
+        # New situation
+        name = self.newLayerNameEdit.text()
+        transit_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(name))
+        uf.selectFeaturesByExpression(transit_layer,"network in {}".format(transittypes))
+        totalfeatures = transit_layer.selectedFeatureCount()
+        transit_layer.removeSelection()
+
+        network_types = ["'rail'", "'tram'", "'ferry'", "'metro'", "'bus'"]
+        new_dict = {}
+        for type in network_types:
+            string = '"network" = '+"{}".format(type)
+            uf.selectFeaturesByExpression(transit_layer, string)
+            num = transit_layer.selectedFeatureCount()
+            new_dict[type] = num
+            transit_layer.removeSelection()
+        print new_dict
+
+
+
 
     # update a text edit field
     """def updateNumberFeatures(self):

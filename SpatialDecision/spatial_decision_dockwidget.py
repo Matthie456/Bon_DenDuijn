@@ -112,7 +112,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         scenario_open = False
 
         scenario_file = os.path.join('{}'.format(QgsProject.instance().homePath()), 'Small_project.qgs')
-        print scenario_file
         # check if file exists
         if os.path.isfile(scenario_file):
             self.iface.addProject(scenario_file)
@@ -297,8 +296,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.iface.legendInterface().moveLayer(scenario_layer, 0)
         self.calculateBuffer(True)
         self.accessibility(True)
-
-
 
     # Calculate Buffers
     def calculateBuffer(self, is_scn):
@@ -519,24 +516,32 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.refreshCanvas(access_nonservice_layer)
 
     def startnodeprocess(self):
-        proj = QgsProject.instance()
-        CRS = proj.readEntry("SpatialDecisionDockWidget", 'CRS')[0]
-        # load layer and duplicate it for possible changes
-        transit_layer = uf.getLegendLayerByName(self.iface, "Transit_stops")
+        isdown = self.addNodeButton.isChecked()
 
-        # Create a copy of the Transit layer for editing purposes
-        self.iface.setActiveLayer(transit_layer)
-        uf.duplicateLayerMem(transit_layer, "POINT", CRS, 'Transit_stops copy')
-        new_layer = uf.getLegendLayerByName(self.iface, 'Transit_stops copy')
-        self.iface.setActiveLayer(new_layer)
-        self.iface.legendInterface().setLayerVisible(new_layer, False)
+        if not isdown:
+            self.addfeatures()
+        elif isdown:
+            proj = QgsProject.instance()
+            CRS = proj.readEntry("SpatialDecisionDockWidget", 'CRS')[0]
+            # load layer and duplicate it for possible changes
+            transit_layer = uf.getLegendLayerByName(self.iface, "Transit_stops")
 
-        # Make sure layer is editable
-        if not new_layer.isEditable():
-            new_layer.startEditing()
-        maxnodes = self.maxNewNodesSpinbox.value()
-        self.remainingNodesLCD.display(maxnodes)
-        self.addnode()
+            # Create a copy of the Transit layer for editing purposes
+            self.iface.setActiveLayer(transit_layer)
+            uf.duplicateLayerMem(transit_layer, "POINT", CRS, 'Transit_stops copy')
+            new_layer = uf.getLegendLayerByName(self.iface, 'Transit_stops copy')
+            self.iface.setActiveLayer(new_layer)
+            self.iface.legendInterface().setLayerVisible(new_layer, False)
+
+            self.canvas.scaleChanged.connect(self.checkMapTool)
+            self.canvas.extentsChanged.connect(self.checkMapTool)
+
+
+            # Make sure layer is editable
+            if not new_layer.isEditable():
+                new_layer.startEditing()
+            self.remainingNodesLCD.display(0)
+            self.addnode()
 
     def addnode(self):
         # load layers
@@ -544,7 +549,14 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         transit_layer = uf.getLegendLayerByName(self.iface, "Transit_stops")
         transit_layer.setReadOnly(True)
         new_layer.featureAdded.connect(self.addnode)
-        self.setClickTool()
+
+    def checkMapTool(self):
+        maptool = self.canvas.mapTool()
+
+        if type(maptool) == QgsMapToolEmitPoint:
+            self.setClickTool()
+        if type(maptool) != QgsMapToolEmitPoint:
+            self.setClickTool()
 
     def setClickTool(self):
         # setup clicktool
@@ -566,19 +578,14 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         originalfeatures = transit_layer.featureCount()
         newfeatures = new_layer.featureCount()
         diff = newfeatures - originalfeatures
-        maxnodes = self.maxNewNodesSpinbox.value()
-        # ischecked = self.addNodeButton.isChecked()
+        ischecked = self.addNodeButton.isChecked()
 
         # Add features
-        if newfeatures == originalfeatures:
+        if ischecked:
             self.iface.setActiveLayer(new_layer)
             self.iface.actionAddFeature().trigger()
             return
-        elif diff < maxnodes:
-            self.iface.setActiveLayer(new_layer)
-            self.iface.actionAddFeature().trigger()
-            return
-        elif diff == maxnodes:
+        elif not ischecked:
             # Commit changes and set clicktool to pantool
             new_layer.commitChanges()
             self.panTool = QgsMapToolPan(self.canvas)
@@ -606,13 +613,15 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             scenario_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(name))
             # style the layer accordingly
             scenario_layer.loadNamedStyle('{}Transit_{}.qml'.format(stylepath, cur_user))
-
             scenario_layer.triggerRepaint()
 
             # Set layer visibility and move to correct group
             self.iface.legendInterface().setLayerVisible(transit_layer, False)
             self.iface.legendInterface().moveLayer(scenario_layer, 0)
             self.iface.legendInterface().setLayerExpanded(scenario_layer, False)
+
+            self.canvas.scaleChanged.disconnect(self.checkMapTool)
+            self.canvas.extentsChanged.disconnect(self.checkMapTool)
 
             # Order layers
             root = QgsProject.instance().layerTreeRoot()
@@ -621,13 +630,12 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             access_clone = access.clone()
             scn_group.insertChildNode(4, access_clone)
             scn_group.removeChildNode(access)
-
             self.refreshCanvas(scenario_layer)
 
 
     def lcdCounter(self):
         value = self.remainingNodesLCD.value()
-        self.remainingNodesLCD.display(value-1)
+        self.remainingNodesLCD.display(value+1)
 
     # after adding features to layers needs a refresh (sometimes)
     def refreshCanvas(self, layer):

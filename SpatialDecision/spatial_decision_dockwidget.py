@@ -76,7 +76,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.continueAddingNodesButton.clicked.connect(self.reporting)
 
         # dropdown menus
-        self.neighborhoodCombo.activated.connect(self.setNeighborhoodlayer)
         self.buildingCentroidsCombo.activated.connect(self.setBuildinglayer)
         self.SelectUserGroupCombo.activated.connect(self.setSelectedUserGroup)
         self.transitLayerCombo.activated.connect(self.setSelectedLayer)
@@ -131,15 +130,12 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def updateLayers(self):
         layers = uf.getLegendLayers(self.iface, 'all', 'all')
         self.transitLayerCombo.clear()
-        self.neighborhoodCombo.clear()
         self.buildingCentroidsCombo.clear()
         if layers:
             layer_names = uf.getLayersListNames(layers)
             self.transitLayerCombo.addItems(layer_names)
-            self.neighborhoodCombo.addItems(layer_names)
             self.buildingCentroidsCombo.addItems(layer_names)
             self.setSelectedLayer()
-            self.setNeighborhoodlayer()
             self.setBuildinglayer()
 
     def setSelectedLayer(self):
@@ -202,16 +198,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 #######
 #    Analysis functions
 #######
-
-    def setNeighborhoodlayer(self):
-        layer_name = self.neighborhoodCombo.currentText()
-        layer = uf.getLegendLayerByName(self.iface,layer_name)
-        self.updateAttributes(layer)
-
-    def getNeighborhoodlayer(self):
-        layer_name = self.neighborhoodCombo.currentText()
-        layer = uf.getLegendLayerByName(self.iface,layer_name)
-        return layer
 
     def setBuildinglayer(self):
         layer_name = self.buildingCentroidsCombo.currentText()
@@ -475,7 +461,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 uf.loadTempLayer(access_nonservice_layer)
             geoms = []
             values = []
-            nbhood_layer = self.getNeighborhoodlayer()
             nbhood_features = uf.getAllFeatures(nbhood_layer)
             nbhood_features_list = list(nbhood_features.values())
             fld_values = uf.getFieldValues(building_layer, 'VBO_CNT')[0]

@@ -248,7 +248,10 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.refreshCanvas(layer)
 
     def toggleDensityLayer(self):
-        layer = uf.getLegendLayerByName(self.iface, 'Density')
+        layer = uf.getLegendLayerByName(self.iface, 'Population_density')
+        path = '{}/styles/'.format(QgsProject.instance().homePath())
+        cur_user = self.SelectUserGroupCombo.currentText()
+        layer.loadNamedStyle('{}population_density_{}.qml'.format(path,cur_user))
         state = self.toggleLoAccessibilityCheckBox.checkState()
 
         if state == 0:

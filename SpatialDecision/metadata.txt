@@ -7,17 +7,17 @@
 # This file should be included when you package your plugin.# Mandatory items:
 
 [general]
-name=SDSS Template
+name=Harry
 qgisMinimumVersion=2.0
 description=This is a SDSS template for the GEO1005 course
 version=0.1
-author=Jorge Gil, TU Delft
-email=j.a.lopesgil@tudelft.nl
+author=Matthijs Bon and Xander den Duijn, TU Delft
+email=X.A.denDuijn@student.tudelft.nl
 
-about=This plugin is a template Spatial Decision Support System, to be developed as a project for the GEO1005 course. It provides example of basic functionality to deal with data, spatial analysis and data visualisation.
+about=This plugin is a Spatial Decision Support System for the Transport Planner. It provides functionality to deal with spatial data, analysis and data visualisation. 
 
 tracker=https://github.com/jorgegil/GEO1005/issues
-repository=https://github.com/jorgegil/GEO1005
+repository=https://github.com/Matthie456/Bon_DenDuijn
 # End of mandatory metadata
 
 # Recommended items:
@@ -28,9 +28,9 @@ repository=https://github.com/jorgegil/GEO1005
 # Tags are comma separated with spaces allowed
 tags=
 
-homepage=https://github.com/jorgegil/GEO1005
+homepage=https://github.com/Matthie456/Bon_DenDuijn
 category=Plugins
-icon=icons/sdss_icon.png
+icon=icons/harry.png
 # experimental flag
 experimental=True
 

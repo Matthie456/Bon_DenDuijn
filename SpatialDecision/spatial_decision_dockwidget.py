@@ -36,6 +36,8 @@ from qgis.gui import QgsMapTool, QgsMapToolEmitPoint, QgsMapToolPan
 
 from . import utility_functions as uf
 
+import webbrowser
+
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'spatial_decision_dockwidget_base.ui'))
@@ -61,6 +63,12 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.canvas = self.iface.mapCanvas()
 
         # set up GUI operation signals
+
+        #general
+        self.wikipushButton = QtGui.QPushButton()
+        self.wikipushButton.setIcon(QtGui.QIcon(':/icons/question.png'))
+
+
         # data
         self.iface.projectRead.connect(self.updateLayers)
         self.iface.newProjectCreated.connect(self.updateLayers)
@@ -107,6 +115,11 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 #######
 #   Input functions
 #######
+
+    def openwiki(self):
+        url = 'https://github.com/Matthie456/Bon_DenDuijn/wiki'
+        webbrowser.open_new(url)
+
     def openScenario(self,filename=""):
         scenario_open = False
 
@@ -435,75 +448,11 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.iface.legendInterface().setLayerVisible(access_layer, False)
             self.refreshCanvas(access_layer)
 
-    def accessibilitynonservice(self, is_scn):
-        # Globals
-        proj = QgsProject.instance()
-        CRS = proj.readEntry("SpatialDecisionDockWidget", 'CRS')[0]
-        all_houses_layer = self.getBuildinglayer()
-        all_houses = uf.getAllFeatures(all_houses_layer) #list with residential houses as points
-        all_houses_list = list(all_houses.values())
-
-        if all_houses_list > 0:
-            building_layer = self.getBuildinglayer()
-            # Check if the layer exists
-            access_nonservice_layer = uf.getLegendLayerByName(self.iface, "Lack of accessibility")
-            # Create one if it doesn't exist and add suffix for the scenario
-            if not access_nonservice_layer:
-                attribs = ['res_address_cnt', 'area','density']
-                types = [QtCore.QVariant.String, QtCore.QVariant.Double, QtCore.QVariant.Double]
-                access_nonservice_layer = uf.createTempLayer('Lack of accessibility','POLYGON',CRS, attribs, types)
-                uf.loadTempLayer(access_nonservice_layer)
-            if is_scn:
-                name = self.newLayerNameEdit.text()
-                attribs = ['res_address_cnt', 'area','density']
-                types = [QtCore.QVariant.String, QtCore.QVariant.Double, QtCore.QVariant.Double]
-                access_nonservice_layer = uf.createTempLayer('Lack of accessibility_{}'.format(name),'POLYGON',CRS, attribs, types)
-                uf.loadTempLayer(access_nonservice_layer)
-            geoms = []
-            values = []
-            nbhood_features = uf.getAllFeatures(nbhood_layer)
-            nbhood_features_list = list(nbhood_features.values())
-            fld_values = uf.getFieldValues(building_layer, 'VBO_CNT')[0]
-
-            for nbhood_feature in nbhood_features_list:
-                geom = QgsGeometry(nbhood_feature.geometry())
-                geoms.append(geom)
-                house_id = 0
-                sumtotal = 0
-                for house in all_houses_list:
-                    adress_cnt = fld_values[house_id]
-                    house_id += 1
-                    base_geom = QgsGeometry(nbhood_feature.geometry())
-                    intersect_geom = QgsGeometry(house.geometry())
-                    if base_geom.intersects(intersect_geom):
-                        if adress_cnt == NULL:
-                            sumtotal = sumtotal + 0
-                        else:
-                            sumtotal = sumtotal + adress_cnt
-                    else:
-                        continue
-                ratio = sumtotal/geom.area()
-                values.append([sumtotal, geom.area(),ratio])
-            uf.insertTempFeatures(access_nonservice_layer, geoms, values)
-
-            # Style the layer
-            path = '{}/styles/'.format(QgsProject.instance().homePath())
-            access_nonservice_layer.loadNamedStyle('{}/Density.qml'.format(path))
-            access_nonservice_layer.triggerRepaint()
-            self.iface.legendInterface().refreshLayerSymbology(access_nonservice_layer)
-
-            # Move the layer if a scenario is made
-            if is_scn:
-                self.iface.legendInterface().moveLayer(access_nonservice_layer, 0)
-            else:
-                self.iface.legendInterface().moveLayer(access_nonservice_layer, 2)
-            self.iface.legendInterface().setLayerVisible(access_nonservice_layer, False)
-            self.refreshCanvas(access_nonservice_layer)
-
     def startnodeprocess(self):
         isdown = self.addNodeButton.isChecked()
 
         if not isdown:
+            print 'is down???'
             self.addfeatures()
         elif isdown:
             proj = QgsProject.instance()

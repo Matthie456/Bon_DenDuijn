@@ -81,7 +81,7 @@ class SpatialDecision:
 
         # Declare instance attributes
         self.actions = []
-        self.menu = self.tr(u'&SDSS Template')
+        self.menu = self.tr(u'&Harry')
         # TODO: We are going to let the user set this up in a future iteration
         self.toolbar = self.iface.addToolBar(u'SpatialDecision')
         self.toolbar.setObjectName(u'SpatialDecision')
@@ -191,7 +191,7 @@ class SpatialDecision:
         icon_path = ':/plugins/SpatialDecision/icons/sdss_icon.png'
         self.add_action(
             icon_path,
-            text=self.tr(u'SDSS Template'),
+            text=self.tr(u'Harry'),
             callback=self.run,
             parent=self.iface.mainWindow())
 
@@ -221,7 +221,7 @@ class SpatialDecision:
 
         for action in self.actions:
             self.iface.removePluginMenu(
-                self.tr(u'&SDSS Template'),
+                self.tr(u'&Harry'),
                 action)
             self.iface.removeToolBarIcon(action)
         # remove the toolbar

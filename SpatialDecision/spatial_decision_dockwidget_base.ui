@@ -65,7 +65,7 @@ For questions, see the Wiki page.</string>
     <item>
      <widget class="QTabWidget" name="sampleWidgets">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="InputTab">
        <attribute name="title">

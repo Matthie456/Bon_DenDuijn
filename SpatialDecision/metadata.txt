@@ -30,7 +30,7 @@ tags=
 
 homepage=https://github.com/Matthie456/Bon_DenDuijn
 category=Plugins
-icon=icons/sdss_icon.png
+icon=sdss_icon.png
 # experimental flag
 experimental=True
 

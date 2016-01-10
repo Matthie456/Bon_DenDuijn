@@ -65,8 +65,9 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # set up GUI operation signals
 
         #general
-        self.wikipushButton = QtGui.QPushButton()
-        self.wikipushButton.setIcon(QtGui.QIcon(':/icons/question.png'))
+        self.wikipushButton.clicked.connect(self.openwiki)
+        self.wikipushButton.setIcon(QtGui.QIcon('icons/question.png'))
+        self.iconLabel.setPixmap(QtGui.QPixmap('icons/question.png'))
 
 
         # data
@@ -118,7 +119,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def openwiki(self):
         url = 'https://github.com/Matthie456/Bon_DenDuijn/wiki'
-        webbrowser.open_new(url)
+        webbrowser.open(url)
+
 
     def openScenario(self,filename=""):
         scenario_open = False

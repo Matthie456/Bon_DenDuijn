@@ -18,6 +18,19 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
+       <widget class="QLabel" name="mainlabel">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QLabel" name="label_4">
         <property name="text">
          <string>Welcome to &quot;Harry&quot;, the Spatial Decision Support System that provide possible new locations for Public Transport Nodes. 
@@ -65,7 +78,7 @@ For questions, see the Wiki page.</string>
     <item>
      <widget class="QTabWidget" name="sampleWidgets">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="InputTab">
        <attribute name="title">
@@ -183,7 +196,7 @@ For questions, see the Wiki page.</string>
         <item>
          <widget class="QPushButton" name="checkAccessibilityButton">
           <property name="text">
-           <string>Check need for public transport</string>
+           <string>Check Accessibility Public Transport</string>
           </property>
          </widget>
         </item>
@@ -313,7 +326,7 @@ For questions, see the Wiki page.</string>
         <item>
          <widget class="QPushButton" name="recalculateButton">
           <property name="text">
-           <string>Recalculate need for public transport</string>
+           <string>Recalculate Accessibility Public Transport</string>
           </property>
          </widget>
         </item>

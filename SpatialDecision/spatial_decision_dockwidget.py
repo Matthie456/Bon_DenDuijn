@@ -67,7 +67,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         #general
         self.wikipushButton.clicked.connect(self.openwiki)
         self.wikipushButton.setIcon(QtGui.QIcon(':icons/question.png'))
-
+        #self.mainlabel.setPixmap(QtGui.QPixmap(':icons/icon_large.png'))
+        self.mainlabel.setPixmap(QtGui.QPixmap(':icons/question.png'))
 
         # data
         self.iface.projectRead.connect(self.updateLayers)
@@ -131,6 +132,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             scenario_open = True
         else:
             last_dir = uf.getLastDir("SDSS")
+            #last_dir = QgsProject.instance().homePath()
             new_file = QtGui.QFileDialog.getOpenFileName(self, "", last_dir, "(*.qgs)")
             if new_file:
                 self.iface.addProject(new_file)
@@ -226,39 +228,52 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def toggleBufferLayer(self):
         cur_user = self.SelectUserGroupCombo.currentText()
         layer = uf.getLegendLayerByName(self.iface, 'Buffers_{}'.format(cur_user))
-        state = self.toggleBufferCheckBox.checkState()
+        if not layer:
+            print 'layer does not exist'
+        else:
+            state = self.toggleBufferCheckBox.checkState()
 
-        if state == 0:
-            self.iface.legendInterface().setLayerVisible(layer, False)
-            self.refreshCanvas(layer)
-        elif state == 2:
-            self.iface.legendInterface().setLayerVisible(layer, True)
-            self.refreshCanvas(layer)
+            if state == 0:
+                self.iface.legendInterface().setLayerVisible(layer, False)
+                self.refreshCanvas(layer)
+            elif state == 2:
+                self.iface.legendInterface().setLayerVisible(layer, True)
+                self.refreshCanvas(layer)
 
     def toggleAccessibilityLayer(self):
-        layer = uf.getLegendLayerByName(self.iface, 'Accessibility')
-        state = self.toggleAccessibiltyCheckBox.checkState()
 
-        if state == 0:
-            self.iface.legendInterface().setLayerVisible(layer, False)
-            self.refreshCanvas(layer)
-        elif state == 2:
-            self.iface.legendInterface().setLayerVisible(layer, True)
-            self.refreshCanvas(layer)
+        layer = uf.getLegendLayerByName(self.iface, 'Accessibility')
+        if not layer:
+            print 'layer does not exist'
+        else:
+            state = self.toggleAccessibiltyCheckBox.checkState()
+
+            if state == 0:
+                #check if layer exists
+
+                self.iface.legendInterface().setLayerVisible(layer, False)
+                self.refreshCanvas(layer)
+            elif state == 2:
+                #check if layer exists
+                self.iface.legendInterface().setLayerVisible(layer, True)
+                self.refreshCanvas(layer)
 
     def toggleDensityLayer(self):
         layer = uf.getLegendLayerByName(self.iface, 'Population_density')
-        path = '{}/styles/'.format(QgsProject.instance().homePath())
-        cur_user = self.SelectUserGroupCombo.currentText()
-        layer.loadNamedStyle('{}population_density_{}.qml'.format(path,cur_user))
-        state = self.toggleLoAccessibilityCheckBox.checkState()
+        if not layer:
+            print 'layer does not exist'
+        else:
+            path = '{}/styles/'.format(QgsProject.instance().homePath())
+            cur_user = self.SelectUserGroupCombo.currentText()
+            layer.loadNamedStyle('{}population_density_{}.qml'.format(path,cur_user))
+            state = self.toggleLoAccessibilityCheckBox.checkState()
 
-        if state == 0:
-            self.iface.legendInterface().setLayerVisible(layer, False)
-            self.refreshCanvas(layer)
-        elif state == 2:
-            self.iface.legendInterface().setLayerVisible(layer, True)
-            self.refreshCanvas(layer)
+            if state == 0:
+                self.iface.legendInterface().setLayerVisible(layer, False)
+                self.refreshCanvas(layer)
+            elif state == 2:
+                self.iface.legendInterface().setLayerVisible(layer, True)
+                self.refreshCanvas(layer)
 
     ## MAIN Function
     def checkaccessibility(self):

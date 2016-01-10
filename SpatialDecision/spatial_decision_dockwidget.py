@@ -66,8 +66,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         #general
         self.wikipushButton.clicked.connect(self.openwiki)
-        self.wikipushButton.setIcon(QtGui.QIcon('icons/question.png'))
-        self.iconLabel.setPixmap(QtGui.QPixmap('icons/question.png'))
+        self.wikipushButton.setIcon(QtGui.QIcon(':icons/question.png'))
 
 
         # data

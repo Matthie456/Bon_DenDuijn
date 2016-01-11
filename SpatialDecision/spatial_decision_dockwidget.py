@@ -129,33 +129,27 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         url = 'https://github.com/Matthie456/Bon_DenDuijn/wiki'
         webbrowser.open(url)
 
-
     def openScenario(self,filename=""):
         scenario_open = False
-
         msgBox = QtGui.QMessageBox()
         msgBox.setText('Are you sure?\nThis will delete all scenarios')
         msgBox.addButton(QtGui.QPushButton('No'), QtGui.QMessageBox.RejectRole)
         msgBox.addButton(QtGui.QPushButton('Yes'), QtGui.QMessageBox.AcceptRole)
         ret = msgBox.exec_()
-
-        if msgBox.reject():
-            return
+        scenario_file = os.path.join('{}'.format(QgsProject.instance().homePath()), 'Small_project.qgs')
+        # check if file exists
+        if os.path.isfile(scenario_file):
+            self.iface.addProject(scenario_file)
+            scenario_open = True
         else:
-            scenario_file = os.path.join('{}'.format(QgsProject.instance().homePath()), 'Small_project.qgs')
-            # check if file exists
-            if os.path.isfile(scenario_file):
-                self.iface.addProject(scenario_file)
+            last_dir = uf.getLastDir("SDSS")
+            #last_dir = QgsProject.instance().homePath()
+            new_file = QtGui.QFileDialog.getOpenFileName(self, "", last_dir, "(*.qgs)")
+            if new_file:
+                self.iface.addProject(new_file)
                 scenario_open = True
-            else:
-                last_dir = uf.getLastDir("SDSS")
-                #last_dir = QgsProject.instance().homePath()
-                new_file = QtGui.QFileDialog.getOpenFileName(self, "", last_dir, "(*.qgs)")
-                if new_file:
-                    self.iface.addProject(new_file)
-                    scenario_open = True
-            if scenario_open:
-                self.updateLayers()
+        if scenario_open:
+            self.updateLayers()
 
     def saveScenario(self):
         self.iface.actionSaveProjectAs().trigger()
@@ -328,7 +322,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         if ischecked:
             self.addNodeButton.setChecked(False)
             self.startnodeprocess()
-            
         name = self.newLayerNameEdit.text()
         self.iface.legendInterface().addGroup(name)
         root = QgsProject.instance().layerTreeRoot()

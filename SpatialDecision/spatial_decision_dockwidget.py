@@ -303,6 +303,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         base_group_clone = base_group.clone()
         root.insertChildNode(0, base_group_clone)
         root.removeChildNode(base_group)
+        transit_layer = uf.getLegendLayerByName(self.iface, "Transit_stops")
+        transit_layer.removeSelection()
 
     def recalculateaccessibility(self):
         '''Runs all other functions, with added nodes'''
@@ -478,6 +480,9 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         if not isdown:
             print 'is down???'
             self.addfeatures()
+            name = self.newLayerNameEdit.text()
+            scenario_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(name))
+            scenario_layer.removeSelection()
         elif isdown:
             proj = QgsProject.instance()
             CRS = proj.readEntry("SpatialDecisionDockWidget", 'CRS')[0]
@@ -500,6 +505,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 new_layer.startEditing()
             self.remainingNodesLCD.display(0)
             self.addnode()
+
 
     def addnode(self):
         # load layers
@@ -612,64 +618,75 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         transittypes = proj.readEntry("SpatialDecisionDockWidget", "transittypes")[0]
 
         # Current situation
-        self.clearTable()
+        self.clearReport()
+        self.reportList.clear()
         transit_layer = uf.getLegendLayerByName(self.iface, 'Transit_stops')
-        uf.selectFeaturesByExpression(transit_layer,"network in {}".format(transittypes))
-        totalfeatures = transit_layer.selectedFeatureCount()
-        transit_layer.removeSelection()
-
-        network_types = ["'rail'", "'tram'", "'ferry'", "'metro'", "'bus'"]
-        current_dict = {}
-        for type in network_types:
-            string = '"network" = '+"{}".format(type)
-            uf.selectFeaturesByExpression(transit_layer, string)
-            num = transit_layer.selectedFeatureCount()
-            current_dict[type] = num
+        if not transit_layer:
+            self.reportList.clear()
+            self.clearTable()
+            self.reportTextEdit.insertPlainText("No valid data available\n")
+        else:
+            uf.selectFeaturesByExpression(transit_layer,"network in {}".format(transittypes))
+            totalfeatures = transit_layer.selectedFeatureCount()
             transit_layer.removeSelection()
-        current_total = sum(current_dict.values())
 
-        # New situation
-        name = self.newLayerNameEdit.text()
-        new_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(name))
-        uf.selectFeaturesByExpression(new_layer,"network in {}".format(transittypes))
-        totalfeatures = new_layer.selectedFeatureCount()
-        new_layer.removeSelection()
+            network_types = ["'rail'", "'tram'", "'ferry'", "'metro'", "'bus'"]
+            current_dict = {}
+            for type in network_types:
+                string = '"network" = '+"{}".format(type)
+                uf.selectFeaturesByExpression(transit_layer, string)
+                num = transit_layer.selectedFeatureCount()
+                current_dict[type] = num
+                transit_layer.removeSelection()
+            current_total = sum(current_dict.values())
 
-        network_types = ["'rail'", "'tram'", "'ferry'", "'metro'", "'bus'"]
-        new_dict = {}
-        for type in network_types:
-            string = '"network" = '+"{}".format(type)
-            uf.selectFeaturesByExpression(new_layer, string)
-            num = new_layer.selectedFeatureCount()
-            new_dict[type] = num
-            new_layer.removeSelection()
-        new_total = sum(new_dict.values())
+            # New situation
+            name = self.newLayerNameEdit.text()
+            new_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(name))
+            uf.selectFeaturesByExpression(new_layer,"network in {}".format(transittypes))
+            if not new_layer:
+                self.reportList.clear()
+                self.clearTable()
+                self.reportTextEdit.insertPlainText("Please create a new scenario\n")
+            else:
+                totalfeatures = new_layer.selectedFeatureCount()
+                new_layer.removeSelection()
 
-        self.reportTextEdit.insertPlainText("Original situation\n"
-                                            "Total number of nodes: {}\n"
-                                            "Number of rail nodes: {}\n"
-                                            "Number of tram nodes: {}\n"
-                                            "Number of ferry nodes: {}\n"
-                                            "Number of bus nodes: {}\n"
-                                            "Number of metro nodes: {}\n\n"
-                                            "New situation\n"
-                                            "Total number of nodes: {}\n"
-                                            "Number of rail nodes: {}\n"
-                                            "Number of tram nodes: {}\n"
-                                            "Number of ferry nodes: {}\n"
-                                            "Number of bus nodes: {}\n"
-                                            "Number of metro nodes: {}\n".format(current_total,
-                                                                                 current_dict["'rail'"],
-                                                                                 current_dict["'tram'"],
-                                                                                 current_dict["'ferry'"],
-                                                                                 current_dict["'bus'"],
-                                                                                 current_dict["'metro'"],
-                                                                                 new_total,
-                                                                                 new_dict["'rail'"],
-                                                                                 new_dict["'tram'"],
-                                                                                 new_dict["'ferry'"],
-                                                                                 new_dict["'bus'"],
-                                                                                 new_dict["'metro'"]))
+                network_types = ["'rail'", "'tram'", "'ferry'", "'metro'", "'bus'"]
+                new_dict = {}
+                for type in network_types:
+                    string = '"network" = '+"{}".format(type)
+                    uf.selectFeaturesByExpression(new_layer, string)
+                    num = new_layer.selectedFeatureCount()
+                    new_dict[type] = num
+                    new_layer.removeSelection()
+                new_total = sum(new_dict.values())
+
+                self.reportTextEdit.insertPlainText("Original situation\n"
+                                                    "Total number of nodes: {}\n"
+                                                    "Number of rail nodes: {}\n"
+                                                    "Number of tram nodes: {}\n"
+                                                    "Number of ferry nodes: {}\n"
+                                                    "Number of bus nodes: {}\n"
+                                                    "Number of metro nodes: {}\n\n"
+                                                    "New situation\n"
+                                                    "Total number of nodes: {}\n"
+                                                    "Number of rail nodes: {}\n"
+                                                    "Number of tram nodes: {}\n"
+                                                    "Number of ferry nodes: {}\n"
+                                                    "Number of bus nodes: {}\n"
+                                                    "Number of metro nodes: {}\n\n".format(current_total,
+                                                                                         current_dict["'rail'"],
+                                                                                         current_dict["'tram'"],
+                                                                                         current_dict["'ferry'"],
+                                                                                         current_dict["'bus'"],
+                                                                                         current_dict["'metro'"],
+                                                                                         new_total,
+                                                                                         new_dict["'rail'"],
+                                                                                         new_dict["'tram'"],
+                                                                                         new_dict["'ferry'"],
+                                                                                         new_dict["'bus'"],
+                                                                                         new_dict["'metro'"]))
 
     # saving the current screen
     def saveMap(self):

@@ -13,8 +13,8 @@
     <edittype widgetv2type="Hidden" name="matchname">
       <widgetv2config fieldEditable="1" labelOnTop="0"/>
     </edittype>
-    <edittype widgetv2type="Hidden" name="network">
-      <widgetv2config fieldEditable="1" labelOnTop="0"/>
+    <edittype widgetv2type="UniqueValues" name="network">
+      <widgetv2config fieldEditable="1" labelOnTop="1" Editable="0"/>
     </edittype>
     <edittype widgetv2type="Hidden" name="buurtname">
       <widgetv2config fieldEditable="1" labelOnTop="0"/>

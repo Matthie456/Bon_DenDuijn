@@ -327,6 +327,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         length = len(root.children())
         new_group = root.children()[length-1]
         new_group_clone = new_group.clone()
+        new_group_clonadde = new_group.clone()
         root.insertChildNode(0,new_group_clone)
         root.removeChildNode(new_group)
         scenario_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(name))

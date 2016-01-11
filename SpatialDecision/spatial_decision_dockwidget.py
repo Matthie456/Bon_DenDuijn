@@ -38,6 +38,8 @@ from . import utility_functions as uf
 
 import webbrowser
 
+#from PyQt4.QtGui import *
+
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'spatial_decision_dockwidget_base.ui'))
@@ -67,7 +69,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         #general
         self.wikipushButton.clicked.connect(self.openwiki)
         self.wikipushButton.setIcon(QtGui.QIcon(':icons/question.png'))
-        #self.mainlabel.setPixmap(QtGui.QPixmap(':icons/icon_large.png'))
         self.mainlabel.setPixmap(QtGui.QPixmap(':icons/icon_large.png'))
 
         # data
@@ -82,7 +83,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.checkAccessibilityButton.clicked.connect(self.checkaccessibility)
         self.addNodeButton.clicked.connect(self.startnodeprocess)
         self.recalculateButton.clicked.connect(self.recalculateaccessibility)
-        self.generateReportButton.clicked.connect(self.reporting)
 
         # dropdown menus
         self.buildingCentroidsCombo.activated.connect(self.setBuildinglayer)
@@ -97,11 +97,15 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # reporting
         #self.featureCounterUpdateButton.clicked.connect(self.updateNumberFeatures)
         self.saveMapButton.clicked.connect(self.saveMap)
-        self.updateAttribute.connect(self.extractAttributeSummary)
+        self.generateReportButton.clicked.connect(self.reporting)
+        self.generateReportButton.clicked.connect(self.extractAttributeSummary)
+
+        #self.updateAttribute.connect(self.)
 
         # set current UI restrictions
         self.reportList.hide()
-        self.statisticsTable.hide()
+        #self.statisticsTable.hide()
+        self.updateAttribute.connect(self.extractAttributeSummary)
         
         # initialisation
         self.updateLayers()
@@ -618,12 +622,10 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         transittypes = proj.readEntry("SpatialDecisionDockWidget", "transittypes")[0]
 
         # Current situation
-        self.clearReport()
-        self.reportList.clear()
+        self.reportTextEdit.clear()
         transit_layer = uf.getLegendLayerByName(self.iface, 'Transit_stops')
         if not transit_layer:
-            self.reportList.clear()
-            self.clearTable()
+            self.reportTextEdit.clear()
             self.reportTextEdit.insertPlainText("No valid data available\n")
         else:
             uf.selectFeaturesByExpression(transit_layer,"network in {}".format(transittypes))
@@ -645,8 +647,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             new_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(name))
             uf.selectFeaturesByExpression(new_layer,"network in {}".format(transittypes))
             if not new_layer:
-                self.reportList.clear()
-                self.clearTable()
+                self.reportTextEdit.clear()
                 self.reportTextEdit.insertPlainText("Please create a new scenario\n")
             else:
                 totalfeatures = new_layer.selectedFeatureCount()
@@ -700,11 +701,13 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def extractAttributeSummary(self, attribute):
         # get summary of the attribute
         summary = []
+        network_types = ['een', 'twee', 'drie' ]
         layer = self.getSelectedLayer()
 
         # send this to the table
         self.clearTable()
-        self.updateTable(summary)
+        self.updateTable(network_types)
+
 
     # report window functions
     def updateReport(self,report):
@@ -720,14 +723,39 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     # table window functions
     def updateTable(self, values):
         # takes a list of label / value pairs, can be tuples or lists. not dictionaries to control order
-        self.statisticsTable.setHorizontalHeaderLabels(["Item","Value"])
+        #self.statisticsTable = QtGui.QTableWidget(3, 2)
+        self.statisticsTable.horizontalHeader().setVisible(True)
+        self.statisticsTable.verticalHeader().setVisible(True)
+        self.statisticsTable.setHorizontalHeaderLabels(["network type","number"])
         self.statisticsTable.setRowCount(len(values))
-        for i, item in enumerate(values):
-            self.statisticsTable.setItem(i,0,QtGui.QTableWidgetItem(str(item[0])))
-            self.statisticsTable.setItem(i,1,QtGui.QTableWidgetItem(str(item[1])))
+
+        tableData = [
+            ("Alice", 'blue'),
+            ("Neptun", 'red'),
+            ("Ferdinand", 'grey')
+        ]
+        for i, (name, color) in enumerate(tableData):
+            nameItem = QtGui.QTableWidgetItem(name)
+            coloritem = QtGui.QTableWidgetItem(color)
+            self.statisticsTable.setItem(i, 0, nameItem)
+            self.statisticsTable.setItem(i, 1, coloritem)
+        '''if len(values) > 0:
+            for i, item in enumerate(values):
+                self.statisticsTable.setItem(i, 0, str(i))
+                self.statisticsTable.setItem(i, 0, item)
+                print i
+                print item
+                #self.statisticsTable.setItem(i,0,QtGui.QTableWidgetItem(i))
+                #self.statisticsTable.setItem(i,1,QtGui.QTableWidgetItem(item))'''
         self.statisticsTable.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
         self.statisticsTable.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.Stretch)
         self.statisticsTable.resizeRowsToContents()
+
+        table = self.statisticsTable
+        layout = QtGui.QGridLayout()
+        layout.addWidget(table, 0, 0)
+        self.setLayout(layout)
+
 
     def clearTable(self):
         self.statisticsTable.clear()

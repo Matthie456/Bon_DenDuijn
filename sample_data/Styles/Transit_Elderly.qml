@@ -38,7 +38,7 @@
           <prop k="angle" v="0"/>
           <prop k="color" v="255,238,51,255"/>
           <prop k="horizontal_anchor_point" v="1"/>
-          <prop k="name" v="transport/rail.svg"/>
+          <prop k="name" v="./Styles/rail.svg"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="offset_unit" v="MM"/>
@@ -58,7 +58,7 @@
           <prop k="angle" v="0"/>
           <prop k="color" v="31,120,180,255"/>
           <prop k="horizontal_anchor_point" v="1"/>
-          <prop k="name" v="transport/ferry.svg"/>
+          <prop k="name" v="./Styles/ferry.svg"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="offset_unit" v="MM"/>
@@ -78,7 +78,7 @@
           <prop k="angle" v="0"/>
           <prop k="color" v="255,127,0,255"/>
           <prop k="horizontal_anchor_point" v="1"/>
-          <prop k="name" v="transport/tram_new.svg"/>
+          <prop k="name" v="./Styles/tram.svg"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="offset_unit" v="MM"/>
@@ -98,7 +98,7 @@
           <prop k="angle" v="0"/>
           <prop k="color" v="51,160,44,255"/>
           <prop k="horizontal_anchor_point" v="1"/>
-          <prop k="name" v="transport/metro.svg"/>
+          <prop k="name" v="./Styles/metro.svg"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="offset_unit" v="MM"/>
@@ -118,7 +118,7 @@
           <prop k="angle" v="0"/>
           <prop k="color" v="227,26,28,255"/>
           <prop k="horizontal_anchor_point" v="1"/>
-          <prop k="name" v="transport/bus.svg"/>
+          <prop k="name" v="./Styles/bus.svg"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="offset_unit" v="MM"/>

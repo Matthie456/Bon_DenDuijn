@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="579.996px" height="579.996px" viewBox="0 0 579.996 579.996" enable-background="new 0 0 579.996 579.996"
+	 xml:space="preserve">
+<g id="Layer_2">
+	<radialGradient id="SVGID_1_" cx="289.9983" cy="288.2483" r="289.998" gradientUnits="userSpaceOnUse">
+		<stop  offset="0" style="stop-color:#FFFFFF"/>
+		<stop  offset="0.9104" style="stop-color:#FFFFFF;stop-opacity:0.0896"/>
+		<stop  offset="1" style="stop-color:#FFFFFF;stop-opacity:0"/>
+	</radialGradient>
+	<circle fill="url(#SVGID_1_)" cx="289.998" cy="288.248" r="289.998"/>
+</g>
+<g id="svg3427" xmlns:svg="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:cc="http://creativecommons.org/ns#" inkscape:export-filename="/home/matt/Programming/openstreetmap/icons/highway=bus_stop.png" inkscape:output_extension="org.inkscape.output.svg.inkscape" sodipodi:version="0.32" inkscape:version="0.46" sodipodi:docname="highway=bus_stop.svg" inkscape:export-xdpi="90" inkscape:export-ydpi="90">
+	<defs>
+		
+		
+			<inkscape:perspective  id="perspective3435" inkscape:vp_x="0 : 8 : 1" inkscape:vp_z="16 : 8 : 1" inkscape:vp_y="0 : 1000 : 0" sodipodi:type="inkscape:persp3d" inkscape:persp3d-origin="8 : 5.3333333 : 1">
+			</inkscape:perspective>
+	</defs>
+	
+		<sodipodi:namedview  id="base" inkscape:window-height="723" inkscape:window-width="1280" inkscape:pageshadow="2" inkscape:pageopacity="0.0" inkscape:window-x="0" inkscape:window-y="0" showgrid="true" pagecolor="#ffffff" inkscape:zoom="31.875" inkscape:cx="-4.6431372" inkscape:cy="8" bordercolor="#666666" borderopacity="1.0" inkscape:current-layer="layer2" inkscape:grid-bbox="true" inkscape:document-units="px">
+		</sodipodi:namedview>
+	<path fill="#E60000" d="M454.681,45.215H121.798c-22.521,0-40.764,18.262-40.764,40.781V421.43
+		c0,22.52,18.243,40.781,40.764,40.781h12.949v44.932c0,13.336,10.818,24.139,24.154,24.139h5.438
+		c13.336,0,24.138-10.803,24.138-24.139v-44.932h197.626v44.932c0,13.336,10.802,24.139,24.138,24.139h5.454
+		c13.3,0,24.139-10.803,24.139-24.139v-44.932h14.849c22.52,0,40.781-18.263,40.781-40.781V85.996
+		C495.462,63.477,477.199,45.215,454.681,45.215z M192.312,78.377c0-8.428,6.826-15.254,15.254-15.254h161.365
+		c8.41,0,15.236,6.826,15.236,15.254v15.535c0,8.428-6.826,15.254-15.236,15.254H207.565c-8.428,0-15.254-6.826-15.254-15.254
+		L192.312,78.377L192.312,78.377z M112.685,377.129c0-14.461,11.753-26.178,26.231-26.178s26.214,11.717,26.214,26.178
+		c0,14.496-11.734,26.25-26.214,26.25C124.438,403.379,112.685,391.625,112.685,377.129z M187.737,381.633H388.74
+		c6.687,0,12.069,4.854,12.069,10.873c0,6.018-5.384,10.873-12.069,10.873H187.737c-6.667,0-12.051-4.855-12.051-10.873
+		C175.686,386.488,181.07,381.633,187.737,381.633z M175.687,363.055c0-5.982,5.384-10.838,12.051-10.838h201.004
+		c6.687,0,12.069,4.854,12.069,10.838c0,6.053-5.384,10.908-12.069,10.908H187.737C181.07,373.963,175.687,369.107,175.687,363.055z
+		 M437.264,403.379c-14.462,0-26.214-11.754-26.214-26.25c0-14.461,11.752-26.178,26.214-26.178
+		c14.461,0,26.214,11.717,26.214,26.178C463.478,391.625,451.725,403.379,437.264,403.379z M463.478,271.711
+		c0,19.738-15.975,35.748-35.715,35.748h-279.03c-19.722,0-35.731-16.011-35.731-35.748V160.238
+		c0-19.721,16.011-35.713,35.731-35.713h279.029c19.74,0,35.715,15.992,35.715,35.713L463.478,271.711L463.478,271.711z"/>
+</g>
+</svg>

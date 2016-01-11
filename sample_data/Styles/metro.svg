@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="579.996px" height="579.996px" viewBox="0 0 579.996 579.996" enable-background="new 0 0 579.996 579.996"
+	 xml:space="preserve">
+<g id="Layer_2">
+	<radialGradient id="SVGID_1_" cx="289.9983" cy="289.9983" r="289.998" gradientUnits="userSpaceOnUse">
+		<stop  offset="0" style="stop-color:#FFFFFF"/>
+		<stop  offset="0.9104" style="stop-color:#FFFFFF;stop-opacity:0.0896"/>
+		<stop  offset="1" style="stop-color:#FFFFFF;stop-opacity:0"/>
+	</radialGradient>
+	<circle fill="url(#SVGID_1_)" cx="289.998" cy="289.998" r="289.998"/>
+</g>
+<g id="svg3427" xmlns:svg="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:cc="http://creativecommons.org/ns#" inkscape:export-filename="/home/matt/Programming/openstreetmap/icons/railway=station.png" inkscape:output_extension="org.inkscape.output.svg.inkscape" sodipodi:version="0.32" inkscape:version="0.46" sodipodi:docname="railway=station.svg" inkscape:export-xdpi="90" inkscape:export-ydpi="90">
+	<defs>
+		
+		
+			<inkscape:perspective  id="perspective3435" inkscape:vp_x="0 : 8 : 1" inkscape:vp_z="16 : 8 : 1" inkscape:vp_y="0 : 1000 : 0" sodipodi:type="inkscape:persp3d" inkscape:persp3d-origin="8 : 5.3333333 : 1">
+			</inkscape:perspective>
+	</defs>
+	
+		<sodipodi:namedview  id="base" inkscape:window-height="723" inkscape:window-width="1280" inkscape:pageshadow="2" inkscape:pageopacity="0.0" inkscape:window-x="0" inkscape:window-y="0" showgrid="true" pagecolor="#ffffff" inkscape:zoom="31.875" inkscape:cx="8" inkscape:cy="8.2609752" bordercolor="#666666" borderopacity="1.0" inkscape:current-layer="layer2" inkscape:grid-bbox="true" inkscape:document-units="px">
+		</sodipodi:namedview>
+	<path fill="#32A000" d="M409.197,103.656h-45.916v-36.52h54.744V30.829H168.575v36.307h49.054v36.521h-40.227
+		c-49.727,0-90.058,40.313-90.058,90.058v185.383c0,39.607,25.569,73.233,61.091,85.295v74.397h32.495v-69.637h216.104v69.637
+		h37.052v-73.121c37.635-10.798,65.168-45.462,65.168-86.571V193.713C499.255,143.969,458.941,103.656,409.197,103.656z
+		 M253.936,67.136h73.039v36.521h-73.039V67.136z M207.328,385.725c0.019,20.246-16.398,36.697-36.645,36.697
+		c-20.263,0-36.696-16.381-36.696-36.66c0,0,0,0,0-0.037c-0.019-20.244,16.398-36.695,36.661-36.695
+		c20.245,0,36.68,16.416,36.68,36.66V385.725z M451.354,384.592c0.035,20.244-16.381,36.694-36.662,36.694
+		c-20.21,0-36.661-16.415-36.661-36.659c0,0,0,0,0-0.035c0-20.246,16.381-36.697,36.661-36.697c20.246,0,36.662,16.416,36.662,36.66
+		C451.354,384.555,451.354,384.555,451.354,384.592z M457.948,260.725c0,18.916-15.388,34.252-34.286,34.252H156.112
+		c-18.934,0-34.269-15.336-34.269-34.252v-79.35c0-18.916,15.335-34.269,34.269-34.269h267.551
+		c18.898,0,34.286,15.353,34.286,34.269V260.725z"/>
+</g>
+</svg>

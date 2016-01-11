@@ -19,18 +19,18 @@
       <layer-tree-layer expanded="1" checked="Qt::Checked" id="Building_polygons20151218113243986" name="Building_polygons">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-group expanded="0" checked="Qt::Unchecked" name="TOP25Raster_small">
+      <layer-tree-group expanded="0" checked="Qt::Checked" name="TOP25Raster_small">
         <customproperties/>
-        <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="25b_top25raster_201420151218114204680" name="25b-top25raster-2014">
+        <layer-tree-layer expanded="0" checked="Qt::Checked" id="25b_top25raster_201420151218114204680" name="25b-top25raster-2014">
           <customproperties/>
         </layer-tree-layer>
-        <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="25d_top25raster_201420151218114140971" name="25d-top25raster-2014">
+        <layer-tree-layer expanded="0" checked="Qt::Checked" id="25d_top25raster_201420151218114140971" name="25d-top25raster-2014">
           <customproperties/>
         </layer-tree-layer>
-        <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="25e_top25raster_201420151218114106702" name="25e-top25raster-2014">
+        <layer-tree-layer expanded="0" checked="Qt::Checked" id="25e_top25raster_201420151218114106702" name="25e-top25raster-2014">
           <customproperties/>
         </layer-tree-layer>
-        <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="25g_top25raster_201420151218114032091" name="25g-top25raster-2014">
+        <layer-tree-layer expanded="0" checked="Qt::Checked" id="25g_top25raster_201420151218114032091" name="25g-top25raster-2014">
           <customproperties/>
         </layer-tree-layer>
       </layer-tree-group>
@@ -40,10 +40,10 @@
   <mapcanvas>
     <units>meters</units>
     <extent>
-      <xmin>115340.54101821954827756</xmin>
-      <ymin>483095.2281355697195977</ymin>
-      <xmax>125907.45384615217335522</xmax>
-      <ymax>488974.04516253084875643</ymax>
+      <xmin>109480.6274485130852554</xmin>
+      <ymin>481004.18544461549026892</ymin>
+      <xmax>130595.61227389809209853</xmax>
+      <ymax>492689.45367208524839953</ymax>
     </extent>
     <rotation>0</rotation>
     <projections>1</projections>
@@ -249,25 +249,25 @@
           <legendlayerfile isInOverview="0" layerid="Building_polygons20151218113243986" visible="1"/>
         </filegroup>
       </legendlayer>
-      <legendgroup open="false" checked="Qt::Unchecked" name="TOP25Raster_small">
-        <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="25b-top25raster-2014" showFeatureCount="0">
+      <legendgroup open="false" checked="Qt::Checked" name="TOP25Raster_small">
+        <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="25b-top25raster-2014" showFeatureCount="0">
           <filegroup open="false" hidden="false">
-            <legendlayerfile isInOverview="0" layerid="25b_top25raster_201420151218114204680" visible="0"/>
+            <legendlayerfile isInOverview="0" layerid="25b_top25raster_201420151218114204680" visible="1"/>
           </filegroup>
         </legendlayer>
-        <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="25d-top25raster-2014" showFeatureCount="0">
+        <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="25d-top25raster-2014" showFeatureCount="0">
           <filegroup open="false" hidden="false">
-            <legendlayerfile isInOverview="0" layerid="25d_top25raster_201420151218114140971" visible="0"/>
+            <legendlayerfile isInOverview="0" layerid="25d_top25raster_201420151218114140971" visible="1"/>
           </filegroup>
         </legendlayer>
-        <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="25e-top25raster-2014" showFeatureCount="0">
+        <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="25e-top25raster-2014" showFeatureCount="0">
           <filegroup open="false" hidden="false">
-            <legendlayerfile isInOverview="0" layerid="25e_top25raster_201420151218114106702" visible="0"/>
+            <legendlayerfile isInOverview="0" layerid="25e_top25raster_201420151218114106702" visible="1"/>
           </filegroup>
         </legendlayer>
-        <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="25g-top25raster-2014" showFeatureCount="0">
+        <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="25g-top25raster-2014" showFeatureCount="0">
           <filegroup open="false" hidden="false">
-            <legendlayerfile isInOverview="0" layerid="25g_top25raster_201420151218114032091" visible="0"/>
+            <legendlayerfile isInOverview="0" layerid="25g_top25raster_201420151218114032091" visible="1"/>
           </filegroup>
         </legendlayer>
       </legendgroup>
@@ -2247,7 +2247,7 @@
         </edittype>
       </edittypes>
     </maplayer>
-    <maplayer minimumScale="-4.65661e-10" maximumScale="1e+08" simplifyDrawingHints="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Point" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+    <maplayer minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Point" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
       <id>Transit_stops20151218113434630</id>
       <datasource>./Baselayer data/Transit_stops.shp</datasource>
       <title></title>
@@ -2276,26 +2276,26 @@
         <map-layer-style name=""/>
       </map-layer-style-manager>
       <edittypes>
-        <edittype widgetv2type="TextEdit" name="sid">
-          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        <edittype widgetv2type="Hidden" name="sid">
+          <widgetv2config fieldEditable="1" labelOnTop="0"/>
         </edittype>
         <edittype widgetv2type="TextEdit" name="stopname">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
-        <edittype widgetv2type="TextEdit" name="townname">
-          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        <edittype widgetv2type="Hidden" name="townname">
+          <widgetv2config fieldEditable="1" labelOnTop="0"/>
         </edittype>
-        <edittype widgetv2type="TextEdit" name="matchname">
-          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        <edittype widgetv2type="Hidden" name="matchname">
+          <widgetv2config fieldEditable="1" labelOnTop="0"/>
         </edittype>
-        <edittype widgetv2type="TextEdit" name="network">
-          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        <edittype widgetv2type="Hidden" name="network">
+          <widgetv2config fieldEditable="1" labelOnTop="0"/>
         </edittype>
-        <edittype widgetv2type="TextEdit" name="buurtname">
-          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        <edittype widgetv2type="Hidden" name="buurtname">
+          <widgetv2config fieldEditable="1" labelOnTop="0"/>
         </edittype>
-        <edittype widgetv2type="TextEdit" name="gemeentena">
-          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        <edittype widgetv2type="Hidden" name="gemeentena">
+          <widgetv2config fieldEditable="1" labelOnTop="0"/>
         </edittype>
       </edittypes>
       <renderer-v2 attr="network" forceraster="0" symbollevels="0" type="categorizedSymbol">
@@ -2313,7 +2313,7 @@
               <prop k="angle" v="0"/>
               <prop k="color" v="255,238,51,255"/>
               <prop k="horizontal_anchor_point" v="1"/>
-              <prop k="name" v="transport/rail.svg"/>
+              <prop k="name" v="./Styles/rail.svg"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
               <prop k="offset_unit" v="MM"/>
@@ -2333,7 +2333,7 @@
               <prop k="angle" v="0"/>
               <prop k="color" v="31,120,180,255"/>
               <prop k="horizontal_anchor_point" v="1"/>
-              <prop k="name" v="transport/ferry.svg"/>
+              <prop k="name" v="./Styles/ferry.svg"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
               <prop k="offset_unit" v="MM"/>
@@ -2353,7 +2353,7 @@
               <prop k="angle" v="0"/>
               <prop k="color" v="255,127,0,255"/>
               <prop k="horizontal_anchor_point" v="1"/>
-              <prop k="name" v="transport/tram_new.svg"/>
+              <prop k="name" v="./Styles/tram.svg"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
               <prop k="offset_unit" v="MM"/>
@@ -2373,7 +2373,7 @@
               <prop k="angle" v="0"/>
               <prop k="color" v="51,160,44,255"/>
               <prop k="horizontal_anchor_point" v="1"/>
-              <prop k="name" v="transport/metro.svg"/>
+              <prop k="name" v="./Styles/metro.svg"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
               <prop k="offset_unit" v="MM"/>
@@ -2393,7 +2393,7 @@
               <prop k="angle" v="0"/>
               <prop k="color" v="227,26,28,255"/>
               <prop k="horizontal_anchor_point" v="1"/>
-              <prop k="name" v="transport/bus.svg"/>
+              <prop k="name" v="./Styles/bus.svg"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
               <prop k="offset_unit" v="MM"/>
@@ -2650,26 +2650,26 @@
         <fieldstyles/>
       </conditionalstyles>
       <edittypes>
-        <edittype widgetv2type="TextEdit" name="sid">
-          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        <edittype widgetv2type="Hidden" name="sid">
+          <widgetv2config fieldEditable="1" labelOnTop="0"/>
         </edittype>
         <edittype widgetv2type="TextEdit" name="stopname">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
-        <edittype widgetv2type="TextEdit" name="townname">
-          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        <edittype widgetv2type="Hidden" name="townname">
+          <widgetv2config fieldEditable="1" labelOnTop="0"/>
         </edittype>
-        <edittype widgetv2type="TextEdit" name="matchname">
-          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        <edittype widgetv2type="Hidden" name="matchname">
+          <widgetv2config fieldEditable="1" labelOnTop="0"/>
         </edittype>
-        <edittype widgetv2type="TextEdit" name="network">
-          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        <edittype widgetv2type="Hidden" name="network">
+          <widgetv2config fieldEditable="1" labelOnTop="0"/>
         </edittype>
-        <edittype widgetv2type="TextEdit" name="buurtname">
-          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        <edittype widgetv2type="Hidden" name="buurtname">
+          <widgetv2config fieldEditable="1" labelOnTop="0"/>
         </edittype>
-        <edittype widgetv2type="TextEdit" name="gemeentena">
-          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        <edittype widgetv2type="Hidden" name="gemeentena">
+          <widgetv2config fieldEditable="1" labelOnTop="0"/>
         </edittype>
       </edittypes>
     </maplayer>

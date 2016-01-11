@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="579.996px" height="579.996px" viewBox="0 0 579.996 579.996" enable-background="new 0 0 579.996 579.996"
+	 xml:space="preserve">
+<g id="Layer_2" display="none">
+	<circle display="inline" fill="#FFFFFF" cx="289.998" cy="289.998" r="289.998"/>
+	<rect x="0" y="0" display="inline" fill="#020202" width="579.996" height="579.996"/>
+</g>
+<g id="Layer_3">
+	<radialGradient id="SVGID_1_" cx="289.9983" cy="289.9983" r="289.998" gradientUnits="userSpaceOnUse">
+		<stop  offset="0" style="stop-color:#FFFFFF"/>
+		<stop  offset="0.9104" style="stop-color:#FFFFFF;stop-opacity:0.0896"/>
+		<stop  offset="1" style="stop-color:#FFFFFF;stop-opacity:0"/>
+	</radialGradient>
+	<circle fill="url(#SVGID_1_)" cx="289.998" cy="289.998" r="289.998"/>
+</g>
+<g id="svg3427" xmlns:svg="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:cc="http://creativecommons.org/ns#" inkscape:export-filename="/home/matt/Programming/openstreetmap/icons/highway=bus_stop.png" inkscape:output_extension="org.inkscape.output.svg.inkscape" sodipodi:version="0.32" inkscape:version="0.46" sodipodi:docname="amenity=ferry_terminal.svg" inkscape:export-xdpi="90" inkscape:export-ydpi="90">
+	<defs>
+		
+		
+			<inkscape:perspective  id="perspective3435" inkscape:vp_x="0 : 8 : 1" inkscape:vp_z="16 : 8 : 1" inkscape:vp_y="0 : 1000 : 0" sodipodi:type="inkscape:persp3d" inkscape:persp3d-origin="8 : 5.3333333 : 1">
+			</inkscape:perspective>
+	</defs>
+	
+		<sodipodi:namedview  id="base" inkscape:window-height="723" inkscape:window-width="1280" inkscape:pageshadow="2" inkscape:pageopacity="0.0" inkscape:window-x="0" inkscape:window-y="0" showgrid="true" pagecolor="#ffffff" inkscape:zoom="31.875" inkscape:cx="8" inkscape:cy="8" bordercolor="#666666" borderopacity="1.0" inkscape:current-layer="layer2" inkscape:grid-bbox="true" inkscape:document-units="px">
+		<inkscape:grid  id="grid4891" type="xygrid"></inkscape:grid>
+	</sodipodi:namedview>
+	<path fill="#1E78B4" d="M160.77,450.55c8.938-5.793,16.26-14.226,20.826-24.829h1.128c0.563-3.174,1.021-6.662,2.256-9.023
+		c1.463-2.819,4.054-4.44,6.769-6.768v-1.129c3.331-3.453,7.049-6.521,12.406-7.896c10.769-2.819,20.778,2.257,27.069,10.15
+		c3.366,4.195,4.106,8.813,4.512,13.535h1.128c6.593,16.741,16.127,25.52,33.839,31.582c29.502,10.08,60.838-3.418,72.188-31.582
+		c0.07-0.142,1.021-0.775,1.128-1.127c0.176-1.06-0.247-1.517,0-2.257c0.388-1.198,0.951-2.891,1.128-3.385
+		c0.351-0.42,0.702-0.771,1.122-1.12c0.054-0.137,0.553-1.225,1.134-2.263c0.493-0.918,0.635-0.494,1.128-1.129
+		c1.798-2.326,3.313-4.477,3.384-4.512c2.045-2.045,5.676-6.168,12.407-7.896c10.785-2.819,20.796,2.257,27.07,10.15
+		c0,0,0.774,0.424,1.128,1.129c0.353,0.705,0.881,0.598,1.128,1.127c0.211,0.354,0,1.129,0,1.129c0-0.035-0.106,0.599,0,1.127
+		c0.423,0.74,0.775,1.48,1.128,2.256c0.281,0.212-0.424,0.705,0,1.13c0.528,1.231,1.903,2.077,2.256,3.383h1.128
+		c0.281,0.704-0.105,0.563,0,1.129c0.105,0.422-0.07,0.67,0,1.127c4.287,10.89,9.904,18.427,18.126,24.022
+		c1.094-11.153,3.17-26.344,7.125-44.221c7.778-35.16,24.631-88.271,60.752-141.623l14.516-21.441l-25.143-6.197
+		c-0.237-0.06-16.547-4.101-39.205-10.814V109.206h-73.6V36.619l-143.797,1.346l-1.126,71.242h-69.238v114.926
+		c-17.65,5.367-33.236,9.631-43.813,12.288l-24.494,6.155l13.757,21.178C142.084,340.83,156.602,416.359,160.77,450.55z
+		 M168.226,130.863h68.898l1.13-71.44l100.819-0.943v72.385h73.599v86.783c-4.573-1.464-9.257-3.001-13.996-4.604
+		c-66.246-22.412-88.369-38.751-95.659-46.496l-12.962-13.77l-13.148,13.591c-17.171,17.748-65.341,36.75-108.681,50.935V130.863
+		L168.226,130.863z"/>
+	<path fill="#1E78B4" d="M536.885,408.998c-9.43-3.229-19.69,1.8-22.919,11.229c-11.94,34.88-50.048,53.557-84.932,41.645
+		c-19.586-6.715-34.729-21.765-41.545-41.288c-1.507-4.317-4.497-7.684-8.19-9.762c-1.164-0.732-2.419-1.358-3.777-1.823
+		c-9.431-3.229-19.69,1.8-22.919,11.229c-11.94,34.878-50.046,53.556-84.931,41.645c-18.563-6.364-33.115-20.23-40.371-38.294
+		c-0.916-6.521-5.363-12.306-12.021-14.581c-7.806-2.668-16.162,0.326-20.646,6.779c-1.45,1.957-2.481,4.194-3.05,6.565
+		c-12.721,33.509-49.957,51.198-84.136,39.528c-19.585-6.71-34.718-21.755-41.52-41.276C62.65,411.18,52.36,406.21,42.95,409.489
+		c-9.412,3.279-14.385,13.567-11.104,22.979c10.472,30.059,33.765,53.221,63.922,63.553c10.996,3.756,22.193,5.538,33.215,5.538
+		c31.062,0,60.674-14.174,80.181-38.247c12.006,14.906,28.088,26.285,46.823,32.709c10.994,3.755,22.188,5.536,33.209,5.536
+		c31.36,0,61.247-14.454,80.751-38.953c12.073,15.252,28.37,26.892,47.403,33.417c10.994,3.755,22.188,5.536,33.209,5.536
+		c42.829,0,82.936-26.935,97.556-69.642C551.342,422.487,546.314,412.227,536.885,408.998z"/>
+</g>
+</svg>

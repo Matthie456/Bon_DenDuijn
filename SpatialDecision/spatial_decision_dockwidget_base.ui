@@ -111,7 +111,7 @@ For questions, see the Wiki page.</string>
           <item row="1" column="0">
            <widget class="QLabel" name="buildingCentroidsLabel">
             <property name="text">
-             <string>Select building layer</string>
+             <string>Select building centroids layer</string>
             </property>
            </widget>
           </item>
@@ -285,9 +285,6 @@ For questions, see the Wiki page.</string>
           </item>
           <item>
            <widget class="QLCDNumber" name="remainingNodesLCD">
-            <property name="toolTip">
-             <string>Remaing nodes</string>
-            </property>
             <property name="frameShape">
              <enum>QFrame::NoFrame</enum>
             </property>
@@ -365,13 +362,17 @@ For questions, see the Wiki page.</string>
          </widget>
         </item>
         <item>
-         <widget class="QPlainTextEdit" name="reportTextEdit"/>
-        </item>
-        <item>
          <widget class="QTableWidget" name="statisticsTable"/>
         </item>
         <item>
          <widget class="QListWidget" name="reportList"/>
+        </item>
+        <item>
+         <widget class="QPushButton" name="saveTableButton">
+          <property name="text">
+           <string>Save table</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>

@@ -31,6 +31,7 @@ import os
 import os.path
 import random
 import processing
+import csv
 
 from qgis.gui import QgsMapTool, QgsMapToolEmitPoint, QgsMapToolPan
 
@@ -66,6 +67,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # define globals
         self.iface = iface
         self.canvas = self.iface.mapCanvas()
+        self.scn_list = []
 
         # set up GUI operation signals
 
@@ -98,12 +100,9 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.toggleLoAccessibilityCheckBox.stateChanged.connect(self.toggleDensityLayer)
 
         # reporting
-        #self.featureCounterUpdateButton.clicked.connect(self.updateNumberFeatures)
         self.saveMapButton.clicked.connect(self.saveMap)
         self.generateReportButton.clicked.connect(self.reporting)
-        self.generateReportButton.clicked.connect(self.extractAttributeSummary)
-
-        #self.updateAttribute.connect(self.)
+        self.saveTableButton.clicked.connect(self.saveTable)
 
         # set current UI restrictions
         self.reportList.hide()
@@ -329,21 +328,21 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         if ischecked:
             self.addNodeButton.setChecked(False)
             self.startnodeprocess()
-        elif not ischecked:
-            name = self.newLayerNameEdit.text()
-            self.iface.legendInterface().addGroup(name)
-            root = QgsProject.instance().layerTreeRoot()
-            length = len(root.children())
-            new_group = root.children()[length-1]
-            new_group_clone = new_group.clone()
-            new_group_clonadde = new_group.clone()
-            root.insertChildNode(0,new_group_clone)
-            root.removeChildNode(new_group)
-            scenario_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(name))
+            
+        name = self.newLayerNameEdit.text()
+        self.iface.legendInterface().addGroup(name)
+        root = QgsProject.instance().layerTreeRoot()
+        length = len(root.children())
+        new_group = root.children()[length-1]
+        new_group_clone = new_group.clone()
+        new_group_clonadde = new_group.clone()
+        root.insertChildNode(0,new_group_clone)
+        root.removeChildNode(new_group)
+        scenario_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(name))
 
-            self.iface.legendInterface().moveLayer(scenario_layer, 0)
-            self.calculateBuffer(True)
-            self.accessibility(True)
+        self.iface.legendInterface().moveLayer(scenario_layer, 0)
+        self.calculateBuffer(True)
+        self.accessibility(True)
 
     # Calculate Buffers
     def calculateBuffer(self, is_scn):
@@ -501,13 +500,11 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         isdown = self.addNodeButton.isChecked()
 
         if not isdown:
-            self.canvas.scaleChanged.disconnect(self.checkMapTool)
-            self.canvas.extentsChanged.disconnect(self.checkMapTool)
-            self.clickTool.canvasClicked.disconnect(self.addfeatures)
             self.new_layer.featureAdded.disconnect(self.lcdCounter)
-
             self.addfeatures()
             name = self.newLayerNameEdit.text()
+
+            self.scn_list.append(name)
             scenario_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(name))
             scenario_layer.removeSelection()
         elif isdown:
@@ -607,6 +604,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
             self.canvas.scaleChanged.disconnect(self.checkMapTool)
             self.canvas.extentsChanged.disconnect(self.checkMapTool)
+            self.clickTool.canvasClicked.disconnect(self.addfeatures)
+
 
             # Order layers
             root = QgsProject.instance().layerTreeRoot()
@@ -640,72 +639,97 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         transittypes = proj.readEntry("SpatialDecisionDockWidget", "transittypes")[0]
 
         # Current situation
-        self.reportTextEdit.clear()
+        #self.reportTextEdit.clear()
         transit_layer = uf.getLegendLayerByName(self.iface, 'Transit_stops')
         if not transit_layer:
-            self.reportTextEdit.clear()
-            self.reportTextEdit.insertPlainText("No valid data available\n")
+            print "kutzooi"
         else:
             uf.selectFeaturesByExpression(transit_layer,"network in {}".format(transittypes))
             totalfeatures = transit_layer.selectedFeatureCount()
             transit_layer.removeSelection()
 
             network_types = ["'rail'", "'tram'", "'ferry'", "'metro'", "'bus'"]
-            current_dict = {}
-            for type in network_types:
-                string = '"network" = '+"{}".format(type)
+            current_list = []
+            for typ in network_types:
+                string = '"network" = '+"{}".format(typ)
                 uf.selectFeaturesByExpression(transit_layer, string)
                 num = transit_layer.selectedFeatureCount()
-                current_dict[type] = num
+                current_list.append(num)
                 transit_layer.removeSelection()
-            current_total = sum(current_dict.values())
+            current_total = sum(current_list)
+            current_list.append(current_total)
 
-            # New situation
-            name = self.newLayerNameEdit.text()
-            new_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(name))
-            uf.selectFeaturesByExpression(new_layer,"network in {}".format(transittypes))
-            if not new_layer:
-                self.reportTextEdit.clear()
-                self.reportTextEdit.insertPlainText("Please create a new scenario\n")
-            else:
-                totalfeatures = new_layer.selectedFeatureCount()
-                new_layer.removeSelection()
-
-                network_types = ["'rail'", "'tram'", "'ferry'", "'metro'", "'bus'"]
-                new_dict = {}
-                for type in network_types:
-                    string = '"network" = '+"{}".format(type)
-                    uf.selectFeaturesByExpression(new_layer, string)
-                    num = new_layer.selectedFeatureCount()
-                    new_dict[type] = num
+            # New situation(s)
+            scn_dict = {}
+            for tekst in self.scn_list:
+                new_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(tekst))
+                uf.selectFeaturesByExpression(new_layer,"network in {}".format(transittypes))
+                if False:
+                    print "test"
+                else:
+                    totalfeatures = new_layer.selectedFeatureCount()
                     new_layer.removeSelection()
-                new_total = sum(new_dict.values())
 
-                self.reportTextEdit.insertPlainText("Original situation\n"
-                                                    "Total number of nodes: {}\n"
-                                                    "Number of rail nodes: {}\n"
-                                                    "Number of tram nodes: {}\n"
-                                                    "Number of ferry nodes: {}\n"
-                                                    "Number of bus nodes: {}\n"
-                                                    "Number of metro nodes: {}\n\n"
-                                                    "New situation\n"
-                                                    "Total number of nodes: {}\n"
-                                                    "Number of rail nodes: {}\n"
-                                                    "Number of tram nodes: {}\n"
-                                                    "Number of ferry nodes: {}\n"
-                                                    "Number of bus nodes: {}\n"
-                                                    "Number of metro nodes: {}\n\n".format(current_total,
-                                                                                         current_dict["'rail'"],
-                                                                                         current_dict["'tram'"],
-                                                                                         current_dict["'ferry'"],
-                                                                                         current_dict["'bus'"],
-                                                                                         current_dict["'metro'"],
-                                                                                         new_total,
-                                                                                         new_dict["'rail'"],
-                                                                                         new_dict["'tram'"],
-                                                                                         new_dict["'ferry'"],
-                                                                                         new_dict["'bus'"],
-                                                                                         new_dict["'metro'"]))
+                    network_types = ["'rail'", "'tram'", "'ferry'", "'metro'", "'bus'"]
+                    new_list = []
+                    for typ in network_types:
+                        string = '"network" = '+"{}".format(typ)
+                        uf.selectFeaturesByExpression(new_layer, string)
+                        num = new_layer.selectedFeatureCount()
+                        new_list.append(num)
+                        new_layer.removeSelection()
+                    new_total = sum(new_list)
+                    new_list.append(new_total)
+                    scn_dict[tekst] = new_list
+
+            rows = 6
+            headers = ["network type","current situation"]
+            for scn_name in self.scn_list:
+                headers.append(scn_name)
+            cols = len(headers)
+            self.statisticsTable.horizontalHeader().setVisible(True)
+            self.statisticsTable.verticalHeader().setVisible(True)
+            self.statisticsTable.setRowCount(rows)
+            self.statisticsTable.setColumnCount(cols)
+
+            first_col = ["rail", "tram", "ferry", "metro", "bus", "total"]
+            for i, typ in enumerate(first_col):
+                self.statisticsTable.setItem(i, 0, QTableWidgetItem(str(typ)))
+
+            for i, item in enumerate(current_list):
+                self.statisticsTable.setItem(i, 1, QTableWidgetItem(str(item)))
+
+            for n, scn in enumerate(self.scn_list):
+                value = scn_dict[scn]
+                for i, item in enumerate(value):
+                    self.statisticsTable.setItem(i, n+2, QTableWidgetItem(str(item)))
+
+            self.statisticsTable.setHorizontalHeaderLabels(headers)
+
+
+    def saveTable(self):
+        path = QtGui.QFileDialog.getSaveFileName(self, 'Save File', '', 'CSV(*.csv)')
+        if path:
+            with open(unicode(path), 'wb') as stream:
+                # open csv file for writing
+                writer = csv.writer(stream)
+                # write header
+                header = []
+                for column in range(self.statisticsTable.columnCount()):
+                    item = self.statisticsTable.horizontalHeaderItem(column)
+                    header.append(unicode(item.text()).encode('utf8'))
+                writer.writerow(header)
+                # write data
+                for row in range(self.statisticsTable.rowCount()):
+                    rowdata = []
+                    for column in range(self.statisticsTable.columnCount()):
+                        item = self.statisticsTable.item(row, column)
+                        if item is not None:
+                            rowdata.append(
+                                unicode(item.text()).encode('utf8'))
+                        else:
+                            rowdata.append('')
+                    writer.writerow(rowdata)
 
     # saving the current screen
     def saveMap(self):

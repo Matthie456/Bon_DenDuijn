@@ -671,17 +671,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                                                                                  new_dict["'bus'"],
                                                                                  new_dict["'metro'"]))
 
-
-
-
-    # update a text edit field
-    """def updateNumberFeatures(self):
-        layer = self.getSelectedLayer()
-        if layer:
-            count = layer.featureCount()
-            self.featureCounterEdit.setText(str(count))"""
-
-
     # saving the current screen
     def saveMap(self):
         dir = "{}/Images/".format(QgsProject.instance().homePath())

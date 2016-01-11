@@ -82,7 +82,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.checkAccessibilityButton.clicked.connect(self.checkaccessibility)
         self.addNodeButton.clicked.connect(self.startnodeprocess)
         self.recalculateButton.clicked.connect(self.recalculateaccessibility)
-        self.continueAddingNodesButton.clicked.connect(self.reporting)
+        self.generateReportButton.clicked.connect(self.reporting)
 
         # dropdown menus
         self.buildingCentroidsCombo.activated.connect(self.setBuildinglayer)
@@ -100,7 +100,9 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.updateAttribute.connect(self.extractAttributeSummary)
 
         # set current UI restrictions
-
+        self.reportList.hide()
+        self.statisticsTable.hide()
+        
         # initialisation
         self.updateLayers()
         proj = QgsProject.instance()
@@ -618,7 +620,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             num = transit_layer.selectedFeatureCount()
             current_dict[type] = num
             transit_layer.removeSelection()
-        print current_dict
+        current_total = sum(current_dict.values())
 
         # New situation
         name = self.newLayerNameEdit.text()
@@ -631,11 +633,37 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         new_dict = {}
         for type in network_types:
             string = '"network" = '+"{}".format(type)
-            uf.selectFeaturesByExpression(transit_layer, string)
+            uf.selectFeaturesByExpression(new_layer, string)
             num = new_layer.selectedFeatureCount()
             new_dict[type] = num
             new_layer.removeSelection()
-        print new_dict
+        new_total = sum(new_dict.values())
+
+        self.reportTextEdit.insertPlainText("Original situation\n"
+                                            "Total number of nodes: {}\n"
+                                            "Number of rail nodes: {}\n"
+                                            "Number of tram nodes: {}\n"
+                                            "Number of ferry nodes: {}\n"
+                                            "Number of bus nodes: {}\n"
+                                            "Number of metro nodes: {}\n\n"
+                                            "New situation\n"
+                                            "Total number of nodes: {}\n"
+                                            "Number of rail nodes: {}\n"
+                                            "Number of tram nodes: {}\n"
+                                            "Number of ferry nodes: {}\n"
+                                            "Number of bus nodes: {}\n"
+                                            "Number of metro nodes: {}\n".format(current_total,
+                                                                                 current_dict["'rail'"],
+                                                                                 current_dict["'tram'"],
+                                                                                 current_dict["'ferry'"],
+                                                                                 current_dict["'bus'"],
+                                                                                 current_dict["'metro'"],
+                                                                                 new_total,
+                                                                                 new_dict["'rail'"],
+                                                                                 new_dict["'tram'"],
+                                                                                 new_dict["'ferry'"],
+                                                                                 new_dict["'bus'"],
+                                                                                 new_dict["'metro'"]))
 
 
 

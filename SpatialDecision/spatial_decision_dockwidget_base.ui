@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>477</width>
-    <height>447</height>
+    <height>488</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -358,9 +358,9 @@ For questions, see the Wiki page.</string>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="continueAddingNodesButton">
+         <widget class="QPushButton" name="generateReportButton">
           <property name="text">
-           <string>Continue adding</string>
+           <string>Generate Report</string>
           </property>
          </widget>
         </item>
@@ -369,6 +369,9 @@ For questions, see the Wiki page.</string>
         </item>
         <item>
          <widget class="QTableWidget" name="statisticsTable"/>
+        </item>
+        <item>
+         <widget class="QPlainTextEdit" name="reportTextEdit"/>
         </item>
        </layout>
       </widget>

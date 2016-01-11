@@ -38,7 +38,10 @@ from . import utility_functions as uf
 
 import webbrowser
 
-from PyQt4.QtGui import QMessageBox
+from PyQt4.QtGui import QMessageBox, QCursor
+from PyQt4.QtGui import *
+from PyQt4.QtCore import *
+
 
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -132,7 +135,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         scenario_open = False
 
         msgBox = QtGui.QMessageBox()
-        msgBox.setText('Are you sure?\n This will delete all scenarios')
+        msgBox.setText('Are you sure?\nThis will delete all scenarios')
         msgBox.addButton(QtGui.QPushButton('No'), QtGui.QMessageBox.RejectRole)
         msgBox.addButton(QtGui.QPushButton('Yes'), QtGui.QMessageBox.AcceptRole)
         ret = msgBox.exec_()
@@ -321,20 +324,26 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def recalculateaccessibility(self):
         '''Runs all other functions, with added nodes'''
-        name = self.newLayerNameEdit.text()
-        self.iface.legendInterface().addGroup(name)
-        root = QgsProject.instance().layerTreeRoot()
-        length = len(root.children())
-        new_group = root.children()[length-1]
-        new_group_clone = new_group.clone()
-        new_group_clonadde = new_group.clone()
-        root.insertChildNode(0,new_group_clone)
-        root.removeChildNode(new_group)
-        scenario_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(name))
+        ischecked = self.addNodeButton.isChecked()
 
-        self.iface.legendInterface().moveLayer(scenario_layer, 0)
-        self.calculateBuffer(True)
-        self.accessibility(True)
+        if ischecked:
+            self.addNodeButton.setChecked(False)
+            self.startnodeprocess()
+        elif not ischecked:
+            name = self.newLayerNameEdit.text()
+            self.iface.legendInterface().addGroup(name)
+            root = QgsProject.instance().layerTreeRoot()
+            length = len(root.children())
+            new_group = root.children()[length-1]
+            new_group_clone = new_group.clone()
+            new_group_clonadde = new_group.clone()
+            root.insertChildNode(0,new_group_clone)
+            root.removeChildNode(new_group)
+            scenario_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(name))
+
+            self.iface.legendInterface().moveLayer(scenario_layer, 0)
+            self.calculateBuffer(True)
+            self.accessibility(True)
 
     # Calculate Buffers
     def calculateBuffer(self, is_scn):
@@ -492,7 +501,11 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         isdown = self.addNodeButton.isChecked()
 
         if not isdown:
-            print 'is down???'
+            self.canvas.scaleChanged.disconnect(self.checkMapTool)
+            self.canvas.extentsChanged.disconnect(self.checkMapTool)
+            self.clickTool.canvasClicked.disconnect(self.addfeatures)
+            self.new_layer.featureAdded.disconnect(self.lcdCounter)
+
             self.addfeatures()
             name = self.newLayerNameEdit.text()
             scenario_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(name))
@@ -506,27 +519,21 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             # Create a copy of the Transit layer for editing purposes
             self.iface.setActiveLayer(transit_layer)
             uf.duplicateLayerMem(transit_layer, "POINT", CRS, 'Transit_stops copy')
-            new_layer = uf.getLegendLayerByName(self.iface, 'Transit_stops copy')
-            self.iface.setActiveLayer(new_layer)
-            self.iface.legendInterface().setLayerVisible(new_layer, False)
+            self.new_layer = uf.getLegendLayerByName(self.iface, 'Transit_stops copy')
+            self.iface.setActiveLayer(self.new_layer)
+            self.iface.legendInterface().setLayerVisible(self.new_layer, False)
+
 
             self.canvas.scaleChanged.connect(self.checkMapTool)
             self.canvas.extentsChanged.connect(self.checkMapTool)
 
 
             # Make sure layer is editable
-            if not new_layer.isEditable():
-                new_layer.startEditing()
+            if not self.new_layer.isEditable():
+                self.new_layer.startEditing()
             self.remainingNodesLCD.display(0)
-            self.addnode()
+            self.setClickTool()
 
-
-    def addnode(self):
-        # load layers
-        new_layer = uf.getLegendLayerByName(self.iface, 'Transit_stops copy')
-        transit_layer = uf.getLegendLayerByName(self.iface, "Transit_stops")
-        transit_layer.setReadOnly(True)
-        new_layer.featureAdded.connect(self.addnode)
 
     def checkMapTool(self):
         maptool = self.canvas.mapTool()
@@ -540,7 +547,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # setup clicktool
         self.clickTool = QgsMapToolEmitPoint(self.canvas)
         self.clickTool.canvasClicked.connect(self.addfeatures)
-        self.clickTool.canvasClicked.connect(self.lcdCounter)
         self.canvas.setMapTool(self.clickTool)
 
     def addfeatures(self):
@@ -562,6 +568,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         if ischecked:
             self.iface.setActiveLayer(new_layer)
             self.iface.actionAddFeature().trigger()
+            self.new_layer.featureAdded.connect(self.lcdCounter)
             return
         elif not ischecked:
             # Commit changes and set clicktool to pantool
@@ -614,6 +621,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def lcdCounter(self):
         value = self.remainingNodesLCD.value()
         self.remainingNodesLCD.display(value+1)
+        return
 
     # after adding features to layers needs a refresh (sometimes)
     def refreshCanvas(self, layer):

@@ -301,7 +301,7 @@ For questions, see the Wiki page.</string>
              <number>0</number>
             </property>
             <property name="digitCount">
-             <number>1</number>
+             <number>2</number>
             </property>
             <property name="segmentStyle">
              <enum>QLCDNumber::Flat</enum>

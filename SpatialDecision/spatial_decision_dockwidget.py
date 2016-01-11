@@ -38,7 +38,7 @@ from . import utility_functions as uf
 
 import webbrowser
 
-#from PyQt4.QtGui import *
+from PyQt4.QtGui import QMessageBox
 
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -131,20 +131,29 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def openScenario(self,filename=""):
         scenario_open = False
 
-        scenario_file = os.path.join('{}'.format(QgsProject.instance().homePath()), 'Small_project.qgs')
-        # check if file exists
-        if os.path.isfile(scenario_file):
-            self.iface.addProject(scenario_file)
-            scenario_open = True
+        msgBox = QtGui.QMessageBox()
+        msgBox.setText('Are you sure?\n This will delete all scenarios')
+        msgBox.addButton(QtGui.QPushButton('No'), QtGui.QMessageBox.RejectRole)
+        msgBox.addButton(QtGui.QPushButton('Yes'), QtGui.QMessageBox.AcceptRole)
+        ret = msgBox.exec_()
+
+        if msgBox.reject():
+            return
         else:
-            last_dir = uf.getLastDir("SDSS")
-            #last_dir = QgsProject.instance().homePath()
-            new_file = QtGui.QFileDialog.getOpenFileName(self, "", last_dir, "(*.qgs)")
-            if new_file:
-                self.iface.addProject(new_file)
+            scenario_file = os.path.join('{}'.format(QgsProject.instance().homePath()), 'Small_project.qgs')
+            # check if file exists
+            if os.path.isfile(scenario_file):
+                self.iface.addProject(scenario_file)
                 scenario_open = True
-        if scenario_open:
-            self.updateLayers()
+            else:
+                last_dir = uf.getLastDir("SDSS")
+                #last_dir = QgsProject.instance().homePath()
+                new_file = QtGui.QFileDialog.getOpenFileName(self, "", last_dir, "(*.qgs)")
+                if new_file:
+                    self.iface.addProject(new_file)
+                    scenario_open = True
+            if scenario_open:
+                self.updateLayers()
 
     def saveScenario(self):
         self.iface.actionSaveProjectAs().trigger()

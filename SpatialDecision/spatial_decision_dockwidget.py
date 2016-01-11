@@ -232,6 +232,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         layer = uf.getLegendLayerByName(self.iface, 'Buffers_{}'.format(cur_user))
         if not layer:
             print 'layer does not exist'
+            self.toggleBufferCheckBox.setChecked(False)
+            return
         else:
             state = self.toggleBufferCheckBox.checkState()
 
@@ -247,6 +249,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         layer = uf.getLegendLayerByName(self.iface, 'Accessibility')
         if not layer:
             print 'layer does not exist'
+            self.toggleAccessibiltyCheckBox.setChecked(False)
+            return
         else:
             state = self.toggleAccessibiltyCheckBox.checkState()
 
@@ -264,6 +268,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         layer = uf.getLegendLayerByName(self.iface, 'Population_density')
         if not layer:
             print 'layer does not exist'
+            self.toggleLoAccessibilityCheckBox.setChecked(False)
+            return
         else:
             path = '{}/styles/'.format(QgsProject.instance().homePath())
             cur_user = self.SelectUserGroupCombo.currentText()

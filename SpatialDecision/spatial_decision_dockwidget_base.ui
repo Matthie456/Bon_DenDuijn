@@ -365,13 +365,13 @@ For questions, see the Wiki page.</string>
          </widget>
         </item>
         <item>
-         <widget class="QListWidget" name="reportList"/>
+         <widget class="QPlainTextEdit" name="reportTextEdit"/>
         </item>
         <item>
          <widget class="QTableWidget" name="statisticsTable"/>
         </item>
         <item>
-         <widget class="QPlainTextEdit" name="reportTextEdit"/>
+         <widget class="QListWidget" name="reportList"/>
         </item>
        </layout>
       </widget>

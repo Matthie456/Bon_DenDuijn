@@ -10,7 +10,7 @@
           <property key="showFeatureCount" value="1"/>
         </customproperties>
       </layer-tree-layer>
-      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="Population_density20160108142935668" name="Population_density">
+      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="Population_density20160112121130402" name="Population_density">
         <customproperties/>
       </layer-tree-layer>
       <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="Building_centroids20151218113326346" name="Building_centroids">
@@ -30,7 +30,7 @@
         <layer-tree-layer expanded="1" checked="Qt::Checked" id="water_linestrings20160112110043274" name="water_linestrings">
           <customproperties/>
         </layer-tree-layer>
-        <layer-tree-layer expanded="1" checked="Qt::Checked" id="water_polygons20160112105949257" name="water_polygons">
+        <layer-tree-layer expanded="1" checked="Qt::Checked" id="water_polygons20160112121047920" name="water_polygons">
           <customproperties/>
         </layer-tree-layer>
         <layer-tree-layer expanded="0" checked="Qt::Checked" id="terrain_polygons20160112110023935" name="terrain_polygons">
@@ -76,6 +76,7 @@
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Buffers_Elderly20151216153548069"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Lack_of_accessibility20151216154427243"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Accessibility20151216125345170"/>
+      <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Accessibility20160112112957167"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Transit_Scenario_120160106215822315"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Lack_of_accessibility20151217013115837"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Lack_of_accessibility20160105200655654"/>
@@ -83,14 +84,17 @@
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Buffers_Elderly20151217114541688"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Symmetrical_difference20151216153553110"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Gebouw_Polygon20160111193652945"/>
+      <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Transit_Scenario_120160112120021265"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Buffers_Students20151216090727835"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Accessibility20151216160619392"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="buurten_2014_adam20151215215457581"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Buffers_Elderly20151217164218578"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Buffers_Elderly20151216152057094"/>
+      <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Population_density20160112121130402"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Buffers_Elderly20151216153648579"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="USER:100000" srcDatumTransform="-1" destDatumTransform="-1" layerid="Gebouwen_NonResidential20151216114348793"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="clipped_buildings20160111195739873"/>
+      <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Transit_Scenario_220160112120224105"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Symmetric_Difference_shp20151217164725092"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Neighborhoods20151217162001735"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Buffers_Students20151216091802705"/>
@@ -101,6 +105,7 @@
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Symmetric_Difference_shp20151216121747751"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Symmetric_Difference_shp20151217012957777"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Accessibility20151216120906707"/>
+      <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="water_polygons20160112121047920"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="25g_top25raster_201420151218114032091"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Accessibility20151217164230733"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Buffers_Elderly20151217012936910"/>
@@ -145,8 +150,8 @@
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="roads_polygons20160112110120550"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Buffers_Students20151216091037773"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Symmetric_Difference_shp20151217002627582"/>
-      <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Accessibility20151217163328758"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="railway_linestrings20160112110134645"/>
+      <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Accessibility20151217163328758"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Accessibility20151216120650294"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Buffers_Elderly20151217002624877"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Population_density20160107103633415"/>
@@ -161,12 +166,14 @@
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Lack_of_accessibility20151217124524278"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="buurten_clip20151216102651552"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Buffers_Elderly_Scenario_120160105201256793"/>
+      <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Transit_stops_copy20160112115122406"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="building_polygons20160112110153959"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Accessibility_Scenario_120160105201256943"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Buffers_Elderly20151217001848576"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Transit_stops20151217161858513"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Symmetrical_difference20151216150101715"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Buffers_Students20151216094443860"/>
+      <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Buffers_Elderly20160112112956974"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="25d_top25raster_201420151215215734635"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="clipped_terrein20160111192048608"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="transit_stops_adam20151215215724928"/>
@@ -236,13 +243,13 @@
     <custom-order enabled="0">
       <item>Building_centroids20151218113326346</item>
       <item>Transit_stops20151218113434630</item>
-      <item>Population_density20160108142935668</item>
-      <item>water_polygons20160112105949257</item>
       <item>terrain_polygons20160112110023935</item>
       <item>water_linestrings20160112110043274</item>
       <item>roads_polygons20160112110120550</item>
       <item>railway_linestrings20160112110134645</item>
       <item>building_polygons20160112110153959</item>
+      <item>water_polygons20160112121047920</item>
+      <item>Population_density20160112121130402</item>
     </custom-order>
   </layer-tree-canvas>
   <legend updateDrawingOrder="true">
@@ -254,7 +261,7 @@
       </legendlayer>
       <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="Population_density" showFeatureCount="0">
         <filegroup open="true" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="Population_density20160108142935668" visible="0"/>
+          <legendlayerfile isInOverview="0" layerid="Population_density20160112121130402" visible="0"/>
         </filegroup>
       </legendlayer>
       <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="Building_centroids" showFeatureCount="0">
@@ -285,7 +292,7 @@
         </legendlayer>
         <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="water_polygons" showFeatureCount="0">
           <filegroup open="true" hidden="false">
-            <legendlayerfile isInOverview="0" layerid="water_polygons20160112105949257" visible="1"/>
+            <legendlayerfile isInOverview="0" layerid="water_polygons20160112121047920" visible="1"/>
           </filegroup>
         </legendlayer>
         <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="terrain_polygons" showFeatureCount="0">
@@ -575,7 +582,7 @@
       </edittypes>
     </maplayer>
     <maplayer minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Polygon" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
-      <id>Population_density20160108142935668</id>
+      <id>Population_density20160112121130402</id>
       <datasource>./Baselayer data/Population_density.shp</datasource>
       <title></title>
       <abstract></abstract>
@@ -678,7 +685,7 @@
           <symbol alpha="1" clip_to_extent="1" type="fill" name="0">
             <layer pass="0" class="SimpleFill" locked="0">
               <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="color" v="113,93,131,255"/>
+              <prop k="color" v="195,144,144,255"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -721,10 +728,10 @@
         <multilineenabled fieldname="" on=""/>
         <selectedonly on=""/>
       </labelattributes>
-      <editform>.</editform>
+      <editform></editform>
       <editforminit/>
       <featformsuppress>0</featformsuppress>
-      <annotationform>.</annotationform>
+      <annotationform></annotationform>
       <editorlayout>generatedlayout</editorlayout>
       <excludeAttributesWMS/>
       <excludeAttributesWFS/>
@@ -846,8 +853,8 @@
         <edittype widgetv2type="Hidden" name="matchname">
           <widgetv2config fieldEditable="1" labelOnTop="0"/>
         </edittype>
-        <edittype widgetv2type="Hidden" name="network">
-          <widgetv2config fieldEditable="1" labelOnTop="0"/>
+        <edittype widgetv2type="UniqueValues" name="network">
+          <widgetv2config fieldEditable="1" labelOnTop="1" Editable="0"/>
         </edittype>
         <edittype widgetv2type="Hidden" name="buurtname">
           <widgetv2config fieldEditable="1" labelOnTop="0"/>
@@ -1041,12 +1048,12 @@
         <property key="labeling/distInMapUnits" value="false"/>
         <property key="labeling/distMapUnitMaxScale" value="0"/>
         <property key="labeling/distMapUnitMinScale" value="0"/>
-        <property key="labeling/drawLabels" value="false"/>
-        <property key="labeling/enabled" value="false"/>
-        <property key="labeling/fieldName" value=""/>
+        <property key="labeling/drawLabels" value="true"/>
+        <property key="labeling/enabled" value="true"/>
+        <property key="labeling/fieldName" value="stopname"/>
         <property key="labeling/fitInPolygonOnly" value="false"/>
         <property key="labeling/fontCapitals" value="0"/>
-        <property key="labeling/fontFamily" value="MS Shell Dlg 2"/>
+        <property key="labeling/fontFamily" value="Arial"/>
         <property key="labeling/fontItalic" value="false"/>
         <property key="labeling/fontLetterSpacing" value="0"/>
         <property key="labeling/fontLimitPixelSize" value="false"/>
@@ -1061,7 +1068,7 @@
         <property key="labeling/fontWeight" value="50"/>
         <property key="labeling/fontWordSpacing" value="0"/>
         <property key="labeling/formatNumbers" value="false"/>
-        <property key="labeling/isExpression" value="true"/>
+        <property key="labeling/isExpression" value="false"/>
         <property key="labeling/labelOffsetInMapUnits" value="true"/>
         <property key="labeling/labelOffsetMapUnitMaxScale" value="0"/>
         <property key="labeling/labelOffsetMapUnitMinScale" value="0"/>
@@ -1093,14 +1100,14 @@
         <property key="labeling/repeatDistanceUnit" value="1"/>
         <property key="labeling/reverseDirectionSymbol" value="false"/>
         <property key="labeling/rightDirectionSymbol" value=">"/>
-        <property key="labeling/scaleMax" value="10000000"/>
+        <property key="labeling/scaleMax" value="5000"/>
         <property key="labeling/scaleMin" value="1"/>
-        <property key="labeling/scaleVisibility" value="false"/>
+        <property key="labeling/scaleVisibility" value="true"/>
         <property key="labeling/shadowBlendMode" value="6"/>
-        <property key="labeling/shadowColorB" value="0"/>
-        <property key="labeling/shadowColorG" value="0"/>
-        <property key="labeling/shadowColorR" value="0"/>
-        <property key="labeling/shadowDraw" value="false"/>
+        <property key="labeling/shadowColorB" value="255"/>
+        <property key="labeling/shadowColorG" value="255"/>
+        <property key="labeling/shadowColorR" value="255"/>
+        <property key="labeling/shadowDraw" value="true"/>
         <property key="labeling/shadowOffsetAngle" value="135"/>
         <property key="labeling/shadowOffsetDist" value="1"/>
         <property key="labeling/shadowOffsetGlobal" value="true"/>
@@ -1189,7 +1196,7 @@
         <selectedonly on=""/>
       </labelattributes>
       <SingleCategoryDiagramRenderer diagramType="Pie">
-        <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" sizeType="MM" minScaleDenominator="-4.65661e-10">
+        <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" sizeType="MM" minScaleDenominator="0">
           <fontProperties description=".SF NS Text,13,-1,5,50,0,0,0,0,0" style=""/>
           <attribute field="" color="#000000" label=""/>
         </DiagramCategory>
@@ -1220,8 +1227,8 @@
         <edittype widgetv2type="Hidden" name="matchname">
           <widgetv2config fieldEditable="1" labelOnTop="0"/>
         </edittype>
-        <edittype widgetv2type="Hidden" name="network">
-          <widgetv2config fieldEditable="1" labelOnTop="0"/>
+        <edittype widgetv2type="UniqueValues" name="network">
+          <widgetv2config fieldEditable="1" labelOnTop="1" Editable="0"/>
         </edittype>
         <edittype widgetv2type="Hidden" name="buurtname">
           <widgetv2config fieldEditable="1" labelOnTop="0"/>
@@ -2957,8 +2964,8 @@
       </edittypes>
     </maplayer>
     <maplayer minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Polygon" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
-      <id>water_polygons20160112105949257</id>
-      <datasource>../../Bon_DenDuijn - Copy/sample_data/Baselayer data/water_polygons.shp</datasource>
+      <id>water_polygons20160112121047920</id>
+      <datasource>./Baselayer data/water_polygons.shp</datasource>
       <title></title>
       <abstract></abstract>
       <keywordList>
@@ -3273,14 +3280,14 @@
       <DefaultSnapToleranceUnit type="int">1</DefaultSnapToleranceUnit>
       <LayerSnappingList type="QStringList">
         <value>Building_centroids20151218113326346</value>
-        <value>Population_density20160108142935668</value>
         <value>Transit_stops20151218113434630</value>
-        <value>water_polygons20160112105949257</value>
+        <value>building_polygons20160112110153959</value>
+        <value>railway_linestrings20160112110134645</value>
+        <value>roads_polygons20160112110120550</value>
         <value>terrain_polygons20160112110023935</value>
         <value>water_linestrings20160112110043274</value>
-        <value>roads_polygons20160112110120550</value>
-        <value>railway_linestrings20160112110134645</value>
-        <value>building_polygons20160112110153959</value>
+        <value>water_polygons20160112121047920</value>
+        <value>Population_density20160112121130402</value>
       </LayerSnappingList>
       <LayerSnappingEnabledList type="QStringList">
         <value>disabled</value>

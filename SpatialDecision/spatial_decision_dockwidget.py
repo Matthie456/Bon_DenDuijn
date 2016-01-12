@@ -502,13 +502,16 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         stylepath = '{}/Styles/'.format(QgsProject.instance().homePath())
 
         if not isdown:
-            self.new_layer.featureAdded.disconnect(self.lcdCounter)
-            self.addfeatures()
-            name = self.newLayerNameEdit.text()
+            if self.addfeatures():
+                print "something"
 
-            self.scn_list.append(name)
-            scenario_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(name))
-            scenario_layer.removeSelection()
+            else:
+
+                name = self.newLayerNameEdit.text()
+
+                self.scn_list.append(name)
+                scenario_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(name))
+                scenario_layer.removeSelection()
         elif isdown:
             proj = QgsProject.instance()
             CRS = proj.readEntry("SpatialDecisionDockWidget", 'CRS')[0]
@@ -571,53 +574,59 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.new_layer.featureAdded.connect(self.lcdCounter)
             return
         elif not ischecked:
-            # Commit changes and set clicktool to pantool
-            new_layer.commitChanges()
-            self.panTool = QgsMapToolPan(self.canvas)
-            self.canvas.setMapTool(self.panTool)
-
-            # Save the scenario to shapefile in /sample_data/Scenarios/{name}/
-            path = "{}/Scenarios/".format(QgsProject.instance().homePath())
-            name = self.newLayerNameEdit.text()
-            directory = "{}/{}".format(path, name)
-            if os.path.exists(directory):
-                pass
+            print 'diff', diff
+            if diff == 0:
+                QgsMapLayerRegistry.instance().removeMapLayer(new_layer.id())
+                return True
             else:
-                os.makedirs(directory)
+                # Commit changes and set clicktool to pantool
+                self.new_layer.featureAdded.disconnect(self.lcdCounter)
+                new_layer.commitChanges()
+                self.panTool = QgsMapToolPan(self.canvas)
+                self.canvas.setMapTool(self.panTool)
 
-            scenario_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(name))
-            if not scenario_layer:
-                uf.saveAsNewShapefile(new_layer, directory, "Transit_{}".format(name), CRS,)
+                # Save the scenario to shapefile in /sample_data/Scenarios/{name}/
+                path = "{}/Scenarios/".format(QgsProject.instance().homePath())
+                name = self.newLayerNameEdit.text()
+                directory = "{}/{}".format(path, name)
+                if os.path.exists(directory):
+                    pass
+                else:
+                    os.makedirs(directory)
+
                 scenario_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(name))
+                if not scenario_layer:
+                    uf.saveAsNewShapefile(new_layer, directory, "Transit_{}".format(name), CRS,)
+                    scenario_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(name))
 
-            # Remove unnecessary copy of transit_layer
-            QgsMapLayerRegistry.instance().removeMapLayer(new_layer.id())
+                # Remove unnecessary copy of transit_layer
+                QgsMapLayerRegistry.instance().removeMapLayer(new_layer.id())
 
-            # Load the saved layer
-            self.iface.addVectorLayer(directory, "Transit_{}".format(name), "ogr")
-            scenario_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(name))
-            # style the layer accordingly
-            scenario_layer.loadNamedStyle('{}Transit_{}.qml'.format(stylepath, cur_user))
-            scenario_layer.triggerRepaint()
+                # Load the saved layer
+                self.iface.addVectorLayer(directory, "Transit_{}".format(name), "ogr")
+                scenario_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(name))
+                # style the layer accordingly
+                scenario_layer.loadNamedStyle('{}Transit_{}.qml'.format(stylepath, cur_user))
+                scenario_layer.triggerRepaint()
 
-            # Set layer visibility and move to correct group
-            self.iface.legendInterface().setLayerVisible(transit_layer, False)
-            self.iface.legendInterface().moveLayer(scenario_layer, 0)
-            self.iface.legendInterface().setLayerExpanded(scenario_layer, False)
+                # Set layer visibility and move to correct group
+                self.iface.legendInterface().setLayerVisible(transit_layer, False)
+                self.iface.legendInterface().moveLayer(scenario_layer, 0)
+                self.iface.legendInterface().setLayerExpanded(scenario_layer, False)
 
-            self.canvas.scaleChanged.disconnect(self.checkMapTool)
-            self.canvas.extentsChanged.disconnect(self.checkMapTool)
-            self.clickTool.canvasClicked.disconnect(self.addfeatures)
+                self.canvas.scaleChanged.disconnect(self.checkMapTool)
+                self.canvas.extentsChanged.disconnect(self.checkMapTool)
+                self.clickTool.canvasClicked.disconnect(self.addfeatures)
 
 
-            # Order layers
-            root = QgsProject.instance().layerTreeRoot()
-            scn_group = root.children()[0]
-            access = scn_group.children()[0]
-            access_clone = access.clone()
-            scn_group.insertChildNode(4, access_clone)
-            scn_group.removeChildNode(access)
-            self.refreshCanvas(scenario_layer)
+                # Order layers
+                root = QgsProject.instance().layerTreeRoot()
+                scn_group = root.children()[0]
+                access = scn_group.children()[0]
+                access_clone = access.clone()
+                scn_group.insertChildNode(4, access_clone)
+                scn_group.removeChildNode(access)
+                self.refreshCanvas(scenario_layer)
 
 
     def lcdCounter(self):
@@ -664,26 +673,38 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
             # New situation(s)
             scn_dict = {}
+            self.scn_list
             for tekst in self.scn_list:
                 new_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(tekst))
-                uf.selectFeaturesByExpression(new_layer,"network in {}".format(transittypes))
-                if False:
-                    print "test"
-                else:
-                    totalfeatures = new_layer.selectedFeatureCount()
-                    new_layer.removeSelection()
+                if new_layer == None:
+                    msgBox = QtGui.QMessageBox()
+                    msgBox.setText('No layers available!\nPlease create a scenario.')
+                    msgBox.addButton(QtGui.QPushButton('Ok'), QtGui.QMessageBox.RejectRole)
+                    ret = msgBox.exec_()
 
-                    network_types = ["'rail'", "'tram'", "'ferry'", "'metro'", "'bus'"]
-                    new_list = []
-                    for typ in network_types:
-                        string = '"network" = '+"{}".format(typ)
-                        uf.selectFeaturesByExpression(new_layer, string)
-                        num = new_layer.selectedFeatureCount()
-                        new_list.append(num)
+                    if ret == 0:
+                        for i in range(len(self.scn_list)):
+                            self.statisticsTable.removeColumn(i+2)
+                        return
+                else:
+                    uf.selectFeaturesByExpression(new_layer,"network in {}".format(transittypes))
+                    if False:
+                        print "test"
+                    else:
+                        totalfeatures = new_layer.selectedFeatureCount()
                         new_layer.removeSelection()
-                    new_total = sum(new_list)
-                    new_list.append(new_total)
-                    scn_dict[tekst] = new_list
+
+                        network_types = ["'rail'", "'tram'", "'ferry'", "'metro'", "'bus'"]
+                        new_list = []
+                        for typ in network_types:
+                            string = '"network" = '+"{}".format(typ)
+                            uf.selectFeaturesByExpression(new_layer, string)
+                            num = new_layer.selectedFeatureCount()
+                            new_list.append(num)
+                            new_layer.removeSelection()
+                        new_total = sum(new_list)
+                        new_list.append(new_total)
+                        scn_dict[tekst] = new_list
 
             rows = 6
             headers = ["network type","current situation"]

@@ -129,17 +129,19 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         url = 'https://github.com/Matthie456/Bon_DenDuijn/wiki'
         webbrowser.open(url)
 
+
     def openScenario(self,filename=""):
         scenario_open = False
+
         msgBox = QtGui.QMessageBox()
         msgBox.setText('Are you sure?\nThis will delete all scenarios')
         msgBox.addButton(QtGui.QPushButton('No'), QtGui.QMessageBox.RejectRole)
         msgBox.addButton(QtGui.QPushButton('Yes'), QtGui.QMessageBox.AcceptRole)
         ret = msgBox.exec_()
 
-        if ret == 0:
+        if msgBox.reject():
             return
-        elif ret == 1:
+        else:
             scenario_file = os.path.join('{}'.format(QgsProject.instance().homePath()), 'Small_project.qgs')
             # check if file exists
             if os.path.isfile(scenario_file):
@@ -326,6 +328,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         if ischecked:
             self.addNodeButton.setChecked(False)
             self.startnodeprocess()
+            
         name = self.newLayerNameEdit.text()
         self.iface.legendInterface().addGroup(name)
         root = QgsProject.instance().layerTreeRoot()

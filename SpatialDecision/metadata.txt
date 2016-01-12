@@ -9,14 +9,14 @@
 [general]
 name=Harry
 qgisMinimumVersion=2.0
-description=This is a SDSS template for the GEO1005 course
+description=HARRY is a Spatial Decision Support System developed for the GEO1005 course at the TU Delft.The aim of HARRY is to be a helpfull tool in the process of Increasing the accessibility to public transport in urban environments.
 version=0.1
 author=Matthijs Bon and Xander den Duijn, TU Delft
 email=X.A.denDuijn@student.tudelft.nl
 
 about=This plugin is a Spatial Decision Support System for the Transport Planner. It provides functionality to deal with spatial data, analysis and data visualisation. 
 
-tracker=https://github.com/jorgegil/GEO1005/issues
+tracker=https://github.com/Matthie456/Bon_DenDuijn/issues
 repository=https://github.com/Matthie456/Bon_DenDuijn
 # End of mandatory metadata
 

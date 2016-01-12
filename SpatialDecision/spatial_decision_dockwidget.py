@@ -139,9 +139,9 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         msgBox.addButton(QtGui.QPushButton('Yes'), QtGui.QMessageBox.AcceptRole)
         ret = msgBox.exec_()
 
-        if msgBox.reject():
+        if ret == 0:
             return
-        else:
+        elif ret == 1:
             scenario_file = os.path.join('{}'.format(QgsProject.instance().homePath()), 'Small_project.qgs')
             # check if file exists
             if os.path.isfile(scenario_file):

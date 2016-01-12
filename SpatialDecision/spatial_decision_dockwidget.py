@@ -136,20 +136,24 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         msgBox.addButton(QtGui.QPushButton('No'), QtGui.QMessageBox.RejectRole)
         msgBox.addButton(QtGui.QPushButton('Yes'), QtGui.QMessageBox.AcceptRole)
         ret = msgBox.exec_()
-        scenario_file = os.path.join('{}'.format(QgsProject.instance().homePath()), 'Small_project.qgs')
-        # check if file exists
-        if os.path.isfile(scenario_file):
-            self.iface.addProject(scenario_file)
-            scenario_open = True
-        else:
-            last_dir = uf.getLastDir("SDSS")
-            #last_dir = QgsProject.instance().homePath()
-            new_file = QtGui.QFileDialog.getOpenFileName(self, "", last_dir, "(*.qgs)")
-            if new_file:
-                self.iface.addProject(new_file)
+
+        if ret == 0:
+            return
+        elif ret == 1:
+            scenario_file = os.path.join('{}'.format(QgsProject.instance().homePath()), 'Small_project.qgs')
+            # check if file exists
+            if os.path.isfile(scenario_file):
+                self.iface.addProject(scenario_file)
                 scenario_open = True
-        if scenario_open:
-            self.updateLayers()
+            else:
+                last_dir = uf.getLastDir("SDSS")
+                #last_dir = QgsProject.instance().homePath()
+                new_file = QtGui.QFileDialog.getOpenFileName(self, "", last_dir, "(*.qgs)")
+                if new_file:
+                    self.iface.addProject(new_file)
+                    scenario_open = True
+            if scenario_open:
+                self.updateLayers()
 
     def saveScenario(self):
         self.iface.actionSaveProjectAs().trigger()

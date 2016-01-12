@@ -1014,4 +1014,3 @@ def duplicateLayerMem(layer, geometry, CRS, name):
     features = [feat for feat in layer.getFeatures()]
     provider.addFeatures(features)
     QgsMapLayerRegistry.instance().addMapLayer(new_layer)
-    print 'done'

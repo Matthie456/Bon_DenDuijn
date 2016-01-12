@@ -156,7 +156,11 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                     scenario_open = True
             if scenario_open:
                 self.updateLayers()
-
+                self.remainingNodesLCD.display(0)
+                try:
+                    self.clickTool.canvasClicked.disconnect(self.addfeatures)
+                except:
+                    pass
     def saveScenario(self):
         self.iface.actionSaveProjectAs().trigger()
 
@@ -246,7 +250,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         cur_user = self.SelectUserGroupCombo.currentText()
         layer = uf.getLegendLayerByName(self.iface, 'Buffers_{}'.format(cur_user))
         if not layer:
-            print 'layer does not exist'
             self.toggleBufferCheckBox.setChecked(False)
             return
         else:
@@ -263,7 +266,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         layer = uf.getLegendLayerByName(self.iface, 'Accessibility')
         if not layer:
-            print 'layer does not exist'
             self.toggleAccessibiltyCheckBox.setChecked(False)
             return
         else:
@@ -282,7 +284,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def toggleDensityLayer(self):
         layer = uf.getLegendLayerByName(self.iface, 'Population_density')
         if not layer:
-            print 'layer does not exist'
             self.toggleLoAccessibilityCheckBox.setChecked(False)
             return
         else:
@@ -389,7 +390,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 types = [QtCore.QVariant.String, QtCore.QVariant.Double, QtCore.QVariant.String]
                 buffer_layer = uf.createTempLayer('Buffers_{}'.format(cur_user),'POLYGON',CRS, attribs, types)
                 buffer_layer.setLayerName('Buffers_{}'.format(cur_user))
-                print "created layer", buffer_layer.name()
                 uf.loadTempLayer(buffer_layer)
             if is_scn:
                 name = self.newLayerNameEdit.text()
@@ -397,7 +397,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 types = [QtCore.QVariant.String, QtCore.QVariant.Double, QtCore.QVariant.String]
                 buffer_layer = uf.createTempLayer('Buffers_{}_{}'.format(cur_user, name),'POLYGON',CRS, attribs, types)
                 buffer_layer.setLayerName('Buffers_{}_{}'.format(cur_user, name))
-                print "created layer", buffer_layer.name()
                 uf.loadTempLayer(buffer_layer)
 
             # insert buffer polygons
@@ -503,10 +502,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         if not isdown:
             if self.addfeatures():
-                print "something"
-
+                pass
             else:
-
                 name = self.newLayerNameEdit.text()
 
                 self.scn_list.append(name)
@@ -574,7 +571,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.new_layer.featureAdded.connect(self.lcdCounter)
             return
         elif not ischecked:
-            print 'diff', diff
             if diff == 0:
                 QgsMapLayerRegistry.instance().removeMapLayer(new_layer.id())
                 return True
@@ -654,7 +650,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         #self.reportTextEdit.clear()
         transit_layer = uf.getLegendLayerByName(self.iface, 'Transit_stops')
         if not transit_layer:
-            print "kutzooi"
+            pass
         else:
             uf.selectFeaturesByExpression(transit_layer,"network in {}".format(transittypes))
             totalfeatures = transit_layer.selectedFeatureCount()
@@ -678,7 +674,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 new_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(tekst))
                 if new_layer == None:
                     msgBox = QtGui.QMessageBox()
-                    msgBox.setText('No layers available!\nPlease create a scenario.')
+                    msgBox.setText('Please create a scenario.')
                     msgBox.addButton(QtGui.QPushButton('Ok'), QtGui.QMessageBox.RejectRole)
                     ret = msgBox.exec_()
 
@@ -689,7 +685,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 else:
                     uf.selectFeaturesByExpression(new_layer,"network in {}".format(transittypes))
                     if False:
-                        print "test"
+                        pass
                     else:
                         totalfeatures = new_layer.selectedFeatureCount()
                         new_layer.removeSelection()
@@ -788,39 +784,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     # table window functions
     def updateTable(self, values):
-        # takes a list of label / value pairs, can be tuples or lists. not dictionaries to control order
-        #self.statisticsTable = QtGui.QTableWidget(3, 2)
-        self.statisticsTable.horizontalHeader().setVisible(True)
-        self.statisticsTable.verticalHeader().setVisible(True)
-        self.statisticsTable.setHorizontalHeaderLabels(["network type","number"])
-        self.statisticsTable.setRowCount(len(values))
-
-        tableData = [
-            ("Alice", 'blue'),
-            ("Neptun", 'red'),
-            ("Ferdinand", 'grey')
-        ]
-        for i, (name, color) in enumerate(tableData):
-            nameItem = QtGui.QTableWidgetItem(name)
-            coloritem = QtGui.QTableWidgetItem(color)
-            self.statisticsTable.setItem(i, 0, nameItem)
-            self.statisticsTable.setItem(i, 1, coloritem)
-        '''if len(values) > 0:
-            for i, item in enumerate(values):
-                self.statisticsTable.setItem(i, 0, str(i))
-                self.statisticsTable.setItem(i, 0, item)
-                print i
-                print item
-                #self.statisticsTable.setItem(i,0,QtGui.QTableWidgetItem(i))
-                #self.statisticsTable.setItem(i,1,QtGui.QTableWidgetItem(item))'''
-        self.statisticsTable.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
-        self.statisticsTable.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.Stretch)
-        self.statisticsTable.resizeRowsToContents()
-
-        table = self.statisticsTable
-        layout = QtGui.QGridLayout()
-        layout.addWidget(table, 0, 0)
-        self.setLayout(layout)
+        pass
 
 
     def clearTable(self):

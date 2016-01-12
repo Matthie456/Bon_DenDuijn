@@ -498,6 +498,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def startnodeprocess(self):
         isdown = self.addNodeButton.isChecked()
+        cur_user = self.SelectUserGroupCombo.currentText()
+        stylepath = '{}/Styles/'.format(QgsProject.instance().homePath())
 
         if not isdown:
             self.new_layer.featureAdded.disconnect(self.lcdCounter)
@@ -518,7 +520,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             uf.duplicateLayerMem(transit_layer, "POINT", CRS, 'Transit_stops copy')
             self.new_layer = uf.getLegendLayerByName(self.iface, 'Transit_stops copy')
             self.iface.setActiveLayer(self.new_layer)
-            self.iface.legendInterface().setLayerVisible(self.new_layer, False)
+            self.iface.legendInterface().setLayerVisible(self.new_layer, True)
+            self.new_layer.loadNamedStyle('{}Transit_{}.qml'.format(stylepath, cur_user))
 
 
             self.canvas.scaleChanged.connect(self.checkMapTool)

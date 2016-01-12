@@ -552,7 +552,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         cur_user = self.SelectUserGroupCombo.currentText()
         new_layer = uf.getLegendLayerByName(self.iface, 'Transit_stops copy')
         stylepath = '{}/Styles/'.format(QgsProject.instance().homePath())
-        new_layer.loadNamedStyle('{}Transit_all.qml'.format(stylepath))
+        new_layer.loadNamedStyle('{}Transit_{}.qml'.format(stylepath, cur_user))
         transit_layer = uf.getLegendLayerByName(self.iface, "Transit_stops")
 
         # set counter

@@ -89,6 +89,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.addNodeButton.clicked.connect(self.startnodeprocess)
         self.recalculateButton.clicked.connect(self.recalculateaccessibility)
 
+
         # dropdown menus
         self.buildingCentroidsCombo.activated.connect(self.setBuildinglayer)
         self.SelectUserGroupCombo.activated.connect(self.setSelectedUserGroup)
@@ -161,6 +162,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                     self.clickTool.canvasClicked.disconnect(self.addfeatures)
                 except:
                     pass
+
     def saveScenario(self):
         self.iface.actionSaveProjectAs().trigger()
 
@@ -263,8 +265,9 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 self.refreshCanvas(layer)
 
     def toggleAccessibilityLayer(self):
+        cur_user = self.SelectUserGroupCombo.currentText()
 
-        layer = uf.getLegendLayerByName(self.iface, 'Accessibility')
+        layer = uf.getLegendLayerByName(self.iface, 'Accessibility_{}'.format(cur_user))
         if not layer:
             self.toggleAccessibiltyCheckBox.setChecked(False)
             return
@@ -446,12 +449,12 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         if all_houses_list > 0:
             layer = self.getSelectedLayer()
             # Check if the layer exists
-            access_layer = uf.getLegendLayerByName(self.iface, "Accessibility")
+            access_layer = uf.getLegendLayerByName(self.iface, "Accessibility_{}".format(cur_user))
             # Create one if it doesn't exist and add suffix for the scenario
             if not access_layer:
                 attribs = ['number of overlapping buffers']
                 types = [QtCore.QVariant.Double]
-                access_layer = uf.createTempLayer('Accessibility','POINT',CRS, attribs, types)
+                access_layer = uf.createTempLayer('Accessibility_{}'.format(cur_user),'POINT',CRS, attribs, types)
                 uf.loadTempLayer(access_layer)
             if is_scn:
                 name = self.newLayerNameEdit.text()
@@ -496,6 +499,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.refreshCanvas(access_layer)
 
     def startnodeprocess(self):
+        # print 'snp'
         isdown = self.addNodeButton.isChecked()
         cur_user = self.SelectUserGroupCombo.currentText()
         stylepath = '{}/Styles/'.format(QgsProject.instance().homePath())
@@ -505,7 +509,6 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 pass
             else:
                 name = self.newLayerNameEdit.text()
-
                 self.scn_list.append(name)
                 scenario_layer = uf.getLegendLayerByName(self.iface, "Transit_{}".format(name))
                 scenario_layer.removeSelection()
@@ -522,9 +525,8 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.iface.setActiveLayer(self.new_layer)
             self.iface.legendInterface().setLayerVisible(self.new_layer, True)
             self.new_layer.loadNamedStyle('{}Transit_{}.qml'.format(stylepath, cur_user))
+            self.new_layer.featureAdded.connect(self.lcdCounter)
 
-
-            self.canvas.scaleChanged.connect(self.checkMapTool)
             self.canvas.extentsChanged.connect(self.checkMapTool)
 
 
@@ -536,6 +538,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
 
     def checkMapTool(self):
+        # print 'checkmaptool'
         maptool = self.canvas.mapTool()
 
         if type(maptool) == QgsMapToolEmitPoint:
@@ -545,11 +548,20 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def setClickTool(self):
         # setup clicktool
+        # print "setclicktool"
+
+        try:
+            print "tried"
+            self.clickTool.canvasClicked.disconnect(self.addfeatures)
+        except:
+            print "pass"
+            pass
         self.clickTool = QgsMapToolEmitPoint(self.canvas)
         self.clickTool.canvasClicked.connect(self.addfeatures)
         self.canvas.setMapTool(self.clickTool)
 
     def addfeatures(self):
+        # print "addfeatures"
         proj = QgsProject.instance()
         CRS = proj.readEntry("SpatialDecisionDockWidget", 'CRS')[0]
         cur_user = self.SelectUserGroupCombo.currentText()
@@ -559,24 +571,29 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         transit_layer = uf.getLegendLayerByName(self.iface, "Transit_stops")
 
         # set counter
-        originalfeatures = transit_layer.featureCount()
-        newfeatures = new_layer.featureCount()
-        diff = newfeatures - originalfeatures
+        # originalfeatures = transit_layer.featureCount()
+        # newfeatures = new_layer.featureCount()
+        diff = self.remainingNodesLCD.value()
+        print diff
         ischecked = self.addNodeButton.isChecked()
 
         # Add features
         if ischecked:
             self.iface.setActiveLayer(new_layer)
+            # print "before"
             self.iface.actionAddFeature().trigger()
-            self.new_layer.featureAdded.connect(self.lcdCounter)
-            return
+            # print "after"
+            # new_layer.featureAdded.connect(self.lcdCounter)
+            # print "afterafter"
+            # return
         elif not ischecked:
             if diff == 0:
                 QgsMapLayerRegistry.instance().removeMapLayer(new_layer.id())
+                self.clickTool.canvasClicked.disconnect(self.addfeatures)
                 return True
             else:
                 # Commit changes and set clicktool to pantool
-                self.new_layer.featureAdded.disconnect(self.lcdCounter)
+                new_layer.featureAdded.disconnect(self.lcdCounter)
                 new_layer.commitChanges()
                 self.panTool = QgsMapToolPan(self.canvas)
                 self.canvas.setMapTool(self.panTool)
@@ -610,7 +627,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 self.iface.legendInterface().moveLayer(scenario_layer, 0)
                 self.iface.legendInterface().setLayerExpanded(scenario_layer, False)
 
-                self.canvas.scaleChanged.disconnect(self.checkMapTool)
+                # self.canvas.scaleChanged.disconnect(self.checkMapTool)
                 self.canvas.extentsChanged.disconnect(self.checkMapTool)
                 self.clickTool.canvasClicked.disconnect(self.addfeatures)
 
@@ -626,9 +643,11 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
 
     def lcdCounter(self):
+        # print 'lcdcounter'
         value = self.remainingNodesLCD.value()
+        # print value
         self.remainingNodesLCD.display(value+1)
-        return
+
 
     # after adding features to layers needs a refresh (sometimes)
     def refreshCanvas(self, layer):
